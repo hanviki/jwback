@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.EvaluationReportMapper"
+>
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.EvaluationReport">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UserCode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="BasicScore" property="basicscore" jdbcType="DOUBLE"/>
+        <result column="KeyScore" property="keyscore" jdbcType="DOUBLE"/>
+        <result column="AvgScore" property="avgscore" jdbcType="DOUBLE"/>
+        <result column="MaxScore" property="maxscore" jdbcType="DOUBLE"/>
+        <result column="MinScore" property="minscore" jdbcType="DOUBLE"/>
+        <result column="ScoreDifference" property="scoredifference" jdbcType="DOUBLE"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="TotalCompareLast" property="totalcomparelast" jdbcType="DOUBLE"/>
+        <result column="TotalCompareMark" property="totalcomparemark" jdbcType="DOUBLE"/>
+        <result column="MaxCompareLast" property="maxcomparelast" jdbcType="DOUBLE"/>
+        <result column="MaxCompareMark" property="maxcomparemark" jdbcType="DOUBLE"/>
+        <result column="MinCompareLast" property="mincomparelast" jdbcType="DOUBLE"/>
+        <result column="MinCompareMark" property="mincomparemark" jdbcType="DOUBLE"/>
+        <result column="Plan" property="plan" jdbcType="DOUBLE"/>
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.welb.organization_check.dto.UserEvaluationDto">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UserCode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="BasicScore" property="basicscore" jdbcType="DOUBLE"/>
+        <result column="KeyScore" property="keyscore" jdbcType="DOUBLE"/>
+        <result column="AvgScore" property="avgscore" jdbcType="DOUBLE"/>
+        <result column="MaxScore" property="maxscore" jdbcType="DOUBLE"/>
+        <result column="MinScore" property="minscore" jdbcType="DOUBLE"/>
+        <result column="ScoreDifference" property="scoredifference" jdbcType="DOUBLE"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="TotalCompareLast" property="totalcomparelast" jdbcType="DOUBLE"/>
+        <result column="TotalCompareMark" property="totalcomparemark" jdbcType="DOUBLE"/>
+        <result column="MaxCompareLast" property="maxcomparelast" jdbcType="DOUBLE"/>
+        <result column="MaxCompareMark" property="maxcomparemark" jdbcType="DOUBLE"/>
+        <result column="MinCompareLast" property="mincomparelast" jdbcType="DOUBLE"/>
+        <result column="MinCompareMark" property="mincomparemark" jdbcType="DOUBLE"/>
+        <result column="Plan" property="plan" jdbcType="DOUBLE"/>
+        <result column="UserName" property="username" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, UserCode, TotalScore, BasicScore, KeyScore, AvgScore, MaxScore, MinScore, ScoreDifference,
+    TotalCompareLast, TotalCompareMark,MaxCompareLast, MaxCompareMark,MinCompareLast, MinCompareMark,
+     Year, Month,Plan
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from evaluationreport
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from evaluationreport
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <!--添加个人测评报告-->
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.EvaluationReport">
+        insert into evaluationreport
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="usercode != null">
+                UserCode,
+            </if>
+            <if test="totalscore != null">
+                TotalScore,
+            </if>
+            <if test="basicscore != null">
+                BasicScore,
+            </if>
+            <if test="keyscore != null">
+                KeyScore,
+            </if>
+            <if test="avgscore != null">
+                AvgScore,
+            </if>
+            <if test="maxscore != null">
+                MaxScore,
+            </if>
+            <if test="minscore != null">
+                MinScore,
+            </if>
+            <if test="scoredifference != null">
+                ScoreDifference,
+            </if>
+            <if test="totalcomparelast != null">
+                TotalCompareLast,
+            </if>
+            <if test="totalcomparemark != null">
+                TotalCompareMark,
+            </if>
+            <if test="maxcomparelast != null">
+                MaxCompareLast,
+            </if>
+            <if test="maxcomparemark != null">
+                MaxCompareMark,
+            </if>
+            <if test="mincomparelast != null">
+                MinCompareLast,
+            </if>
+            <if test="mincomparemark != null">
+                MinCompareMark,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="month != null">
+                Month,
+            </if>
+            <if test="plan != null">
+                Plan,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="usercode != null">
+                #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="totalscore != null">
+                #{totalscore,jdbcType=DOUBLE},
+            </if>
+            <if test="basicscore != null">
+                #{basicscore,jdbcType=DOUBLE},
+            </if>
+            <if test="keyscore != null">
+                #{keyscore,jdbcType=DOUBLE},
+            </if>
+            <if test="avgscore != null">
+                #{avgscore,jdbcType=DOUBLE},
+            </if>
+            <if test="maxscore != null">
+                #{maxscore,jdbcType=DOUBLE},
+            </if>
+            <if test="minscore != null">
+                #{minscore,jdbcType=DOUBLE},
+            </if>
+            <if test="scoredifference != null">
+                #{scoredifference,jdbcType=DOUBLE},
+            </if>
+            <if test="totalcomparelast != null">
+                #{totalcomparelast,jdbcType=DOUBLE},
+            </if>
+            <if test="totalcomparemark != null">
+                #{totalcomparemark,jdbcType=DOUBLE},
+            </if>
+            <if test="maxcomparelast != null">
+                #{maxcomparelast,jdbcType=DOUBLE},
+            </if>
+            <if test="maxcomparemark != null">
+                #{maxcomparemark,jdbcType=DOUBLE},
+            </if>
+            <if test="mincomparelast != null">
+                #{mincomparelast,jdbcType=DOUBLE},
+            </if>
+            <if test="mincomparemark != null">
+                #{mincomparemark,jdbcType=DOUBLE},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="plan != null">
+                #{plan,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <!--修改个人测评报告-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.EvaluationReport">
+        update evaluationreport
+        <set>
+            <if test="usercode != null">
+                UserCode = #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="totalscore != null">
+                TotalScore = #{totalscore,jdbcType=DOUBLE},
+            </if>
+            <if test="basicscore != null">
+                BasicScore = #{basicscore,jdbcType=DOUBLE},
+            </if>
+            <if test="keyscore != null">
+                KeyScore = #{keyscore,jdbcType=DOUBLE},
+            </if>
+            <if test="avgscore != null">
+                AvgScore = #{avgscore,jdbcType=DOUBLE},
+            </if>
+            <if test="maxscore != null">
+                MaxScore = #{maxscore,jdbcType=DOUBLE},
+            </if>
+            <if test="minscore != null">
+                MinScore = #{minscore,jdbcType=DOUBLE},
+            </if>
+            <if test="scoredifference != null">
+                ScoreDifference = #{scoredifference,jdbcType=DOUBLE},
+            </if>
+            <if test="mincomparelast != null">
+                MinCompareLast = #{mincomparelast,jdbcType=DOUBLE},
+            </if>
+            <if test="mincomparemark != null">
+                MinCompareMark = #{mincomparemark,jdbcType=DOUBLE},
+            </if>
+
+            <if test="totalcomparelast != null">
+                TotalCompareLast = #{totalcomparelast,jdbcType=DOUBLE},
+            </if>
+            <if test="totalcomparemark != null">
+                TotalCompareMark = #{totalcomparemark,jdbcType=DOUBLE},
+            </if>
+            <if test="maxcomparelast != null">
+                MaxCompareLast = #{maxcomparelast,jdbcType=DOUBLE},
+            </if>
+            <if test="maxcomparemark != null">
+                MaxCompareMark = #{maxcomparemark,jdbcType=DOUBLE},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="plan != null">
+                Plan = #{plan,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <!--通过用户查找上一季度的测评报告-->
+    <select id="selectReportByUserCode" resultType="com.welb.organization_check.entity.EvaluationReport">
+    select e.*,u.* from evaluationreport e ,user u
+    where e.UserCode=#{usercode}
+    and e.Year=#{year}
+    and e.Month=#{month}
+    and u.UserCode=e.UserCode
+  </select>
+    <!--计算总分 -->
+    <select id="selectReportTotalScore" resultType="double">
+    select sum(TotalScore) from evaluationreport where Year=#{year} and Month=#{month}
+  </select>
+
+    <!--获取个人测评表的数据总量 -->
+    <select id="selectReportCount" resultType="int">
+    select count(*) from evaluationreport where Year=#{year} and Month=#{month}
+</select>
+
+    <!--获取个人测评表的数据总量 -->
+    <select id="selectMaxAndMinReportCount" resultType="int">
+    select count(*) from evaluationreport where Year=#{year} and Month=#{month} and MaxScore is not null and 	MinScore is not null
+  </select>
+    <!--糊查询所有报告-->
+    <select id="selectAllEvaluationReportLike" resultMap="BaseResultMap1">
+        select e.Id,e.Year,e.Month,e.TotalScore,e.AvgScore,e.Plan,
+        u.UserCode,u.UserName
+        from evaluationreport e,user u,role r,user_role ur
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="year!=null and year!=''">
+                and e.Year =#{year}
+            </if>
+            <if test="month!=null and month!=''">
+                and e.Month=#{month}
+            </if>
+            and u.UserCode=e.UserCode
+            and e.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and r.RoleCode in("100","200","300","50")
+        </where>
+
+    </select>
+
+
+    <!--查询所有评估报告-->
+    <select id="selectAllEvaluationReport" resultMap="BaseResultMap">
+        select e.* from evaluationreport e
+    </select>
+
+    <!--查找数据总量 -->
+    <select id="selectEvacationReportCount" resultType="int">
+        select count(*) from evaluationreport
+    </select>
+    <!--获取最高分数之和-->
+    <select id="selectSumOfMaxScore" resultType="double">
+        select sum(MaxScore) from evaluationreport where Year=#{year} and Month=#{month}
+    </select>
+    <!--获取最低分数之和 -->
+    <select id="selectSumOfMinScore" resultType="double">
+        select sum(MinScore) from evaluationreport where Year=#{year} and Month=#{month}
+    </select>
+
+
+    <select id="selectMaxId" resultType="int">
+        select max(id) from evaluationreport
+    </select>
+
+    <select id="selectEvaluationByUserCode" resultMap="BaseResultMap">
+        select * from evaluationreport where UserCode=#{usercode}
+    </select>
+
+    <delete id="batchDelete">
+        delete from evaluationreport where Id in
+        <foreach collection="list" item="reportIds" separator="," open="(" close=")">
+            #{reportIds}
+        </foreach>
+    </delete>
+
+    <update id="updateAvgScore" parameterType="com.welb.organization_check.entity.EvaluationReport">
+        update evaluationreport set AvgScore = #{avgscore} where Year=#{year} and Month=#{month}
+    </update>
+</mapper>

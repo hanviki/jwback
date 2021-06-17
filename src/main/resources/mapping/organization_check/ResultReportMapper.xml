@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.ResultReportMapper">
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ResultReport">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="ResultReportCode" jdbcType="VARCHAR" property="resultreportcode" />
+    <result column="ResultReportName" jdbcType="VARCHAR" property="resultreportname" />
+    <result column="EvaluationReportCode" jdbcType="INTEGER" property="evaluationreportcode" />
+    <result column="AScore" jdbcType="DOUBLE" property="ascore" />
+    <result column="BScore" jdbcType="DOUBLE" property="bscore" />
+    <result column="CScore" jdbcType="DOUBLE" property="cscore" />
+    <result column="DScore" jdbcType="DOUBLE" property="dscore" />
+    <result column="Score" jdbcType="DOUBLE" property="score" />
+    <result column="AvgScore" jdbcType="DOUBLE" property="avgscore" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id,ResultReportCode, ResultReportName, EvaluationReportCode, AScore, BScore, CScore, DScore, Score,
+    AvgScore
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resultreport
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from resultreport
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ResultReport">
+    insert into resultreport
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="resultreportcode != null">
+        ResultReportCode,
+      </if>
+      <if test="resultreportname != null">
+        ResultReportName,
+      </if>
+      <if test="evaluationreportcode != null">
+        EvaluationReportCode,
+      </if>
+      <if test="ascore != null">
+        AScore,
+      </if>
+      <if test="bscore != null">
+        BScore,
+      </if>
+      <if test="cscore != null">
+        CScore,
+      </if>
+      <if test="dscore != null">
+        DScore,
+      </if>
+      <if test="score != null">
+        Score,
+      </if>
+      <if test="avgscore != null">
+        AvgScore,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="resultreportname != null">
+        #{resultreportcode,jdbcType=VARCHAR},
+      </if>
+      <if test="resultreportname != null">
+        #{resultreportname,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluationreportcode != null">
+        #{evaluationreportcode,jdbcType=INTEGER},
+      </if>
+      <if test="ascore != null">
+        #{ascore,jdbcType=DOUBLE},
+      </if>
+      <if test="bscore != null">
+        #{bscore,jdbcType=DOUBLE},
+      </if>
+      <if test="cscore != null">
+        #{cscore,jdbcType=DOUBLE},
+      </if>
+      <if test="dscore != null">
+        #{dscore,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="avgscore != null">
+        #{avgscore,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ResultReport">
+    update resultreport
+    <set>
+      <if test="resultreportcode != null">
+        ResultReportCode = #{resultreportcode,jdbcType=VARCHAR},
+      </if>
+      <if test="resultreportname != null">
+        ResultReportName = #{resultreportname,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluationreportcode != null">
+        EvaluationReportCode = #{evaluationreportcode,jdbcType=INTEGER},
+      </if>
+      <if test="ascore != null">
+        AScore = #{ascore,jdbcType=DOUBLE},
+      </if>
+      <if test="bscore != null">
+        BScore = #{bscore,jdbcType=DOUBLE},
+      </if>
+      <if test="cscore != null">
+        CScore = #{cscore,jdbcType=DOUBLE},
+      </if>
+      <if test="dscore != null">
+        DScore = #{dscore,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        Score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="avgscore != null">
+        AvgScore = #{avgscore,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+<!--通过维度编号和个人测评表的主键查找综合报告表的数据-->
+  <select id="selectResultReportByCode" resultType="com.welb.organization_check.entity.ResultReport">
+    select * from resultreport where ResultReportCode=#{resultreportcode} and EvaluationReportCode=#{evaluationreportcode}
+  </select>
+  <!--通过个人测评表的主键查找综合报告表的数据-->
+  <select id="selectResultReportByEvaluationCode" resultMap="BaseResultMap">
+        select * from resultreport where EvaluationReportCode=#{evaluationreportcode}
+  </select>
+  <delete id="batchDelete">
+    delete from resultreport where Id in
+    <foreach collection="list" item="resultReportIds" separator="," open="(" close=")">
+      #{resultReportIds}
+    </foreach>
+  </delete>
+</mapper>

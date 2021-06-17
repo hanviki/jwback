@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.survey.mapper.SurveyOptionPreviewMapper">
+    <resultMap id="BaseResultMap" type="com.welb.survey.entity.SurveyOptionPreview">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="SurveyInfoId" property="surveyinfoid" jdbcType="INTEGER"/>
+        <result column="QuestionId" property="questionid" jdbcType="INTEGER"/>
+        <result column="OptionContent" property="optioncontent" jdbcType="VARCHAR"/>
+        <result column="OptionOrder" property="optionorder" jdbcType="INTEGER" />
+        <result column="Gap" property="gap" jdbcType="INTEGER" />
+        <result column="GapText" property="gaptext" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, SurveyInfoId, QuestionId, OptionContent,OptionOrder,Gap,GapText
+  </sql>
+    <!--查询单个选项-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_option_preview
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <!--删除选项-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from survey_option_preview
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <!--添加单个选项-->
+    <insert id="insertSelective" parameterType="com.welb.survey.entity.SurveyOptionPreview">
+        insert into survey_option_preview
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="surveyinfoid != null">
+                SurveyInfoId,
+            </if>
+            <if test="questionid != null">
+                QuestionId,
+            </if>
+            <if test="optioncontent != null">
+                OptionContent,
+            </if>
+            <if test="optionorder != null">
+                OptionOrder,
+            </if>
+            <if test="gap != null">
+                Gap,
+            </if>
+            <if test="gaptext != null">
+                GapText,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="surveyinfoid != null">
+                #{surveyinfoid,jdbcType=INTEGER},
+            </if>
+            <if test="questionid != null">
+                #{questionid,jdbcType=INTEGER},
+            </if>
+            <if test="optioncontent != null">
+                #{optioncontent,jdbcType=VARCHAR},
+            </if>
+            <if test="optionorder != null">
+                #{optionorder,jdbcType=INTEGER},
+            </if>
+            <if test="gap != null">
+                #{gap,jdbcType=INTEGER},
+            </if>
+            <if test="gaptext != null">
+                #{gaptext,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--修改单个选项-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.survey.entity.SurveyOptionPreview">
+        update survey_option_preview
+        <set>
+            <if test="surveyinfoid != null">
+                SurveyInfoId = #{surveyinfoid,jdbcType=INTEGER},
+            </if>
+            <if test="questionid != null">
+                QuestionId = #{questionid,jdbcType=INTEGER},
+            </if>
+            <if test="optioncontent != null">
+                OptionContent = #{optioncontent,jdbcType=VARCHAR},
+            </if>
+            <if test="optionorder != null">
+                OptionOrder = #{optionorder,jdbcType=INTEGER},
+            </if>
+            <if test="gap != null">
+                Gap = #{gap,jdbcType=INTEGER},
+            </if>
+            <if test="gaptext != null">
+                GapText = #{gaptext,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <!--批量添加题目选项-->
+    <insert id="batchInsert">
+        insert into survey_option_preview(Id, SurveyInfoId, QuestionId, OptionContent,OptionOrder,Gap,GapText)
+        values
+        <foreach collection="list" item="option" separator=",">
+            (
+            #{option.id},
+            #{option.surveyinfoid},
+            #{option.questionid},
+            #{option.optioncontent},
+            #{option.optionorder},
+            #{option.gap},
+            #{option.gaptext}
+            )
+        </foreach>
+    </insert>
+
+    <!--批量修改题目选项-->
+    <update id="batchUpdate">
+        update survey_option_preview
+        <foreach collection="list" item="option" separator=";" open="" close="">
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="option.surveyinfoid != null">
+                        SurveyInfoId = #{option.surveyinfoid,jdbcType=INTEGER},
+                    </if>
+                    <if test="option.questionid != null">
+                        QuestionId = #{option.questionid,jdbcType=INTEGER},
+                    </if>
+                    <if test="option.content != null">
+                        OptionContent = #{option.optioncontent,jdbcType=VARCHAR},
+                    </if>
+                    <if test="option.order != null">
+                        OptionOrder = #{option.optionorder,jdbcType=INTEGER},
+                    </if>
+                    <if test="option.gap != null">
+                        Gap = #{option.gap,jdbcType=INTEGER},
+                    </if>
+                    <if test="option.gaptext != null">
+                        GapText = #{option.gaptext,jdbcType=VARCHAR},
+                    </if>
+                </trim>
+            </set>
+            where Id = #{option.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+
+    <!--批量删除选项-->
+    <delete id="batchDelete">
+        delete from survey_option_preview  where Id in
+        <foreach collection="list" item="ids" separator="," open="(" close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--通过问题id查找关联的选项集合-->
+    <select id="selectOptionsByQuestionId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_option_preview
+        where QuestionId=#{questionid}
+    </select>
+
+    <!--通过问题全部选项集合-->
+    <select id="selectAllOptions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_option_preview
+    </select>
+
+    <!--通过问卷id查找选项集合-->
+    <select id="selectListByInfoId" resultMap="BaseResultMap">
+    select * from survey_option_preview where SurveyInfoId=#{surveyinfoid}
+  </select>
+
+    <!--通过预览问卷id删除预览问卷选项-->
+    <delete id="deleteOptionByInfoId" parameterType="java.lang.Integer">
+        delete from survey_option_preview where SurveyInfoId=#{surveyinfoid}
+    </delete>
+</mapper>

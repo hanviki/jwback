@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.BranchMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.Branch" >
+    <id column="BranchCode" property="branchcode" jdbcType="VARCHAR" />
+    <result column="BranchName" property="branchname" jdbcType="VARCHAR" />
+    <result column="UpBranchCode" property="upbranchcode" jdbcType="VARCHAR" />
+    <result column="BranchDesc" property="branchdesc" jdbcType="VARCHAR" />
+    <result column="FullBranchCode" property="fullbranchcode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    BranchCode, BranchName, UpBranchCode, BranchDesc,FullBranchCode
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from branch
+    where BranchCode = #{branchcode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from branch
+    where BranchCode = #{branchcode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.welb.organization_check.entity.Branch" >
+    insert into branch (BranchCode, BranchName, UpBranchCode,
+      BranchDesc,FullBranchCode)
+    values (#{branchcode,jdbcType=VARCHAR}, #{branchname,jdbcType=VARCHAR}, #{upbranchcode,jdbcType=VARCHAR},
+      #{branchdesc,jdbcType=VARCHAR},#{fullbranchcode})
+  </insert>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Branch" >
+    insert into branch
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="branchcode != null" >
+        BranchCode,
+      </if>
+      <if test="branchname != null" >
+        BranchName,
+      </if>
+      <if test="upbranchcode != null" >
+        UpBranchCode,
+      </if>
+      <if test="branchdesc != null" >
+        BranchDesc,
+      </if>
+      <if test="fullbranchcode != null" >
+        FullBranchCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="branchcode != null" >
+        #{branchcode,jdbcType=VARCHAR},
+      </if>
+      <if test="branchname != null" >
+        #{branchname,jdbcType=VARCHAR},
+      </if>
+      <if test="upbranchcode != null" >
+        #{upbranchcode,jdbcType=VARCHAR},
+      </if>
+      <if test="branchdesc != null" >
+        #{branchdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fullbranchcode != null" >
+        #{fullbranchcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.Branch" >
+    update branch
+    <set >
+      <if test="branchname != null" >
+        BranchName = #{branchname,jdbcType=VARCHAR},
+      </if>
+      <if test="upbranchcode != null" >
+        UpBranchCode = #{upbranchcode,jdbcType=VARCHAR},
+      </if>
+      <if test="branchdesc != null" >
+        BranchDesc = #{branchdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fullbranchcode != null" >
+        FullBranchCode = #{fullbranchcode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where BranchCode = #{branchcode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.Branch" >
+    update branch
+    set BranchName = #{branchname,jdbcType=VARCHAR},
+      UpBranchCode = #{upbranchcode,jdbcType=VARCHAR},
+      BranchDesc = #{branchdesc,jdbcType=VARCHAR},FullBranchCode
+    where BranchCode = #{branchcode,jdbcType=VARCHAR}
+  </update>
+  <!--查找所有支部 包含模糊匹配查询-->
+  <select id="selectBranchTrees" resultType="com.welb.organization_check.entity.Branch">
+    select * from branch
+    <where>
+      <if test="upbranchcode!=null and upbranchcode!=''">
+         UpBranchCode=#{upbranchcode}
+      </if>
+      <if test="branchname!=null and branchname!=''">
+        and BranchName like concat('%',#{branchname},'%')
+      </if>
+    </where>
+
+  </select>
+  <!--查找支部编号最大数-->
+  <select id="selectMaxBranchCode" resultType="string">
+    select MAX(CAST(BranchCode as SIGNED INTEGER)) from  branch;
+  </select>
+</mapper>

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.MonthSummaryMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.MonthSummary">
+        <id column="SerialNo" property="serialno" jdbcType="VARCHAR"/>
+        <result column="Title" property="title" jdbcType="VARCHAR"/>
+        <result column="EmployeeCode" property="employeecode" jdbcType="VARCHAR"/>
+        <result column="Pubdate" property="pubdate" jdbcType="TIMESTAMP"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+        <result column="FormatText" property="formattext" jdbcType="LONGVARBINARY"/>
+        <result column="SavePath" property="savepath" jdbcType="VARCHAR"/>
+        <result column="FileName" property="filename" jdbcType="VARCHAR"/>
+        <result column="IsSend" property="issend" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringcode" jdbcType="VARCHAR"/>
+        <result column="ScoreStatus" property="scorestatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    SerialNo, Title, EmployeeCode, Pubdate, Year, Month, State,Content, FormatText,SavePath,FileName,IsSend,ScoreStatus
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from monthsummary
+        where SerialNo = #{serialno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from monthsummary
+    where SerialNo = #{serialno,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.MonthSummary">
+        insert into monthsummary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serialno != null">
+                SerialNo,
+            </if>
+            <if test="title != null">
+                Title,
+            </if>
+            <if test="employeecode != null">
+                EmployeeCode,
+            </if>
+            <if test="pubdate != null">
+                Pubdate,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="month != null">
+                Month,
+            </if>
+            <if test="state != null">
+                State,
+            </if>
+            <if test="content != null">
+                Content,
+            </if>
+            <if test="formattext != null">
+                FormatText,
+            </if>
+            <if test="savepath != null">
+                SavePath,
+            </if>
+            <if test="filename != null">
+                FileName,
+            </if>
+            <if test="issend != null">
+                IsSend,
+            </if>
+            <if test="scorestatus != null">
+                ScoreStatus,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serialno != null">
+                #{serialno,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="employeecode != null">
+                #{employeecode,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null">
+                #{pubdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="formattext != null">
+                #{formattext,jdbcType=VARCHAR},
+            </if>
+            <if test="savepath != null">
+                #{savepath,jdbcType=VARCHAR},
+            </if>
+            <if test="filename != null">
+                #{filename,jdbcType=VARCHAR},
+            </if>
+            <if test="issend != null">
+                #{issend,jdbcType=VARCHAR},
+            </if>
+            <if test="scorestatus != null">
+                #{scorestatus,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.MonthSummary">
+        update monthsummary
+        <set>
+            <if test="title != null">
+                Title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="employeecode != null">
+                EmployeeCode = #{employeecode,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null">
+                Pubdate = #{pubdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                State = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                Content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="formattext != null">
+                FormatText = #{formattext,jdbcType=LONGVARBINARY},
+            </if>
+            <if test="savepath != null ">
+                SavePath = #{savepath,jdbcType=VARCHAR},
+            </if>
+            <if test="filename != null ">
+                FileName = #{filename,jdbcType=VARCHAR},
+            </if>
+            <if test="issend != null ">
+                IsSend = #{issend,jdbcType=VARCHAR},
+            </if>
+            <if test="scorestatus != null ">
+                ScoreStatus = #{scorestatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SerialNo = #{serialno,jdbcType=VARCHAR}
+    </update>
+    <!--查询个人季节总结 包含多条件查询-->
+    <select id="selectSummaryLikeAll" resultMap="BaseResultMap">
+        select SerialNo, Title, EmployeeCode, Pubdate, Year, Month, State,Content, SavePath,FileName,IsSend
+        from monthsummary
+        <where>
+            <if test="title!=null and title!=''">
+                and Title like concat('%',#{title},"%")
+            </if>
+            <if test="year!=null and year!=''">
+                and Year =#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and Month =#{month}
+            </if>
+            and EmployeeCode =#{employeecode}
+            and State not in("0")
+        </where>
+        order by Year+0 desc, Month+0 desc,Pubdate desc
+    </select>
+
+    <select id="selectMonthSummary" resultMap="BaseResultMap">
+        select s.* from monthsummary s where s.EmployeeCode=#{code}
+        AND s.Year =#{year} AND s.Month =#{month}
+    </select>
+
+    <!--通过主键修改状态-->
+    <update id="updateSubmitStateBySerialNo" parameterType="string">
+    update  monthsummary set State="5" where SerialNo=#{serialno}
+  </update>
+    <!--通过主键修改状态-->
+    <update id="updateGradeStateBySerialNo" parameterType="string">
+    update  monthsummary set State="6" where SerialNo=#{serialno}
+  </update>
+    <!--状态修改为全部季节评分-->
+    <update id="updateStateAll" parameterType="com.welb.organization_check.entity.MonthSummary">
+    update  monthsummary set State="6"
+  </update>
+    <!--批量修改状态为季节评分完成-->
+    <update id="updateFinishGradeBySerialNo" parameterType="com.welb.organization_check.entity.MonthSummary">
+        update  monthsummary set State="7" where SerialNo=#{serialno}
+    </update>
+    <!--把状态全部修改为季节评分完成-->
+    <update id="updateFinishGradeAll" parameterType="com.welb.organization_check.entity.MonthSummary">
+        update  monthsummary set State="7"
+    </update>
+
+    <update id="updateStateBySerialNo" parameterType="com.welb.organization_check.entity.MonthSummary">
+        update monthsummary set State=#{state} where SerialNo=#{serialno}
+    </update>
+
+    <!--通过年份和季度查询所有的季度总结-->
+    <select id="selectSummaryByYearAndMonth" resultMap="BaseResultMap">
+        select * from monthsummary where Year=#{year} and Month=#{month} and IsSend="1"
+    </select>
+
+    <!--通过用户code查找当前上一季度个人总结报告-->
+    <select id="selectSummaryByYearAndMonthAndCode" resultType="com.welb.organization_check.entity.MonthSummary">
+        select * from monthsummary where Year=#{year} and Month=#{month} and  EmployeeCode=#{employeecode}
+    </select>
+
+    <!--通过年份和季度查询所有的季度总结-->
+    <select id="selectSummaryListByYearAndMonth" resultMap="BaseResultMap">
+        select m.Year,m.Month,m.State ,m.EmployeeCode ,m.SerialNo
+        from monthsummary  m,user_role ur,role r,user u
+        where m.Year=#{year} and m.Month=#{month}
+         and ur.UserCode=m.EmployeeCode
+         and r.RoleCode=ur.RoleCode
+         and r.RoleCode in("100","150","200","300","50")
+         and u.UserCode=m.EmployeeCode
+         and u.UserState="1"
+         and u.Flag="0"
+    </select>
+
+    <select id="findMonthSummaryAll" resultMap="BaseResultMap">
+        select * from monthsummary
+    </select>
+
+    <delete id="batchDelete" parameterType="INTEGER">
+        delete from monthsummary
+        where SerialNo in
+        <foreach collection="list" item="serialnos" open="(" separator="," close=")">
+            #{serialnos}
+        </foreach>
+    </delete>
+
+
+    <!--通过用户编号查找季节编号-->
+    <select id="selectSerialNoByEmployeeCode" resultMap="BaseResultMap">
+        select SerialNo from monthsummary where EmployeeCode=#{employeecode}
+    </select>
+
+
+    <insert id="batchInsert">
+        insert into monthsummary( SerialNo, Title, EmployeeCode, Pubdate, Year, Month,
+        State,Content,SavePath,FileName,IsSend,ScoreStatus)
+        values
+        <foreach collection="list" item="summary" separator=",">
+            (#{summary.serialno,jdbcType=VARCHAR},
+            #{summary.title,jdbcType=VARCHAR},
+            #{summary.employeecode,jdbcType=VARCHAR},
+            #{summary.pubdate,jdbcType=TIMESTAMP},
+            #{summary.year,jdbcType=VARCHAR},
+            #{summary.month,jdbcType=VARCHAR},
+            #{summary.state,jdbcType=VARCHAR},
+            #{summary.content,jdbcType=VARCHAR},
+            #{summary.savepath,jdbcType=VARCHAR},
+            #{summary.filename,jdbcType=VARCHAR},
+            #{summary.issend,jdbcType=VARCHAR},
+            #{summary.scorestatus,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+
+    <update id="batchUpdate" parameterType="INTEGER">
+        <foreach collection="list" item="summary" separator=";" open="" close="">
+            update monthsummary
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="summary.title != null">
+                        Title = #{summary.title,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.employeecode != null">
+                        EmployeeCode = #{summary.employeecode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.pubdate != null">
+                        Pubdate = #{summary.pubdate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="summary.year != null">
+                        Year = #{summary.year,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.month != null">
+                        Month = #{summary.month,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.state != null">
+                        State = #{summary.state,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.content != null">
+                        Content = #{summary.content,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.formattext != null">
+                        FormatText = #{summary.formattext,jdbcType=LONGVARBINARY},
+                    </if>
+                    <if test="summary.savepath != null ">
+                        SavePath = #{summary.savepath,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.filename != null ">
+                        FileName = #{summary.filename,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.issend != null ">
+                        IsSend = #{summary.issend,jdbcType=VARCHAR},
+                    </if>
+                    <if test="summary.scorestatus != null ">
+                        ScoreStatus = #{summary.scorestatus,jdbcType=VARCHAR},
+                    </if>
+                </trim>
+            </set>
+            where SerialNo = #{summary.serialno,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+
+    <select id="selectListByYearAndMonth" resultMap="BaseResultMap">
+        select SerialNo,State from monthsummary Year=#{year} and Month=#{month}
+    </select>
+</mapper>

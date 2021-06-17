@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.vote.mapper.UserWorkerMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.vote.entity.UserWorker" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="worker_id" property="workerId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from vote_user_worker
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.welb.vote.entity.UserWorker" >
+    insert into vote_user_worker
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="workerId != null" >
+        worker_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="workerId != null" >
+        #{workerId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.vote.entity.UserWorker" >
+    update vote_user_worker
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="workerId != null" >
+        worker_id = #{workerId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--查询医务工作者投票数-->
+  <select id="selectCountByWorkerId" resultType="int">
+    select count(*) from vote_user_worker where user_id=#{userId}
+  </select>
+
+  <select id="selectCountByWorkerIdAndType" resultType="int">
+    select count(*) from vote_user_worker where user_id=#{userId} and type=#{type}
+  </select>
+
+  <select id="selectVoteWorker" resultType="com.welb.vote.entity.UserWorker">
+    select * from vote_user_worker where user_id=#{userId} and worker_id = #{workerId}
+  </select>
+
+  <select id="selectWorkerByWorkerId" resultMap="BaseResultMap">
+    select * from vote_user_worker where user_id=#{userId}
+  </select>
+</mapper>

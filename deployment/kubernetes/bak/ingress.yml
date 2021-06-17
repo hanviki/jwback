@@ -1,0 +1,19 @@
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app: ${PROJECT_NAME}
+  name: ${PROJECT_NAME}
+  namespace: ${PROJECT_NAMESPACE}
+spec:
+  rules:
+    - host: ${PROJECT_INGRESS_HOST}.${PROJECT_DOMAIN}
+      http:
+        paths:
+          - backend:
+              serviceName: ${PROJECT_NAME}
+              servicePort: http

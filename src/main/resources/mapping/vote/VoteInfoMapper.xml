@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.vote.mapper.VoteInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.vote.entity.VoteInfo" >
+    <id column="worker_id" property="workerId" jdbcType="VARCHAR" />
+    <result column="info" property="info" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    worker_id, info
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from vote_info
+    where worker_id = #{workerId,jdbcType=VARCHAR}
+  </select>
+</mapper>

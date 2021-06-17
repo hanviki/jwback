@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreFlowMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ScoreFlow">
+        <id column="SerialNo" property="serialno" jdbcType="VARCHAR"/>
+        <result column="MSerialNo" property="mserialno" jdbcType="VARCHAR"/>
+        <result column="ScoredCode" property="scoredcode" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringcode" jdbcType="VARCHAR"/>
+        <result column="ScoreDate" property="scoredate" jdbcType="DATE"/>
+        <result column="ScoreType" property="scoretype" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="INTEGER"/>
+        <result column="Score" property="score" jdbcType="DOUBLE"/>
+        <result column="Ratio" property="ratio" jdbcType="DOUBLE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    SerialNo, MSerialNo, ScoredCode, ScorringCode, ScoreDate, ScoreType, State, Score,
+    Ratio
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from scoreflow
+        where SerialNo = #{serialno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from scoreflow
+    where SerialNo = #{serialno,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.welb.organization_check.entity.ScoreFlow">
+    insert into scoreflow (SerialNo, MSerialNo, ScoredCode,
+      ScorringCode, ScoreDate, ScoreType,
+      State, Score, Ratio)
+    values (#{serialno,jdbcType=VARCHAR}, #{mserialno,jdbcType=VARCHAR}, #{scoredcode,jdbcType=VARCHAR},
+      #{scorringcode,jdbcType=VARCHAR}, #{scoredate,jdbcType=DATE}, #{scoretype,jdbcType=VARCHAR},
+      #{state,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, #{ratio,jdbcType=DOUBLE})
+  </insert>
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreFlow">
+        insert into scoreflow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serialno != null">
+                SerialNo,
+            </if>
+            <if test="mserialno != null">
+                MSerialNo,
+            </if>
+            <if test="scoredcode != null">
+                ScoredCode,
+            </if>
+            <if test="scorringcode != null">
+                ScorringCode,
+            </if>
+            <if test="scoredate != null">
+                ScoreDate,
+            </if>
+            <if test="scoretype != null">
+                ScoreType,
+            </if>
+            <if test="state != null">
+                State,
+            </if>
+            <if test="score != null">
+                Score,
+            </if>
+            <if test="ratio != null">
+                Ratio,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serialno != null">
+                #{serialno,jdbcType=VARCHAR},
+            </if>
+            <if test="mserialno != null">
+                #{mserialno,jdbcType=VARCHAR},
+            </if>
+            <if test="scoredcode != null">
+                #{scoredcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorringcode != null">
+                #{scorringcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scoredate != null">
+                #{scoredate,jdbcType=DATE},
+            </if>
+            <if test="scoretype != null">
+                #{scoretype,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=DOUBLE},
+            </if>
+            <if test="ratio != null">
+                #{ratio,jdbcType=DOUBLE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ScoreFlow">
+        update scoreflow
+        <set>
+            <if test="mserialno != null">
+                MSerialNo = #{mserialno,jdbcType=VARCHAR},
+            </if>
+            <if test="scoredcode != null">
+                ScoredCode = #{scoredcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorringcode != null">
+                ScorringCode = #{scorringcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scoredate != null">
+                ScoreDate = #{scoredate,jdbcType=DATE},
+            </if>
+            <if test="scoretype != null">
+                ScoreType = #{scoretype,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                State = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                Score = #{score,jdbcType=DOUBLE},
+            </if>
+            <if test="ratio != null">
+                Ratio = #{ratio,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where SerialNo = #{serialno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.ScoreFlow">
+    update scoreflow
+    set MSerialNo = #{mserialno,jdbcType=VARCHAR},
+      ScoredCode = #{scoredcode,jdbcType=VARCHAR},
+      ScorringCode = #{scorringcode,jdbcType=VARCHAR},
+      ScoreDate = #{scoredate,jdbcType=DATE},
+      ScoreType = #{scoretype,jdbcType=VARCHAR},
+      State = #{state,jdbcType=INTEGER},
+      Score = #{score,jdbcType=DOUBLE},
+      Ratio = #{ratio,jdbcType=DOUBLE}
+    where SerialNo = #{serialno,jdbcType=VARCHAR}
+  </update>
+    <!--通过评分人编号和季节编号查找当前上一季度的总分-->
+    <select id="selectByScoreFlow" resultMap="BaseResultMap">
+    select SerialNo,Score from scoreflow where MSerialNo=#{mserialno} and ScorringCode=#{scorringcode}
+  </select>
+
+    <select id="getTotal" resultMap="BaseResultMap" parameterType="com.welb.organization_check.entity.ScoreFlow">
+        select
+        <include refid="Base_Column_List"/>
+        from scoreflow
+        where MSerialNo = #{mserialno,jdbcType=VARCHAR}
+        and ScorringCode = #{scorringcode,jdbcType=VARCHAR}
+        and ScoredCode = #{scoredcode,jdbcType=VARCHAR}
+        and ScoreType = #{scoretype,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getScoreByType" resultType="double">
+    select sum(Score) from scoreflow
+    where MSerialNo = #{mserialno,jdbcType=VARCHAR}
+    and ScoreType = #{scoretype,jdbcType=VARCHAR}
+  </select>
+
+    <select id="getScoreByTypeCount" resultType="int">
+    select count(*) from scoreflow
+    where MSerialNo = #{mserialno,jdbcType=VARCHAR}
+    and ScoreType = #{scoretype,jdbcType=VARCHAR}
+  </select>
+
+    <select id="selectMaxSerialNo" resultType="string">
+     select MAX(CAST(SerialNo as SIGNED INTEGER))  from scoreflow
+  </select>
+    <!--通过被评人查找所有打分情况-->
+    <select id="selectScoreAllByScoredCode" resultMap="BaseResultMap">
+    select s.* from scoreflow s,monthsummary m
+    where s.ScoredCode=#{scoredcode}
+    and m.Year=#{year}
+    and m.Month=#{month}
+    and s.MSerialNo=m.SerialNo
+  </select>
+
+    <!--通过被评人查找最高评分-->
+    <select id="selectMaxScoreByScoredCode" resultType="double">
+    select max(s.Score) from scoreflow s,monthsummary m
+    where s.ScoredCode=#{scoredcode}
+    and m.Year=#{year}
+    and m.Month=#{month}
+    and s.MSerialNo=m.SerialNo
+  </select>
+
+    <!--通过被评人查找最低评分-->
+    <select id="selectMinScoreByScoredCode" resultType="double">
+    select min(s.Score) from scoreflow s,monthsummary m
+    where s.ScoredCode=#{scoredcode}
+    and m.Year=#{year}
+    and m.Month=#{month}
+    and s.MSerialNo=m.SerialNo
+  </select>
+
+    <!--通过被评人code查找打分详情数据-->
+    <select id="selectFlowByScorredCode" resultMap="BaseResultMap">
+    select * from scoreflow where ScoredCode=#{scorredcode}
+  </select>
+    <!--通过评分人code查找打分详情数据-->
+    <select id="selectFlowByScorringCode" resultMap="BaseResultMap">
+    select * from scoreflow where ScorringCode=#{scorringcode}
+  </select>
+
+    <!--通过被评人code查找上一季度打分详情数据-->
+    <select id="getSingleTotalScoreAll" resultMap="BaseResultMap">
+    select s.* from scoreflow s,scoredetail d ,duty t
+    where s.SerialNo=d.FSerialNo
+    and  t.DutyCode=d.DSerialNo
+    and s.MSerialNo=#{mserialno}
+    and s.ScoreType=#{scoretype}
+    and t.DutyType=#{dutytype}
+    and t.OrderId=#{orderid}
+  </select>
+    <!--通过被评分人code查找评分关系数据-->
+    <select id="selectScoreByCodeAndType" resultMap="BaseResultMap">
+        select s.* from scoreflow s
+        <where>
+            <if test="scoredcode!=null">
+                and s.ScoredCode=#{scoredcode}
+            </if>
+            <if test="scorringcode!=null">
+                and s.ScorringCode=#{scorringcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+
+        </where>
+    </select>
+
+
+    <delete id="batchDelete" parameterType="string">
+        delete from scoreflow where SerialNo in
+        <foreach collection="list" item="scorringSerialnos" separator="," close=")" open="(">
+            #{scorringSerialnos}
+        </foreach>
+    </delete>
+
+    <!--通过被评人code查找打分详情数据-->
+    <select id="selectSerialNoByScorredCode" resultMap="BaseResultMap">
+    select SerialNo from scoreflow where ScoredCode=#{scorredcode}
+  </select>
+
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="flow" separator=";" open="" close="">
+            update scoreflow
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="flow.mserialno != null">
+                        MSerialNo = #{flow.mserialno,jdbcType=VARCHAR},
+                    </if>
+                    <if test="flow.scoredcode != null">
+                        ScoredCode = #{flow.scoredcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="flow.scorringcode != null">
+                        ScorringCode = #{flow.scorringcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="flow.scoredate != null">
+                        ScoreDate = #{flow.scoredate,jdbcType=DATE},
+                    </if>
+                    <if test="flow.scoretype != null">
+                        ScoreType = #{flow.scoretype,jdbcType=VARCHAR},
+                    </if>
+                    <if test="flow.state != null">
+                        State = #{flow.state,jdbcType=INTEGER},
+                    </if>
+                    <if test="flow.score != null">
+                        Score = #{flow.score,jdbcType=DOUBLE},
+                    </if>
+                    <if test="flow.ratio != null">
+                        Ratio = #{flow.ratio,jdbcType=DOUBLE},
+                    </if>
+                </trim>
+            </set>
+            where SerialNo = #{flow.serialno,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <insert id="batchInsert">
+        insert into scoreflow (SerialNo,MSerialNo, ScoredCode, ScorringCode, ScoreDate, ScoreType, State, Score,
+        Ratio) values
+        <foreach collection="list" item="flow" separator=",">
+            (#{flow.serialno,jdbcType=VARCHAR},
+            #{flow.mserialno,jdbcType=VARCHAR},
+            #{flow.scoredcode,jdbcType=VARCHAR},
+            #{flow.scorringcode,jdbcType=VARCHAR},
+            #{flow.scoredate,jdbcType=DATE},
+            #{flow.scoretype,jdbcType=VARCHAR},
+            #{flow.state,jdbcType=INTEGER},
+            #{flow.score,jdbcType=DOUBLE},
+            #{flow.ratio,jdbcType=DOUBLE})
+        </foreach>
+    </insert>
+
+    <!--通过评分人编号和季节编号查找当前上一季度的总分-->
+    <select id="selectFlowByMserialNoAndScorringCode" resultType="com.welb.organization_check.entity.ScoreFlow">
+    select SerialNo,Score from scoreflow where MSerialNo=#{mserialno} and ScorringCode=#{scorringcode}
+  </select>
+    <!--获取各类型的平均分即  各类型总分/总人数=平均分-->
+    <select id="getTypeAvgScore" resultType="double">
+        SELECT Sum(Score)/ COUNT(*) as typeAvgScore from 	scoreflow WHERE MSerialNo = #{mserialno}  AND ScoreType=#{scoretype}
+    </select>
+
+
+    <!--通过评分人编号和季节编号查找当前上一季度的数据量-->
+    <select id="getTotalCount" resultType="int">
+    select count(*) from scoreflow where MSerialNo like concat(#{mserialno},'%') and ScorringCode =#{scorringcode}
+  </select>
+
+
+    <!--通过用户编号查找scoreflows表的数据-->
+    <select id="findFlowsByCode" resultMap="BaseResultMap">
+        select * from scoreflow where ScoredCode=#{usercode} or ScorringCode=#{usercode}
+    </select>
+</mapper>

@@ -1,0 +1,17 @@
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${PROJECT_NAMESPACE}
+
+---
+
+apiVersion: v1
+data:
+   .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5tZWR3YXkuY2xvdWQiOnsidXNlcm5hbWUiOiJyb2JvdCIsInBhc3N3b3JkIjoiUm9ib3RAMTIzIiwiZW1haWwiOiJyb2JvdEBtZWR3YXkuY2xvdWQiLCJhdXRoIjoiY205aWIzUTZVbTlpYjNSQU1USXoifX19
+kind: Secret
+metadata:
+  name: ${PROJECT_REGISTRY_ACCESS}
+  namespace: ${PROJECT_NAMESPACE}
+type: kubernetes.io/dockerconfigjson

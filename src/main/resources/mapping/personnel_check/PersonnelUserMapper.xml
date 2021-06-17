@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.personnel_check.mapper.PersonnelUserMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.PersonnelUser">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="Moneycard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="UserName" jdbcType="VARCHAR" property="username"/>
+        <result column="DepartmentName" jdbcType="VARCHAR" property="departmentname"/>
+        <result column="StartTime" jdbcType="VARCHAR" property="starttime"/>
+        <result column="EndTime" jdbcType="VARCHAR" property="endtime"/>
+        <result column="Flag" jdbcType="VARCHAR" property="flag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id,Moneycard, UserName, DepartmentName,StartTime,EndTime,Flag
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from personnel_user
+        where MoneyCard = #{moneycard,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from personnel_user
+    where MoneyCard = #{moneycard,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.welb.personnel_check.entity.PersonnelUser">
+        insert into personnel_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="moneycard != null">
+                Moneycard,
+            </if>
+            <if test="username != null">
+                UserName,
+            </if>
+            <if test="departmentname != null">
+                DepartmentName,
+            </if>
+            <if test="starttime != null">
+                StartTime,
+            </if>
+            <if test="endtime != null">
+                EndTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                #{starttime,jdbcType=VARCHAR},
+            </if>
+            <if test="endtime != null">
+                #{endtime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.PersonnelUser">
+        update personnel_user
+        <set>
+            <if test="moneycard != null">
+                MoneyCard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                UserName = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                DepartmentName = #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                StartTime = #{starttime,jdbcType=VARCHAR},
+            </if>
+            <if test="endtime != null">
+                EndTime = #{endtime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                Flag = #{flag}
+            </if>
+        </set>
+        where  Id= #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="selectAllPersonnelByLike" resultMap="BaseResultMap">
+        select * from personnel_user
+        <where>
+            <if test="username!=null and username!=''">
+                and UserName like concat('%',#{username},'%')
+            </if>
+            <if test="departmentname!=null and departmentname!=''">
+                and DepartmentName like concat('%',#{departmentname},'%')
+            </if>
+            <if test="starttime!=null and starttime!=''">
+                and StartTime >=#{starttime}
+                and StartTime!=''
+            </if>
+            <if test="endtime!=null and endtime!=''">
+                and EndTime &lt;=#{endtime}
+                and EndTime!=''
+            </if>
+            <if test="flag!=null and flag!=''">
+                and Flag =#{flag}
+            </if>
+        </where>
+        order by DepartmentName
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+    select * from personnel_user
+  </select>
+
+
+    <select id="selectListByDeptName" resultMap="BaseResultMap">
+    select * from personnel_user where DepartmentName=#{departmentname}
+  </select>
+
+    <insert id="batchInsert">
+        insert into personnel_user( Id,Moneycard, UserName,StartTime,EndTime,Flag, DepartmentName)
+        values
+        <foreach collection="list" item="user" separator=",">
+            (#{user.id,jdbcType=INTEGER},
+            #{user.moneycard,jdbcType=VARCHAR},
+            #{user.username,jdbcType=VARCHAR},
+            #{user.starttime,jdbcType=VARCHAR},
+            #{user.endtime,jdbcType=VARCHAR},
+            #{user.flag,jdbcType=VARCHAR},
+            #{user.departmentname,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <!--通过部门名称查找数据-->
+    <select id="selectPersonnelByDepartmentName" resultMap="BaseResultMap">
+        select * from personnel_user where DepartmentName=#{departmentname}
+
+
+    </select>
+
+    <!--通过部门名称查找数据-->
+    <select id="selectListByPersonner" resultMap="BaseResultMap">
+        select * from personnel_user
+        <where>
+            <if test="username!=null and username!=''">
+                and UserName like concat('%',#{username},'%')
+            </if>
+            <if test="moneycard!=null and moneycard!=''">
+                and MoneyCard =#{moneycard}
+            </if>
+            <if test="starttime!=null and starttime!=''">
+                and StartTime >=#{starttime}
+                and StartTime!=''
+            </if>
+            <if test="endtime!=null and endtime!=''">
+                and EndTime &lt;=#{endtime}
+                and EndTime!=''
+            </if>
+            <if test="flag!=null and flag!=''">
+                and Flag =#{flag}
+            </if>
+            and DepartmentName=#{departmentname}
+        </where>
+
+    </select>
+
+    <update id="updateFlagByMoneyCard" parameterType="com.welb.personnel_check.entity.PersonnelUser">
+        update personnel_user set Flag=#{flag} ,StartTime="",EndTime="" where MoneyCard=#{moneycard}
+    </update>
+    <update id="updateFlag" parameterType="com.welb.personnel_check.entity.PersonnelUser">
+        update personnel_user set Flag=#{flag} where MoneyCard=#{moneycard}
+    </update>
+
+    <select id="selectById" resultType="com.welb.personnel_check.entity.PersonnelUser">
+        select
+        <include refid="Base_Column_List"/>
+        from personnel_user
+        where Id = #{moneycard,jdbcType=INTEGER}
+    </select>
+
+</mapper>

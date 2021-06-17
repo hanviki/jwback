@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.HistoryScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.HistoryScore" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UserName" property="username" jdbcType="VARCHAR" />
+    <result column="MoneyCard" property="moneycard" jdbcType="VARCHAR" />
+    <result column="DepartmentName" property="departmentname" jdbcType="VARCHAR" />
+    <result column="StationCode" property="stationcode" jdbcType="VARCHAR" />
+    <result column="RoleCode" property="rolecode" jdbcType="VARCHAR" />
+    <result column="ScoreStatus" property="scorestatus" jdbcType="VARCHAR" />
+    <result column="State" property="state" jdbcType="VARCHAR" />
+    <result column="Month" property="month" jdbcType="VARCHAR" />
+    <result column="Year" property="year" jdbcType="VARCHAR" />
+    <result column="AScore" property="ascore" jdbcType="DOUBLE" />
+    <result column="BScore" property="bscore" jdbcType="DOUBLE" />
+    <result column="CScore" property="cscore" jdbcType="DOUBLE" />
+    <result column="DScore" property="dscore" jdbcType="DOUBLE" />
+    <result column="TotalScore" property="totalscore" jdbcType="DOUBLE" />
+    <result column="StationName" property="stationname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, UserName, MoneyCard, DepartmentName, StationCode, RoleCode, ScoreStatus, State,
+    Month, Year, AScore, BScore, CScore, DScore, TotalScore,StationName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from history_score
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from history_score
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.HistoryScore" >
+    insert into history_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="username != null" >
+        UserName,
+      </if>
+      <if test="moneycard != null" >
+        MoneyCard,
+      </if>
+      <if test="departmentname != null" >
+        DepartmentName,
+      </if>
+      <if test="stationcode != null" >
+        StationCode,
+      </if>
+      <if test="rolecode != null" >
+        RoleCode,
+      </if>
+      <if test="scorestatus != null" >
+        ScoreStatus,
+      </if>
+      <if test="state != null" >
+        State,
+      </if>
+      <if test="month != null" >
+        Month,
+      </if>
+      <if test="year != null" >
+        Year,
+      </if>
+      <if test="ascore != null" >
+        AScore,
+      </if>
+      <if test="bscore != null" >
+        BScore,
+      </if>
+      <if test="cscore != null" >
+        CScore,
+      </if>
+      <if test="dscore != null" >
+        DScore,
+      </if>
+      <if test="totalscore != null" >
+        TotalScore,
+      </if>
+      <if test="stationname != null" >
+        StationName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="moneycard != null" >
+        #{moneycard,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null" >
+        #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="stationcode != null" >
+        #{stationcode,jdbcType=VARCHAR},
+      </if>
+      <if test="rolecode != null" >
+        #{rolecode,jdbcType=VARCHAR},
+      </if>
+      <if test="scorestatus != null" >
+        #{scorestatus,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="ascore != null" >
+        #{ascore,jdbcType=DOUBLE},
+      </if>
+      <if test="bscore != null" >
+        #{bscore,jdbcType=DOUBLE},
+      </if>
+      <if test="cscore != null" >
+        #{cscore,jdbcType=DOUBLE},
+      </if>
+      <if test="dscore != null" >
+        #{dscore,jdbcType=DOUBLE},
+      </if>
+      <if test="totalscore != null" >
+        #{totalscore,jdbcType=DOUBLE},
+      </if>
+      <if test="stationname != null" >
+        #{stationname},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.HistoryScore" >
+    update history_score
+    <set >
+      <if test="username != null" >
+        UserName = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="moneycard != null" >
+        MoneyCard = #{moneycard,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null" >
+        DepartmentName = #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="stationcode != null" >
+        StationCode = #{stationcode,jdbcType=VARCHAR},
+      </if>
+      <if test="rolecode != null" >
+        RoleCode = #{rolecode,jdbcType=VARCHAR},
+      </if>
+      <if test="scorestatus != null" >
+        ScoreStatus = #{scorestatus,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        State = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        Month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        Year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="ascore != null" >
+        AScore = #{ascore,jdbcType=DOUBLE},
+      </if>
+      <if test="bscore != null" >
+        BScore = #{bscore,jdbcType=DOUBLE},
+      </if>
+      <if test="cscore != null" >
+        CScore = #{cscore,jdbcType=DOUBLE},
+      </if>
+      <if test="dscore != null" >
+        DScore = #{dscore,jdbcType=DOUBLE},
+      </if>
+      <if test="totalscore != null" >
+        TotalScore = #{totalscore,jdbcType=DOUBLE},
+      </if>
+      <if test="stationname != null" >
+        StationName = #{stationname},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <insert id="batchInsert" >
+    insert into history_score (Id, UserName, MoneyCard,
+      DepartmentName, StationCode, RoleCode,
+    ScoreStatus, State, Month,
+      Year, AScore, BScore,
+      CScore, DScore, TotalScore,StationName
+      )
+    values
+     <foreach collection="list" item="score" separator=",">
+    (#{score.id,jdbcType=INTEGER},
+       #{score.username,jdbcType=VARCHAR},
+       #{score.moneycard,jdbcType=VARCHAR},
+       #{score.departmentname,jdbcType=VARCHAR},
+       #{score.stationcode,jdbcType=VARCHAR},
+       #{score.rolecode,jdbcType=VARCHAR},
+       #{score.scorestatus,jdbcType=VARCHAR},
+       #{score.state,jdbcType=VARCHAR},
+       #{score.month,jdbcType=VARCHAR},
+       #{score.year,jdbcType=VARCHAR},
+       #{score.ascore,jdbcType=DOUBLE},
+       #{score.bscore,jdbcType=DOUBLE},
+       #{score.cscore,jdbcType=DOUBLE},
+       #{score.dscore,jdbcType=DOUBLE},
+       #{score.totalscore,jdbcType=DOUBLE},
+       #{score.stationname}
+      )
+     </foreach>
+  </insert>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select Id,UserName from history_score where Year=#{year} and Month=#{month}
+  </select>
+
+  <delete id="batchDelete">
+    delete from history_score where Id in
+    <foreach collection="list" item="ids" open="(" close=")" separator=",">
+      #{ids}
+    </foreach>
+  </delete>
+
+  <select id="selectList" resultMap="BaseResultMap">
+    select * from history_score
+    <where>
+      <if test="username!=null and username!=''">
+        and UserName like concat('%',#{username},'%')
+      </if>
+      <if test="stationcode!=null and stationcode!=''">
+        and StationCode=#{stationcode}
+      </if>
+
+      <if test="year!=null and year!=''">
+        and Year=#{year}
+      </if>
+      <if test="month!=null and month !=''">
+        and Month=#{month}
+      </if>
+      <if test="scorestatus!=null and scorestatus !=''">
+        and ScoreStatus=#{scorestatus}
+      </if>
+      <if test="state!=null and state !=''">
+        and State=#{state}
+      </if>
+    </where>
+    order by Year+0 desc,Month+0 desc
+  </select>
+
+  <update id="batchUpdate">
+    <foreach collection="list" item="score" separator=";" open="" close="">
+      update user
+      <set >
+        <trim suffixOverrides=",">
+            <if test="score.username != null" >
+              UserName = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="score.moneycard != null" >
+              MoneyCard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="score.departmentname != null" >
+              DepartmentName = #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="score.stationcode != null" >
+              StationCode = #{stationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="score.rolecode != null" >
+              RoleCode = #{rolecode,jdbcType=VARCHAR},
+            </if>
+            <if test="score.scorestatus != null" >
+              ScoreStatus = #{scorestatus,jdbcType=VARCHAR},
+            </if>
+            <if test="score.state != null" >
+              State = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="score.month != null" >
+              Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="score.year != null" >
+              Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="score.ascore != null" >
+              AScore = #{ascore,jdbcType=DOUBLE},
+            </if>
+            <if test="score.bscore != null" >
+              BScore = #{bscore,jdbcType=DOUBLE},
+            </if>
+            <if test="score.cscore != null" >
+              CScore = #{cscore,jdbcType=DOUBLE},
+            </if>
+            <if test="score.dscore != null" >
+              DScore = #{dscore,jdbcType=DOUBLE},
+            </if>
+            <if test="score.totalscore != null" >
+              TotalScore = #{totalscore,jdbcType=DOUBLE},
+            </if>
+            <if test="score.stationname != null" >
+              StationName = #{stationname},
+            </if>
+        </trim>
+      </set>
+      where id= #{score.id}
+    </foreach>
+  </update>
+</mapper>

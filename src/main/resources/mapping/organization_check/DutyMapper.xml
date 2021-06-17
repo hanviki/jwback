@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.DutyMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.Duty">
+        <id column="DutyCode" property="dutycode" jdbcType="VARCHAR"/>
+        <result column="StationCode" property="stationcode" jdbcType="VARCHAR"/>
+        <result column="DutyName" property="dutyname" jdbcType="VARCHAR"/>
+        <result column="DutyType" property="dutytype" jdbcType="VARCHAR"/>
+        <result column="OrderId" property="orderid" jdbcType="INTEGER"/>
+        <result column="UpDutyCode" property="updutycode" jdbcType="VARCHAR"/>
+        <result column="BScore" property="bscore" jdbcType="VARCHAR"/>
+        <result column="AScore" property="ascore" jdbcType="VARCHAR"/>
+        <result column="CScore" property="cscore" jdbcType="VARCHAR"/>
+        <result column="DScore" property="dscore" jdbcType="VARCHAR"/>
+        <result column="FullStationCode" property="fullstationcode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    DutyCode, StationCode, DutyName, DutyType, OrderId, UpDutyCode, BScore,
+    AScore, CScore, DScore,FullStationCode
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from duty
+        where DutyCode = #{dutycode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from duty
+    where DutyCode = #{dutycode,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.welb.organization_check.entity.Duty">
+    insert into duty (DutyCode, StationCode, DutyName,
+      DutyType, OrderId,
+      UpDutyCode, BScore, AScore,
+      CScore, DScore,FullStationCode)
+    values (#{dutycode,jdbcType=VARCHAR}, #{stationcode,jdbcType=VARCHAR}, #{dutyname,jdbcType=VARCHAR},
+      #{dutytype,jdbcType=VARCHAR}, #{orderid,jdbcType=INTEGER},
+      #{updutycode,jdbcType=VARCHAR}, #{bscore,jdbcType=VARCHAR}, #{ascore,jdbcType=VARCHAR},
+      #{cscore,jdbcType=VARCHAR}, #{dscore,jdbcType=VARCHAR},#{fullstationcode,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Duty">
+        insert into duty
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dutycode != null">
+                DutyCode,
+            </if>
+            <if test="stationcode != null">
+                StationCode,
+            </if>
+            <if test="dutyname != null">
+                DutyName,
+            </if>
+            <if test="dutytype != null">
+                DutyType,
+            </if>
+            <if test="orderid != null">
+                OrderId,
+            </if>
+            <if test="updutycode != null">
+                UpDutyCode,
+            </if>
+            <if test="bscore != null">
+                BScore,
+            </if>
+            <if test="ascore != null">
+                AScore,
+            </if>
+            <if test="cscore != null">
+                CScore,
+            </if>
+            <if test="dscore != null">
+                DScore,
+            </if>
+            <if test="fullstationcode != null">
+                FullStationCode,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dutycode != null">
+                #{dutycode,jdbcType=VARCHAR},
+            </if>
+            <if test="stationcode != null">
+                #{stationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="dutyname != null">
+                #{dutyname,jdbcType=VARCHAR},
+            </if>
+            <if test="dutytype != null">
+                #{dutytype,jdbcType=VARCHAR},
+            </if>
+
+            <if test="orderid != null">
+                #{orderid,jdbcType=INTEGER},
+            </if>
+            <if test="updutycode != null">
+                #{updutycode,jdbcType=VARCHAR},
+            </if>
+            <if test="bscore != null">
+                #{bscore,jdbcType=VARCHAR},
+            </if>
+            <if test="ascore != null">
+                #{ascore,jdbcType=VARCHAR},
+            </if>
+            <if test="cscore != null">
+                #{cscore,jdbcType=VARCHAR},
+            </if>
+            <if test="dscore != null">
+                #{dscore,jdbcType=VARCHAR},
+            </if>
+            <if test="fullstationcode != null">
+                #{fullstationcode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.Duty">
+        update duty
+        <set>
+            <if test="stationcode != null">
+                StationCode = #{stationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="dutyname != null">
+                DutyName = #{dutyname,jdbcType=VARCHAR},
+            </if>
+            <if test="dutytype != null">
+                DutyType = #{dutytype,jdbcType=VARCHAR},
+            </if>
+            <if test="orderid != null">
+                OrderId = #{orderid,jdbcType=INTEGER},
+            </if>
+            <if test="updutycode != null">
+                UpDutyCode = #{updutycode,jdbcType=VARCHAR},
+            </if>
+            <if test="bscore != null">
+                BScore = #{bscore,jdbcType=VARCHAR},
+            </if>
+            <if test="ascore != null">
+                AScore = #{ascore,jdbcType=VARCHAR},
+            </if>
+            <if test="cscore != null">
+                CScore = #{cscore,jdbcType=VARCHAR},
+            </if>
+            <if test="dscore != null">
+                DScore = #{dscore,jdbcType=VARCHAR},
+            </if>
+            <if test="fullstationcode != null">
+                FullStationCode = #{fullstationcode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DutyCode = #{dutycode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.Duty">
+    update duty
+    set StationCode = #{stationcode,jdbcType=VARCHAR},
+      DutyName = #{dutyname,jdbcType=VARCHAR},
+      DutyType = #{dutytype,jdbcType=VARCHAR},
+      OrderId = #{orderid,jdbcType=INTEGER},
+      UpDutyCode = #{updutycode,jdbcType=VARCHAR},
+      BScore = #{bscore,jdbcType=VARCHAR},
+      AScore = #{ascore,jdbcType=VARCHAR},
+      CScore = #{cscore,jdbcType=VARCHAR},
+      DScore = #{dscore,jdbcType=VARCHAR},
+      FullStationCode=#{fullstationcode,jdbcType=VARCHAR}
+    where DutyCode = #{dutycode,jdbcType=VARCHAR}
+  </update>
+    <!--查询所有指标 包含模糊匹配查询-->
+    <select id="selectDutyAll" resultMap="BaseResultMap">
+        select duty.*,s.StationName,d.DepartmentName from duty,station s,department d
+        <where>
+            <if test="stationcode!=null and stationcode!=''">
+                and duty.StationCode=#{stationcode}
+            </if>
+            <if test="dutyname!=null and dutyname!=''">
+                and duty.DutyName like concat('%',#{dutyname},'%')
+            </if>
+            and duty.StationCode=s.StationCode and s.DepartmentCode=d.DepartmentCode
+        </where>
+        order by duty.StationCode,duty.DutyType,duty.OrderId
+    </select>
+    <!--查询指标code的最大数-->
+    <select id="selectMaxDutyCode" resultType="string">
+    select MAX(CAST(DutyCode as SIGNED INTEGER )) from duty
+  </select>
+    <!--通过stationcode查询所有指标-->
+    <select id="selectDutyByStationCode" resultMap="BaseResultMap">
+    select d.* from duty d,station s where d.StationCode=s.StationCode
+     and s.StationCode=#{stationcode}
+  </select>
+
+    <!--通过stationcode查询指标类型为基础量化指标的数据-->
+    <select id="queryJiChu" resultMap="BaseResultMap">
+        select DutyCode, DutyName ,AScore,BScore,CScore,DScore from duty
+        where DutyType='0'  and StationCode =#{stationcode}
+        order by OrderId
+    </select>
+    <!--通过stationcode查询指标类型为关键量化指标的数据-->
+    <select id="queryYiBan" resultMap="BaseResultMap">
+        select DutyCode, DutyName ,AScore,BScore,CScore,DScore from duty
+        where DutyType='1'  and StationCode =#{stationcode}
+        order by OrderId
+    </select>
+</mapper>

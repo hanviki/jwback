@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.survey.mapper.SurveyInfoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.survey.entity.SurveyInfo">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Title" property="title" jdbcType="VARCHAR"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+        <result column="PublishStatus" property="publishstatus" jdbcType="INTEGER"/>
+        <result column="Flag" property="flag" jdbcType="INTEGER"/>
+        <result column="StarStatus" property="starstatus" jdbcType="INTEGER"/>
+        <result column="Link" property="link" jdbcType="VARCHAR"/>
+        <result column="AnswerCount" property="answercount" jdbcType="INTEGER"/>
+        <result column="CreateTime" property="createtime" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="VARCHAR"/>
+        <result column="CreateUser" property="createuser" jdbcType="VARCHAR"/>
+        <result column="UpdateUser" property="updateuser" jdbcType="VARCHAR"/>
+        <result column="BatchJson" property="batchjson" jdbcType="VARCHAR"/>
+        <result column="SurveyType" property="surveytype" jdbcType="INTEGER"/>
+        <result column="PreviewId" property="previewid" jdbcType="INTEGER"/>
+
+    </resultMap>
+    <resultMap id="BaseThreeTablesResultMap" type="com.welb.survey.entity.SurveyInfo">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Title" property="title" jdbcType="VARCHAR"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+        <result column="PublishStatus" property="publishstatus" jdbcType="INTEGER"/>
+        <result column="Flag" property="flag" jdbcType="INTEGER"/>
+        <result column="StarStatus" property="starstatus" jdbcType="INTEGER"/>
+        <result column="Link" property="link" jdbcType="VARCHAR"/>
+        <result column="CreateTime" property="createtime" jdbcType="VARCHAR"/>
+        <result column="AnswerCount" property="answercount" jdbcType="INTEGER"/>
+        <result column="CreateTime" property="createtime" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="VARCHAR"/>
+        <result column="CreateUser" property="createuser" jdbcType="VARCHAR"/>
+        <result column="UpdateUser" property="updateuser" jdbcType="VARCHAR"/>
+        <result column="BatchJson" property="batchjson" jdbcType="VARCHAR"/>
+        <result column="SurveyType" property="surveytype" jdbcType="INTEGER"/>
+        <result column="PreviewId" property="previewid" jdbcType="INTEGER"/>
+        <collection property="questionList" ofType="SurveyQuestion" column="Id">
+            <id column="QId" property="id" jdbcType="INTEGER"/>
+            <result column="SurveyInfoId" property="surveyinfoid" jdbcType="INTEGER"/>
+            <result column="QuestionTitle" property="questiontitle" jdbcType="VARCHAR"/>
+            <result column="Type" property="type" jdbcType="INTEGER"/>
+            <result column="UpdateTime" property="updatetime" jdbcType="VARCHAR"/>
+            <result column="QuestionOrder" property="questionorder" jdbcType="INTEGER"/>
+            <result column="IsWrite" property="iswrite" jdbcType="INTEGER"/>
+            <collection property="optionList" ofType="SurveyOption" column="Id">
+                <id column="OId" property="id" jdbcType="INTEGER"/>
+                <result column="QuestionId" property="questionid" jdbcType="INTEGER"/>
+                <result column="OptionContent" property="optioncontent" jdbcType="VARCHAR"/>
+                <result column="OptionOrder" property="optionorder" jdbcType="INTEGER"/>
+                <result column="GapText" property="gaptext" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, Title, Content, PublishStatus, Flag, StarStatus, Link, CreateTime,AnswerCount,UpdateTime,CreateUser,UpdateUser,BatchJson,SurveyType,PreviewId
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_surveyinfo
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from survey_surveyinfo
+    where Id = #{id,jdbcType=INTEGER} and Flag=2
+  </delete>
+    <insert id="insertSelective"  useGeneratedKeys="true" keyProperty="id" parameterType="com.welb.survey.entity.SurveyInfo">
+        insert into survey_surveyinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="title != null">
+                Title,
+            </if>
+            <if test="content != null">
+                Content,
+            </if>
+            <if test="publishstatus != null">
+                PublishStatus,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+            <if test="starstatus != null">
+                StarStatus,
+            </if>
+            <if test="link != null">
+                Link,
+            </if>
+            <if test="createtime != null">
+                CreateTime,
+            </if>
+            <if test="answercount != null">
+                AnswerCount,
+            </if>
+            <if test="updatetime != null">
+                UpdateTime,
+            </if>
+            <if test="createuser != null">
+                CreateUser,
+            </if>
+            <if test="updateuser != null">
+                UpdateUser,
+            </if>
+            <if test="batchjson != null">
+                BatchJson,
+            </if>
+            <if test="surveytype != null">
+                SurveyType,
+            </if>
+            <if test="previewid != null">
+                PreviewId,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="publishstatus != null">
+                #{publishstatus,jdbcType=INTEGER},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=INTEGER},
+            </if>
+            <if test="starstatus != null">
+                #{starstatus,jdbcType=INTEGER},
+            </if>
+            <if test="link != null">
+                #{link,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=VARCHAR},
+            </if>
+            <if test="answercount != null">
+                #{answercount,jdbcType=INTEGER},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="createuser != null">
+                #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateuser != null">
+                #{updateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="batchjson != null">
+                #{batchjson,jdbcType=VARCHAR},
+            </if>
+            <if test="surveytype != null">
+                #{surveytype,jdbcType=VARCHAR},
+            </if>
+            <if test="previewid != null">
+                #{previewid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.survey.entity.SurveyInfo">
+        update survey_surveyinfo
+        <set>
+            <if test="title != null">
+                Title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                Content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="publishstatus != null">
+                PublishStatus = #{publishstatus,jdbcType=INTEGER},
+            </if>
+            <if test="flag != null">
+                Flag = #{flag,jdbcType=INTEGER},
+            </if>
+            <if test="starstatus != null">
+                StarStatus = #{starstatus,jdbcType=INTEGER},
+            </if>
+            <if test="link != null">
+                Link = #{link,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                CreateTime = #{createtime,jdbcType=VARCHAR},
+            </if>
+            <if test="answercount != null">
+                AnswerCount = #{answercount,jdbcType=INTEGER},
+            </if>
+            <if test="updatetime != null">
+                UpdateTime = #{updatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="createuser != null">
+                CreateUser = #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateuser != null">
+                UpdateUser = #{updateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="batchjson != null">
+                BatchJson = #{batchjson,jdbcType=VARCHAR},
+            </if>
+            <if test="surveytype != null">
+                SurveyType = #{surveytype,jdbcType=INTEGER},
+            </if>
+            <if test="previewid != null">
+                PreviewId = #{previewid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <!--查询全部问卷-->
+    <select id="selectSurveyInfoList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_surveyinfo
+        <where>
+            <if test="title !=null and title!=''">
+                and Title like concat('%',#{title},'%')
+            </if>
+            <if test="publishstatus !=null">
+                and PublishStatus =#{publishstatus}
+            </if>
+            <if test="surveytype !=null">
+                and SurveyType =#{surveytype}
+            </if>
+            and Flag ="1"
+        </where>
+        order by CreateTime desc
+    </select>
+
+    <!--查询全部星标问卷-->
+    <select id="selectStarSurveyInfoList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_surveyinfo
+        <where>
+            <if test="title !=null">
+                and Title like concat('%',#{title},'%')
+            </if>
+            <if test="publishstatus !=null">
+                and PublishStatus =#{publishstatus}
+            </if>
+            <if test="surveytype !=null">
+                and SurveyType =#{surveytype}
+            </if>
+            and Flag ="1"
+            and StarStatus="2"
+        </where>
+        order by CreateTime desc
+    </select>
+    <!--查询回收站所有问卷-->
+    <select id="selectRecycleSurveyInfoList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from survey_surveyinfo where Flag ="2" order by CreateTime desc
+  </select>
+
+    <!--修改删除状态-->
+    <update id="updateFlag" parameterType="java.lang.Integer">
+     update survey_surveyinfo set Flag=#{flag} where Id=#{id}
+  </update>
+
+    <!--修改发布状态 -->
+    <update id="updatePublishStatus" parameterType="java.lang.Integer">
+     update survey_surveyinfo set PublishStatus=#{publishstatus} where Id=#{id}
+  </update>
+
+
+    <!--批量永久删除问卷-->
+    <delete id="batchDelete">
+        delete from survey_surveyinfo where Id in
+        <foreach collection="list" item="ids" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--查看问卷详情/预览问卷-->
+    <select id="getDetail" resultMap="BaseThreeTablesResultMap">
+        select info.Id,info.Title,info.Content,info.BatchJson,info.PublishStatus,info.SurveyType,info.PreviewId,
+        q.Id as QId,q.SurveyInfoId,q.QuestionTitle,q.Type,q.QuestionOrder,q.IsWrite,
+        o.Id as OId,o.SurveyInfoId,o.QuestionId,o.OptionContent,o.OptionOrder,o.Gap,o.GapText
+        from survey_surveyinfo info
+        left join survey_question q on info.Id=q.SurveyInfoId
+        left join survey_option o on q.Id=o.QuestionId
+        where  info.Id=#{id}
+        order by q.QuestionOrder ,o.OptionOrder
+    </select>
+
+    <!--修改问卷数量/问卷数量加1-->
+    <update id="increaseAnswerCount" parameterType="java.lang.Integer">
+        update survey_surveyinfo set AnswerCount=(AnswerCount+1) where Id=#{id}
+    </update>
+
+    <!--修改问卷数量/问卷数量加1-->
+    <update id="decreaseAnswerCount" parameterType="java.lang.Integer">
+        update survey_surveyinfo set AnswerCount=(AnswerCount-1) where Id=#{id}
+    </update>
+
+</mapper>

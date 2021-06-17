@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.UserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.UserRoleKey" >
+    <id column="UserCode" property="usercode" jdbcType="VARCHAR" />
+    <id column="RoleCode" property="rolecode" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.welb.organization_check.entity.UserRoleKey" >
+    delete from user_role
+    where UserCode = #{usercode,jdbcType=VARCHAR}
+      and RoleCode = #{rolecode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.UserRoleKey" >
+    insert into user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="usercode != null" >
+        UserCode,
+      </if>
+      <if test="rolecode != null" >
+        RoleCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="usercode != null" >
+        #{usercode,jdbcType=VARCHAR},
+      </if>
+      <if test="rolecode != null" >
+        #{rolecode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--通过用户编号查找角色-->
+  <select id="selectUserRoleByUserCode" resultMap="BaseResultMap">
+    select * from user_role where UserCode=#{usercode}
+  </select>
+
+  <insert id="batchInsert">
+    insert  into user_role(UserCode, RoleCode) values
+    <foreach collection="list" item="role" separator=",">
+      (#{role.usercode},
+      #{role.rolecode})
+    </foreach>
+  </insert>
+
+  <delete id="batchDelete" parameterType="com.welb.organization_check.entity.UserRoleKey" >
+    delete from user_role where
+    <foreach collection="list" item="role" separator=",">
+      (#{role.usercode},
+      #{role.rolecode})
+    </foreach>
+  </delete>
+
+  <select id="selectOne" resultType="com.welb.organization_check.entity.UserRoleKey">
+    select * from user_role where UserCode=#{usercode} and  RoleCode = #{rolecode}
+  </select>
+</mapper>

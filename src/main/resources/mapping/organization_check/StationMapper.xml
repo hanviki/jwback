@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.StationMapper">
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.Station">
+    <result column="StationCode" jdbcType="VARCHAR" property="stationcode" />
+    <result column="StationName" jdbcType="VARCHAR" property="stationname" />
+    <result column="DepartmentCode" jdbcType="VARCHAR" property="departmentcode" />
+    <result column="StationDesc" jdbcType="VARCHAR" property="stationdesc" />
+    <result column="DutyDesc" jdbcType="VARCHAR" property="dutydesc" />
+    <result column="Relation1" jdbcType="VARCHAR" property="relation1" />
+    <result column="Relation2" jdbcType="VARCHAR" property="relation2" />
+    <result column="Station1" jdbcType="VARCHAR" property="station1" />
+    <result column="Station2" jdbcType="VARCHAR" property="station2" />
+    <result column="Xueli" jdbcType="VARCHAR" property="xueli" />
+    <result column="Zhiyezige" jdbcType="VARCHAR" property="zhiyezige" />
+    <result column="Peixun" jdbcType="VARCHAR" property="peixun" />
+    <result column="Gongzuojingyan" jdbcType="VARCHAR" property="gongzuojingyan" />
+    <result column="Gexingtezheng" jdbcType="VARCHAR" property="gexingtezheng" />
+    <result column="Jibenjineng" jdbcType="VARCHAR" property="jibenjineng" />
+    <result column="OrderId" jdbcType="INTEGER" property="orderid" />
+    <result column="FullDepartmentCode" jdbcType="VARCHAR" property="fulldepartmentcode" />
+  </resultMap>
+  <insert id="insert" parameterType="com.welb.organization_check.entity.Station">
+    insert into station (StationCode, StationName, DepartmentCode,
+      StationDesc, DutyDesc, Relation1,
+      Relation2, Station1, Station2,
+      Xueli, Zhiyezige, Peixun,
+      Gongzuojingyan, Gexingtezheng, Jibenjineng,
+      OrderId, FullDepartmentCode)
+    values (#{stationcode,jdbcType=VARCHAR}, #{stationname,jdbcType=VARCHAR}, #{departmentcode,jdbcType=VARCHAR},
+      #{stationdesc,jdbcType=VARCHAR}, #{dutydesc,jdbcType=VARCHAR}, #{relation1,jdbcType=VARCHAR},
+      #{relation2,jdbcType=VARCHAR}, #{station1,jdbcType=VARCHAR}, #{station2,jdbcType=VARCHAR},
+      #{xueli,jdbcType=VARCHAR}, #{zhiyezige,jdbcType=VARCHAR}, #{peixun,jdbcType=VARCHAR},
+      #{gongzuojingyan,jdbcType=VARCHAR}, #{gexingtezheng,jdbcType=VARCHAR}, #{jibenjineng,jdbcType=VARCHAR},
+      #{orderid,jdbcType=INTEGER},  #{fulldepartmentcode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Station">
+    insert into station
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stationcode != null">
+        StationCode,
+      </if>
+      <if test="stationname != null">
+        StationName,
+      </if>
+      <if test="departmentcode != null">
+        DepartmentCode,
+      </if>
+      <if test="stationdesc != null">
+        StationDesc,
+      </if>
+      <if test="dutydesc != null">
+        DutyDesc,
+      </if>
+      <if test="relation1 != null">
+        Relation1,
+      </if>
+      <if test="relation2 != null">
+        Relation2,
+      </if>
+      <if test="station1 != null">
+        Station1,
+      </if>
+      <if test="station2 != null">
+        Station2,
+      </if>
+      <if test="xueli != null">
+        Xueli,
+      </if>
+      <if test="zhiyezige != null">
+        Zhiyezige,
+      </if>
+      <if test="peixun != null">
+        Peixun,
+      </if>
+      <if test="gongzuojingyan != null">
+        Gongzuojingyan,
+      </if>
+      <if test="gexingtezheng != null">
+        Gexingtezheng,
+      </if>
+      <if test="jibenjineng != null">
+        Jibenjineng,
+      </if>
+      <if test="orderid != null">
+        OrderId,
+      </if>
+      <if test="fulldepartmentcode != null">
+        FullDepartmentCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stationcode != null">
+        #{stationcode,jdbcType=VARCHAR},
+      </if>
+      <if test="stationname != null">
+        #{stationname,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentcode != null">
+        #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="stationdesc != null">
+        #{stationdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="dutydesc != null">
+        #{dutydesc,jdbcType=VARCHAR},
+      </if>
+      <if test="relation1 != null">
+        #{relation1,jdbcType=VARCHAR},
+      </if>
+      <if test="relation2 != null">
+        #{relation2,jdbcType=VARCHAR},
+      </if>
+      <if test="station1 != null">
+        #{station1,jdbcType=VARCHAR},
+      </if>
+      <if test="station2 != null">
+        #{station2,jdbcType=VARCHAR},
+      </if>
+      <if test="xueli != null">
+        #{xueli,jdbcType=VARCHAR},
+      </if>
+      <if test="zhiyezige != null">
+        #{zhiyezige,jdbcType=VARCHAR},
+      </if>
+      <if test="peixun != null">
+        #{peixun,jdbcType=VARCHAR},
+      </if>
+      <if test="gongzuojingyan != null">
+        #{gongzuojingyan,jdbcType=VARCHAR},
+      </if>
+      <if test="gexingtezheng != null">
+        #{gexingtezheng,jdbcType=VARCHAR},
+      </if>
+      <if test="jibenjineng != null">
+        #{jibenjineng,jdbcType=VARCHAR},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="fulldepartmentcode != null">
+        #{fulldepartmentcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+    <!--删除岗位-->
+    <delete id="deleteByPrimaryKey" parameterType="com.welb.organization_check.entity.Station">
+    delete from station where StationCode=#{stationcode}
+  </delete>
+    <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.Station">
+     update station set  StationName=#{stationname}, DepartmentCode=#{departmentcode},
+      StationDesc=#{stationdesc}, DutyDesc=#{dutydesc}, Relation1=#{relation1},
+      Relation2=#{relation2}, Station1=#{station1}, Station2=#{station2},
+      Xueli=#{xueli}, Zhiyezige=#{zhiyezige}, Peixun=#{peixun},
+      Gongzuojingyan=#{gongzuojingyan}, Gexingtezheng=#{ gexingtezheng}, Jibenjineng=#{jibenjineng},
+      OrderId=#{orderid} where StationCode=#{stationcode}
+  </update>
+    <!--通过stationcode修改岗位信息-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.Station">
+        update station
+        <set>
+            <if test="stationname != null">
+                StationName = #{stationname},
+            </if>
+            <if test="departmentcode != null">
+                DepartmentCode = #{departmentcode},
+            </if>
+            <if test="stationdesc != null">
+                StationDesc = #{stationdesc},
+            </if>
+            <if test="dutydesc != null">
+                DutyDesc = #{dutydesc},
+            </if>
+            <if test="relation1 != null">
+                Relation1 = #{relation1},
+            </if>
+            <if test="relation2 != null">
+                Relation2 = #{relation2},
+            </if>
+            <if test="station1 != null">
+                Station1 = #{station1},
+            </if>
+            <if test="station2 != null">
+                Station2 = #{station2},
+            </if>
+            <if test="xueli != null">
+                Xueli = #{xueli},
+            </if>
+            <if test="zhiyezige != null">
+                Zhiyezige = #{zhiyezige},
+            </if>
+            <if test="peixun != null">
+                Peixun = #{peixun},
+            </if>
+            <if test="gongzuojingyan != null">
+                Gongzuojingyan = #{gongzuojingyan},
+            </if>
+            <if test="gexingtezheng != null">
+                Gexingtezheng = #{gexingtezheng},
+            </if>
+            <if test="jibenjineng != null">
+                Jibenjineng = #{jibenjineng},
+            </if>
+            <if test="orderid != null">
+                OrderId = #{orderid},
+            </if>
+            <if test="fulldepartmentcode != null">
+                FullDepartmentCode = #{fulldepartmentcode}
+            </if>
+        </set>
+        where StationCode=#{stationcode}
+    </update>
+    <!--通过stationcode查看岗位信息-->
+    <select id="selectByPrimaryKey" resultType="com.welb.organization_check.entity.Station">
+    select * from station where StationCode=#{stationcode}
+  </select>
+    <!--查询stationcode最大数-->
+    <select id="selectMaxStationCode" resultType="string">
+     select MAX(CAST(StationCode as SIGNED INTEGER))  from station
+    </select>
+    <!--通过部门code和岗位名称进行模糊查询-->
+    <select id="selectStationLike" resultMap="BaseResultMap">
+        select station.*,station.FullDepartmentCode,d.DepartmentName from station,department d
+        <where>
+            <if test="departmentcode!=null and departmentcode!=''">
+                and station.DepartmentCode=#{departmentcode}
+            </if>
+            <if test="stationname!=null and stationname!=''">
+                and station.StationName like concat('%',#{stationname},'%')
+            </if>
+          and d.DepartmentCode=station.DepartmentCode
+        </where>
+        order by station.StationCode+0
+    </select>
+    <!--通过部门code查找岗位-->
+    <select id="selectStationsByDeptCode" resultMap="BaseResultMap">
+        select s.DepartmentCode,s.StationCode, s.StationName,d.DepartmentName from station s,department d where s.DepartmentCode=d.DepartmentCode
+        and d.DepartmentCode=#{departmentcode}
+    </select>
+
+</mapper>

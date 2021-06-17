@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.EvaluateDeleteMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.EvaluateDelete" >
+    <id column="EvaluateId" property="evaluateid" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from evaluate_delete
+    where EvaluateId = #{evaluateid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.EvaluateDelete" >
+    insert into evaluate_delete
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="evaluateid != null" >
+        EvaluateId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="evaluateid != null" >
+        #{evaluateid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <insert id="batchInsert">
+    insert into evaluate_delete values
+    <foreach collection="list" item="reportIds" open="(" close=")" separator=",">
+      #{reportIds}
+    </foreach>
+  </insert>
+
+  <select id="selectAllEvaluateDelete" resultMap="BaseResultMap">
+    select * from evaluate_delete
+  </select>
+
+  <delete id="batchDelete">
+
+    delete from evaluate_delete where EvaluateId in
+    <foreach collection="list" item="evaluateIds" close=")" open="(" separator=",">
+      #{evaluateIds}
+    </foreach>
+   </delete>
+</mapper>

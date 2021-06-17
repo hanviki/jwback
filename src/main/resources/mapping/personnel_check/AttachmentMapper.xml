@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.personnel_check.mapper.AttachmentMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.Attachment" >
+    <id column="AttachmentCode" property="attachmentcode" jdbcType="VARCHAR" />
+    <result column="FileName" property="filename" jdbcType="VARCHAR" />
+    <result column="FilePath" property="filepath" jdbcType="VARCHAR" />
+    <result column="Year" property="year" jdbcType="VARCHAR" />
+    <result column="Month" property="month" jdbcType="VARCHAR" />
+    <result column="MoneyCard" property="moneycard" jdbcType="VARCHAR" />
+    <result column="Depart" property="depart" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    AttachmentCode, FileName, FilePath, Year, Month,MoneyCard,Depart
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from attachment
+    where AttachmentCode = #{attachmentcode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from attachment
+    where AttachmentCode = #{attachmentcode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.Attachment" >
+    insert into attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attachmentcode != null" >
+        AttachmentCode,
+      </if>
+      <if test="filename != null" >
+        FileName,
+      </if>
+      <if test="filepath != null" >
+        FilePath,
+      </if>
+      <if test="year != null" >
+        Year,
+      </if>
+      <if test="month != null" >
+        Month,
+      </if>
+      <if test="moneycard != null" >
+        MoneyCard,
+      </if>
+      <if test="depart != null" >
+        Depart,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attachmentcode != null" >
+        #{attachmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="moneycard != null" >
+        #{moneycard,jdbcType=VARCHAR},
+      </if>
+      <if test="depart != null" >
+        #{depart,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.Attachment" >
+    update attachment
+    <set >
+      <if test="filename != null" >
+        FileName = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        FilePath = #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        Year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        Month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="moneycard != null" >
+        MoneyCard = #{moneycard,jdbcType=VARCHAR},
+      </if>
+      <if test="depart != null" >
+        Depart = #{depart,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AttachmentCode = #{attachmentcode,jdbcType=VARCHAR}
+  </update>
+
+  <!--查询附件表最大数-->
+  <select id="selectMaxCode" resultType="string">
+    select MAX(CAST(AttachmentCode AS SIGNED INTEGER)) from attachment
+  </select>
+
+  <!--根据年份和季度查询附件-->
+  <select id="selectAttachmentByYearAndMonth" resultType="com.welb.personnel_check.entity.Attachment">
+    select * from attachment where Year=#{year} and Month=#{month} and MoneyCard=#{moneycard}
+  </select>
+
+  <!--根据年份季度发薪号查询附件-->
+  <select id="selectAttachmentByMoneyCard" resultType="com.welb.personnel_check.entity.Attachment">
+    select * from attachment where Year=#{year} and Month=#{month} and MoneyCard=#{moneycard}
+  </select>
+
+  <!--根据年份季度发薪号查询附件-->
+  <select id="selectAttachmentByDepart" resultType="com.welb.personnel_check.entity.Attachment">
+    select * from attachment where Year=#{year} and Month=#{month} and Depart=#{depart}
+  </select>
+
+  <select id="getAttachmentList" resultMap="BaseResultMap">
+    select a.* ,u.UserName from attachment a left join user u on a.MoneyCard=u.Moneycard
+    <where>
+      <if test="year != null and year !=''">
+        and a.Year = #{year}
+      </if>
+      <if test="month != null and month !=''" >
+        and a.Month = #{month}
+      </if>
+      <if test="moneycard != null and moneycard !=''" >
+        and a.MoneyCard = #{moneycard}
+      </if>
+      <if test="depart != null and depart !=''" >
+        and a.Depart like concat('%',#{depart},'%')
+      </if>
+      <if test="username != null and username !=''" >
+        and u.UserName like concat('%',#{username},'%')
+      </if>
+    </where>
+    order by a.Year+0 desc,a.Month+0 desc
+  </select>
+
+
+</mapper>

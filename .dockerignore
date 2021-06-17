@@ -1,0 +1,16 @@
+# workspace
+.git/
+.gitignore
+.gitlab-ci.yml
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+README.md
+Makefile
+
+# project
+deployment/
+.gitlab/
+.m2/
+.mvn/
+src/

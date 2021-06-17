@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserSummaryDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserSummaryDto">
+        <id column="SerialNo" jdbcType="VARCHAR" property="serialno"/>
+        <result column="EmployeeCode" property="employeecode" jdbcType="VARCHAR"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="Title" property="title" jdbcType="VARCHAR"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+        <result column="SavePath" property="savepath" jdbcType="VARCHAR"/>
+        <result column="FileName" property="filename" jdbcType="VARCHAR"/>
+
+        <result column="UserCode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="UserName" jdbcType="VARCHAR" property="username"/>
+        <result column="StationCode" jdbcType="VARCHAR" property="stationcode"/>
+        <result column="MoneyCard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
+
+        <result column="ScorredCode" property="scorredcode" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringcode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询所有评分汇总数据/待评分列表数据-->
+    <select id="selectUserSummary" resultMap="BaseResultMap">
+        select u.*,m.*,s.* from user u ,monthsummary m,score s
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and m.Month=#{month}
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and m.EmployeeCode=s.ScorredCode
+            and s.ScorringCode=#{scorringcode}
+            and m.State in ("6","7")
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+
+    </select>
+
+    <!--通过被评分人的code,年份，季度查找相关数据-->
+    <select id="selectUserSummaryByLike" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,
+        m.SerialNo,m.Title,m.Content,m.Year,m.Month,m.Content,m.State,m.FileName,m.SavePath,m.EmployeeCode,
+        s.StationCode,s.StationName,d.DepartmentCode,d.DepartmentName
+        from user u,monthsummary m,station s,department d
+        <where>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month!=''">
+                and m.Month=#{month}
+            </if>
+            <if test="employeecode!=null and employeecode!=''">
+                and m.EmployeeCode=#{employeecode}
+            </if>
+            and  u.UserCode=m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.StationCode=s.StationCode
+            and d.DepartmentCode=s.DepartmentCode
+        </where>
+    </select>
+
+
+    <!--查询所有评分汇总数据/待评分列表数据-->
+    <select id="selectUserSummaryBySixState" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,
+        m.SerialNo,m.Year,m.Month,m.Title,m.State,m.EmployeeCode,
+        s.* from user u ,monthsummary m,score s
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and m.Month=#{month}
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and m.EmployeeCode=s.ScorredCode
+            and s.ScorringCode=#{scorringcode}
+            and m.State ="6"
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+
+    </select>
+
+
+</mapper>
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.MessageLogMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.MessageLog">
+        <id column="LogCode" property="logcode" jdbcType="VARCHAR"/>
+        <result column="ReceiverCode" property="receivercode" jdbcType="VARCHAR"/>
+        <result column="MessageContent" property="messagecontent" jdbcType="VARCHAR"/>
+        <result column="ReceiveTime" property="receivetime" jdbcType="VARCHAR"/>
+        <result column="SenderCode" property="sendercode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    LogCode, ReceiverCode, MessageContent, ReceiveTime,SenderCode
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from message_log
+        where LogCode = #{logcode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from message_log
+    where LogCode = #{logcode,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.MessageLog">
+        insert into message_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logcode != null">
+                LogCode,
+            </if>
+            <if test="receivercode != null">
+                ReceiverCode,
+            </if>
+            <if test="messagecontent != null">
+                MessageContent,
+            </if>
+            <if test="receivetime != null">
+                ReceiveTime,
+            </if>
+            <if test="sendercode != null">
+                SenderCode,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logcode != null">
+                #{logcode,jdbcType=VARCHAR},
+            </if>
+            <if test="receivercode != null">
+                #{receivercode,jdbcType=VARCHAR},
+            </if>
+            <if test="messagecontent != null">
+                #{messagecontent,jdbcType=VARCHAR},
+            </if>
+            <if test="receivetime != null">
+                #{receivetime,jdbcType=VARCHAR},
+            </if>
+            <if test="sendercode != null">
+                #{sendercode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.MessageLog">
+        update message_log
+        <set>
+            <if test="receivercode != null">
+                ReceiverCode = #{receivercode,jdbcType=VARCHAR},
+            </if>
+            <if test="messagecontent != null">
+                MessageContent = #{messagecontent,jdbcType=VARCHAR},
+            </if>
+            <if test="receivetime != null">
+                ReceiveTime = #{receivetime,jdbcType=VARCHAR},
+            </if>
+            <if test="sendercode != null">
+                SenderCode = #{sendercode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where LogCode = #{logcode,jdbcType=VARCHAR}
+    </update>
+
+    <!--查找主键最大数-->
+    <select id="selectMaxCode" resultType="string">
+        select MAX(CAST(LogCode as SIGNED INTEGER)) from  message_log;
+  </select>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ScoreDetail" >
+    <id column="SerialNo" property="serialNo" jdbcType="INTEGER" />
+    <result column="FSerialNo" property="FSerialNo" jdbcType="VARCHAR" />
+    <result column="DSerialNo" property="DSerialNo" jdbcType="VARCHAR" />
+    <result column="Score" property="score" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SerialNo, FSerialNo, DSerialNo, Score
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from scoredetail
+    where SerialNo = #{serialNo,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from scoredetail
+    where SerialNo = #{serialNo,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.welb.organization_check.entity.ScoreDetail" >
+    insert into scoredetail (FSerialNo, DSerialNo,
+      Score)
+    values (#{FSerialNo,jdbcType=VARCHAR}, #{DSerialNo,jdbcType=VARCHAR},
+      #{score,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreDetail" >
+    insert into scoredetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="serialNo != null" >
+        SerialNo,
+      </if>
+      <if test="FSerialNo != null" >
+        FSerialNo,
+      </if>
+      <if test="DSerialNo != null" >
+        DSerialNo,
+      </if>
+      <if test="score != null" >
+        Score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=INTEGER},
+      </if>
+      <if test="FSerialNo != null" >
+        #{FSerialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="DSerialNo != null" >
+        #{DSerialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ScoreDetail" >
+    update scoredetail
+    <set >
+      <if test="FSerialNo != null" >
+        FSerialNo = #{FSerialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="DSerialNo != null" >
+        DSerialNo = #{DSerialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        Score = #{score,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SerialNo = #{serialNo,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.ScoreDetail" >
+    update scoredetail
+    set FSerialNo = #{FSerialNo,jdbcType=VARCHAR},
+      DSerialNo = #{DSerialNo,jdbcType=VARCHAR},
+      Score = #{score,jdbcType=VARCHAR}
+    where SerialNo = #{serialNo,jdbcType=INTEGER}
+  </update>
+  <select id="checkIsExit" resultMap="BaseResultMap" parameterType="com.welb.organization_check.entity.ScoreDetail" >
+    select
+    <include refid="Base_Column_List" />
+    from scoredetail
+    where FSerialNo = #{FSerialNo,jdbcType=VARCHAR} and  DSerialNo = #{DSerialNo,jdbcType=VARCHAR}
+  </select>
+  <!--通过DSerialNo和FSerialNo查找打分信息-->
+  <select id="selectDetailBySerialNo" resultMap="BaseResultMap">
+    select * from scoredetail where DSerialNo=#{dutycode} and FSerialNo=#{fserialno}
+  </select>
+
+  <!--计算各类型的基础或者关键的分-->
+  <select id="getTotalScoreByType" resultType="double">
+    select sum(d.Score) from scoreflow s,scoredetail d ,duty t
+    where s.SerialNo=d.FSerialNo
+    and  t.DutyCode=d.DSerialNo
+    and s.MSerialNo=#{mserialno}
+    and s.ScoreType=#{scoretype}
+    and t.DutyType=#{dutytype}
+  </select>
+
+  <!--计算各类型每一道的基础或者关键得分-->
+  <select id="getSingleTotalScoreByType" resultType="double">
+    select sum(d.Score) from scoreflow s,scoredetail d ,duty t
+    where s.SerialNo=d.FSerialNo
+    and  t.DutyCode=d.DSerialNo
+    and s.MSerialNo=#{mserialno}
+    and s.ScoreType=#{scoretype}
+    and t.DutyType=#{dutytype}
+    and t.OrderId=#{orderid}
+  </select>
+
+  <!--获取评分人为每一道的基础或者关键得分的人数-->
+  <select id="getCountByType" resultType="int">
+    select count(*) from scoreflow s,scoredetail d ,duty t
+    where s.SerialNo=d.FSerialNo
+    and  t.DutyCode=d.DSerialNo
+    and s.MSerialNo=#{mserialno}
+    and s.ScoreType=#{scoretype}
+    and t.DutyType=#{dutytype}
+    and t.OrderId=#{orderid}
+  </select>
+
+  <!--获取评分人为每一道的基础或者关键得分的人数-->
+  <select id="getSingleTotalScore" resultMap="BaseResultMap">
+    select d.* from scoreflow s,scoredetail d ,duty t
+    where s.SerialNo=d.FSerialNo
+    and  t.DutyCode=d.DSerialNo
+    and s.MSerialNo=#{mserialno}
+    and s.ScoreType=#{scoretype}
+    and t.DutyType=#{dutytype}
+    and t.OrderId=#{orderid}
+  </select>
+
+
+  <!--通过FSerialNo查找打分信息-->
+  <select id="selectDetailByFSerialNo" resultMap="BaseResultMap">
+    select * from scoredetail where  FSerialNo=#{fserialno}
+  </select>
+
+
+  <delete id="batchDelete">
+    delete from scoredetail where SerialNo in
+    <foreach collection="list" item="detailSerialNos" separator="," close=")" open="(">
+      #{detailSerialNos}
+    </foreach>
+  </delete>
+
+
+  <!--通过FSerialNo查找主键-->
+  <select id="selectSerialNoByFSerialNo" resultMap="BaseResultMap">
+    select SerialNo from scoredetail where  FSerialNo=#{fserialno}
+  </select>
+
+  <insert id="batchInset">
+    insert into scoredetail(SerialNo,FSerialNo, DSerialNo, Score) values
+    <foreach collection="list" item="detail"  separator=",">
+      (#{detail.serialNo,jdbcType=VARCHAR},
+      #{detail.FSerialNo,jdbcType=VARCHAR},
+      #{detail.DSerialNo,jdbcType=VARCHAR},
+      #{detail.score,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+
+  <update id="batchUpdate" parameterType="java.util.List">
+    <foreach collection="list" item="detail" separator=";" open="" close="">
+      update scoredetail
+      <set >
+        <trim suffixOverrides=",">
+        <if test="detail.FSerialNo != null" >
+          FSerialNo = #{detail.FSerialNo,jdbcType=VARCHAR},
+        </if>
+        <if test="detail.DSerialNo != null" >
+          DSerialNo = #{detail.DSerialNo,jdbcType=VARCHAR},
+        </if>
+        <if test="detail.score != null" >
+          Score = #{detail.score},
+        </if>
+        </trim>
+      </set>
+      where SerialNo = #{detail.serialNo}
+    </foreach>
+  </update>
+
+
+
+  <!--通过DSerialNo和FSerialNo批量查找打分信息-->
+  <select id="batchSelectDetailBySerialNo" resultMap="BaseResultMap">
+    select SerialNo from scoredetail where
+    <foreach collection="list" item="detail" separator="," close=")" open="(">
+      DSerialNo=#{detail.dutycode}
+      and FSerialNo=#{detail.fserialno}
+    </foreach>
+
+  </select>
+
+
+</mapper>

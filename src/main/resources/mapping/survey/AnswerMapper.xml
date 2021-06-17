@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.survey.mapper.AnswerMapper">
+    <resultMap id="BaseResultMap" type="com.welb.survey.entity.Answer">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="MoneyCard" property="moneycard" jdbcType="VARCHAR"/>
+        <result column="SurveyInfoId" property="surveyinfoid" jdbcType="INTEGER"/>
+        <result column="QuestionId" property="questionid" jdbcType="INTEGER"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+        <result column="OptionId" property="optionid" jdbcType="INTEGER"/>
+        <result column="SubmitTime" property="submittime" jdbcType="VARCHAR"/>
+        <result column="GapText" property="gaptext" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, MoneyCard, SurveyInfoId, QuestionId, Content, OptionId, SubmitTime,GapText
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from survey_answer
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from survey_answer
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insertSelective" parameterType="com.welb.survey.entity.Answer">
+        insert into survey_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="moneycard != null">
+                MoneyCard,
+            </if>
+            <if test="surveyinfoid != null">
+                SurveyInfoId,
+            </if>
+            <if test="questionid != null">
+                QuestionId,
+            </if>
+            <if test="content != null">
+                Content,
+            </if>
+            <if test="optionid != null">
+                OptionId,
+            </if>
+            <if test="submittime != null">
+                SubmitTime,
+            </if>
+            <if test="gaptext != null">
+                GapText,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="surveyinfoid != null">
+                #{surveyinfoid,jdbcType=INTEGER},
+            </if>
+            <if test="questionid != null">
+                #{questionid,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="optionid != null">
+                #{optionid,jdbcType=INTEGER},
+            </if>
+            <if test="submittime != null">
+                #{submittime,jdbcType=VARCHAR},
+            </if>
+            <if test="gaptext != null">
+                #{gaptext,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.survey.entity.Answer">
+        update survey_answer
+        <set>
+            <if test="moneycard != null">
+                MoneyCard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="surveyinfoid != null">
+                SurveyInfoId = #{surveyinfoid,jdbcType=INTEGER},
+            </if>
+            <if test="questionid != null">
+                QuestionId = #{questionid,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                Content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="optionid != null">
+                OptionId = #{optionid,jdbcType=INTEGER},
+            </if>
+            <if test="submittime != null">
+                SubmitTime = #{submittime,jdbcType=VARCHAR},
+            </if>
+            <if test="gaptext != null">
+                GapText = #{gaptext,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--批量添加题目-->
+    <insert id="batchInsert">
+        insert into survey_answer(Id, MoneyCard, SurveyInfoId, QuestionId, Content, OptionId, SubmitTime,GapText) values
+        <foreach collection="list" item="answer" separator=",">
+            (
+            #{answer.id},
+            #{answer.moneycard},
+            #{answer.surveyinfoid},
+            #{answer.questionid},
+            #{answer.content},
+            #{answer.optionid},
+            #{answer.submittime},
+            #{answer.gaptext}
+            )
+        </foreach>
+    </insert>
+
+    <!--查询答卷数量-->
+    <select id="getAnswerCount" resultType="int">
+    select COUNT(DISTINCT(MoneyCard))  from survey_answer where SurveyInfoId=#{surveyinfoid}
+  </select>
+
+    <!--查询填空详情-->
+    <select id="getPackList" resultMap="BaseResultMap">
+        select Content,SubmitTime from survey_answer
+        <where>
+            <if test="content!=null and content!=''">
+                and Content like concat('%',#{content},'%')
+            </if>
+            and QuestionId= #{questionid}
+        </where>
+
+    </select>
+
+    <!--批量删除答案-->
+    <delete id="batchDelete">
+        delete from survey_answer where Id in
+        <foreach collection="list" separator="," item="ids" close=")" open="(">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--通过问卷id查找答案集合-->
+    <select id="selectListByInfoId" resultMap="BaseResultMap">
+    select * from survey_answer where SurveyInfoId=#{surveyinfoid}
+  </select>
+
+    <!--通过选项id查找数量 -->
+    <select id="selectOptionCount" resultType="int">
+  select count(*) from survey_answer where OptionId=#{optionid}
+</select>
+
+    <!--通过问卷id和发薪号查找答案集合-->
+    <select id="selectAnswerByMoneyCardAndInfoId" resultMap="BaseResultMap">
+        select * from survey_answer where SurveyInfoId=#{surveyinfoid} and MoneyCard=#{moneycard}
+    </select>
+    <!--通过问卷id和问题id查找·数量 -->
+    <select id="selectQuestionCount" resultType="int">
+       select count(DISTINCT(MoneyCard)) from survey_answer where SurveyInfoId=#{surveyinfoid}  and  QuestionId=#{questionid}
+    </select>
+
+
+    <!--查询选项填空详情-->
+    <select id="getOptionPackList" resultMap="BaseResultMap">
+        select SubmitTime,GapText from survey_answer
+        <where>
+            <if test="content!=null and content!=''">
+                and GapText like concat('%',#{gaptext},'%')
+            </if>
+            and OptionId= #{optionid}
+            and GapText is not null
+        </where>
+
+    </select>
+</mapper>

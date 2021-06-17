@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ${PROJECT_NAMESPACE}-${PROJECT_NAME}-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 10Gi
+  nfs:
+    path: /nfs
+    server: 192.168.10.198
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+ name: ${PROJECT_NAME}-pvc
+ namespace: ${PROJECT_NAMESPACE}
+ labels:
+   app: ${PROJECT_NAME}
+spec:
+ accessModes:
+   - ReadWriteMany
+ resources:
+   requests:
+     storage: 10Gi

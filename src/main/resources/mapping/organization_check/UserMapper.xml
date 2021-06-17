@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.User">
+        <id column="UserCode" jdbcType="VARCHAR" property="usercode"/>
+        <result column="UserName" jdbcType="VARCHAR" property="username"/>
+        <result column="Password" jdbcType="VARCHAR" property="password"/>
+        <result column="UserState" jdbcType="VARCHAR" property="userstate"/>
+        <result column="Mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="Operator" jdbcType="VARCHAR" property="operator"/>
+        <result column="StationCode" jdbcType="VARCHAR" property="stationcode"/>
+        <result column="PicturePath" jdbcType="VARCHAR" property="picturepath"/>
+        <result column="Sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="Nation" jdbcType="VARCHAR" property="nation"/>
+        <result column="Education" jdbcType="VARCHAR" property="education"/>
+        <result column="Email" jdbcType="VARCHAR" property="email"/>
+        <result column="Political" jdbcType="VARCHAR" property="political"/>
+        <result column="MoneyCard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="BranchCode" jdbcType="VARCHAR" property="branchcode"/>
+        <result column="FullBranchCode" jdbcType="VARCHAR" property="fullbranchcode"/>
+        <result column="ARatio" jdbcType="DOUBLE" property="aratio"/>
+        <result column="BRatio" jdbcType="DOUBLE" property="bratio"/>
+        <result column="CRatio" jdbcType="DOUBLE" property="cratio"/>
+        <result column="DRatio" jdbcType="DOUBLE" property="dratio"/>
+        <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
+        <result column="RoleType" jdbcType="VARCHAR" property="roletype"/>
+        <result column="Flag" jdbcType="VARCHAR" property="flag"/>
+        <result column="RoleCode" jdbcType="VARCHAR" property="rolecode"/>
+        <result column="IsAgent" jdbcType="VARCHAR" property="isagent"/>
+        <association property="rolecode" javaType="com.welb.organization_check.entity.Role">
+            <id column="RoleCode" jdbcType="VARCHAR" property="rolecode"/>
+            <result column="RoleName" jdbcType="VARCHAR" property="rolename"/>
+            <result column="RoleDescription" jdbcType="VARCHAR" property="roledescription"/>
+        </association>
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.welb.organization_check.entity.User">
+        <id column="UserCode" jdbcType="VARCHAR" property="usercode"/>
+        <result column="UserName" jdbcType="VARCHAR" property="username"/>
+        <result column="Password" jdbcType="VARCHAR" property="password"/>
+        <result column="UserState" jdbcType="VARCHAR" property="userstate"/>
+        <result column="Mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="Operator" jdbcType="VARCHAR" property="operator"/>
+        <result column="StationCode" jdbcType="VARCHAR" property="stationcode"/>
+        <result column="PicturePath" jdbcType="VARCHAR" property="picturepath"/>
+        <result column="Sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="Nation" jdbcType="VARCHAR" property="nation"/>
+        <result column="Education" jdbcType="VARCHAR" property="education"/>
+        <result column="Email" jdbcType="VARCHAR" property="email"/>
+        <result column="Political" jdbcType="VARCHAR" property="political"/>
+        <result column="MoneyCard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="BranchCode" jdbcType="VARCHAR" property="branchcode"/>
+        <result column="FullBranchCode" jdbcType="VARCHAR" property="fullbranchcode"/>
+        <result column="ARatio" jdbcType="DOUBLE" property="aratio"/>
+        <result column="BRatio" jdbcType="DOUBLE" property="bratio"/>
+        <result column="CRatio" jdbcType="DOUBLE" property="cratio"/>
+        <result column="DRatio" jdbcType="DOUBLE" property="dratio"/>
+        <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
+        <result column="RoleType" jdbcType="VARCHAR" property="roletype"/>
+        <result column="Flag" jdbcType="VARCHAR" property="flag"/>
+        <result column="IsAgent" jdbcType="VARCHAR" property="isagent"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    UserCode, UserName, Password, UserState, Mobile, Operator, StationCode, PicturePath,
+    Sex, Nation, Education, Email, Political, MoneyCard, BranchCode, ARatio, BRatio,
+    CRatio, DRatio,FullStationCode,FullBranchCode,Flag,RoleType,IsAgent
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where UserCode = #{usercode,jdbcType=VARCHAR}
+        and Flag="0"
+        and RoleType="0"
+        -- and UserState="1"
+    </select>
+
+    <select id="selectAllUsers" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where Flag="0"
+        and RoleType="0"
+        -- and UserState="1"
+    </select>
+
+    <select id="getUserByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where UserCode = #{usercode,jdbcType=VARCHAR}
+        and Flag="0"
+    </select>
+
+    <select id="selectByMoneyCard" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where MoneyCard = #{moneycard,jdbcType=VARCHAR}
+        and Flag="0"
+        and UserState="1"
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where UserCode = #{usercode,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="usercode"
+            parameterType="com.welb.organization_check.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="usercode != null">
+                UserCode,
+            </if>
+            <if test="username != null">
+                UserName,
+            </if>
+            <if test="password != null">
+                Password,
+            </if>
+            <if test="userstate != null">
+                UserState,
+            </if>
+            <if test="mobile != null">
+                Mobile,
+            </if>
+            <if test="operator != null">
+                Operator,
+            </if>
+            <if test="stationcode != null">
+                StationCode,
+            </if>
+            <if test="picturepath != null">
+                PicturePath,
+            </if>
+            <if test="sex != null">
+                Sex,
+            </if>
+            <if test="nation != null">
+                Nation,
+            </if>
+            <if test="education != null">
+                Education,
+            </if>
+            <if test="email != null">
+                Email,
+            </if>
+            <if test="political != null">
+                Political,
+            </if>
+            <if test="moneycard != null">
+                MoneyCard,
+            </if>
+            <if test="branchcode != null">
+                BranchCode,
+            </if>
+            <if test="aratio != null">
+                ARatio,
+            </if>
+            <if test="bratio != null">
+                BRatio,
+            </if>
+            <if test="cratio != null">
+                CRatio,
+            </if>
+            <if test="dratio != null">
+                DRatio,
+            </if>
+            <if test="fullstationcode != null">
+                FullStationCode,
+            </if>
+            <if test="fullbranchcode != null">
+                FullBranchCode,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+            <if test="roletype != null">
+                RoleType,
+            </if>
+            <if test="isagent != null">
+                IsAgent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="usercode != null">
+                #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userstate != null">
+                #{userstate,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="stationcode != null">
+                #{stationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="picturepath != null">
+                #{picturepath,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="education != null">
+                #{education,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="political != null">
+                #{political,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="branchcode != null">
+                #{branchcode,jdbcType=VARCHAR},
+            </if>
+            <if test="aratio != null">
+                #{aratio,jdbcType=DOUBLE},
+            </if>
+            <if test="bratio != null">
+                #{bratio,jdbcType=DOUBLE},
+            </if>
+            <if test="cratio != null">
+                #{cratio,jdbcType=DOUBLE},
+            </if>
+            <if test="dratio != null">
+                #{dratio,jdbcType=DOUBLE},
+            </if>
+            <if test="fullstationcode != null">
+                #{fullstationcode},
+            </if>
+            <if test="fullbranchcode != null">
+                #{fullbranchcode},
+            </if>
+            <if test="flag != null">
+                #{flag},
+            </if>
+            <if test="roletype != null">
+                #{roletype,jdbcType=VARCHAR},
+            </if>
+            <if test="isagent != null">
+                #{isagent,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <insert id="add"
+            parameterType="com.welb.organization_check.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="usercode != null">
+                UserCode,
+            </if>
+            <if test="username != null">
+                UserName,
+            </if>
+            <if test="password != null">
+                Password,
+            </if>
+            <if test="userstate != null">
+                UserState,
+            </if>
+            <if test="mobile != null">
+                Mobile,
+            </if>
+            <if test="operator != null">
+                Operator,
+            </if>
+            <if test="stationcode != null">
+                StationCode,
+            </if>
+            <if test="picturepath != null">
+                PicturePath,
+            </if>
+            <if test="sex != null">
+                Sex,
+            </if>
+            <if test="nation != null">
+                Nation,
+            </if>
+            <if test="education != null">
+                Education,
+            </if>
+            <if test="email != null">
+                Email,
+            </if>
+            <if test="political != null">
+                Political,
+            </if>
+            <if test="moneycard != null">
+                MoneyCard,
+            </if>
+            <if test="branchcode != null">
+                BranchCode,
+            </if>
+            <if test="aratio != null">
+                ARatio,
+            </if>
+            <if test="bratio != null">
+                BRatio,
+            </if>
+            <if test="cratio != null">
+                CRatio,
+            </if>
+            <if test="dratio != null">
+                DRatio,
+            </if>
+            <if test="fullstationcode != null">
+                FullStationCode,
+            </if>
+            <if test="fullbranchcode != null">
+                FullBranchCode,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+            <if test="roletype != null">
+                RoleType,
+            </if>
+            <if test="isagent != null">
+                IsAgent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="usercode != null">
+                #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userstate != null">
+                #{userstate,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="stationcode != null">
+                #{stationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="picturepath != null">
+                #{picturepath,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="education != null">
+                #{education,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="political != null">
+                #{political,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="branchcode != null">
+                #{branchcode,jdbcType=VARCHAR},
+            </if>
+            <if test="aratio != null">
+                #{aratio,jdbcType=DOUBLE},
+            </if>
+            <if test="bratio != null">
+                #{bratio,jdbcType=DOUBLE},
+            </if>
+            <if test="cratio != null">
+                #{cratio,jdbcType=DOUBLE},
+            </if>
+            <if test="dratio != null">
+                #{dratio,jdbcType=DOUBLE},
+            </if>
+            <if test="fullstationcode != null">
+                #{fullstationcode},
+            </if>
+            <if test="fullbranchcode != null">
+                #{fullbranchcode},
+            </if>
+            <if test="flag != null">
+                #{flag},
+            </if>
+            <if test="roletype != null">
+                #{roletype,jdbcType=VARCHAR},
+            </if>
+            <if test="isagent != null">
+                #{isagent,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.User">
+        update user
+        <set>
+            <if test="username != null">
+                UserName = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                Password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userstate != null">
+                UserState = #{userstate,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                Mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null">
+                Operator = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="stationcode != null">
+                StationCode = #{stationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="picturepath != null">
+                PicturePath = #{picturepath,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                Sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                Nation = #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="education != null">
+                Education = #{education,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                Email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="political != null">
+                Political = #{political,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                MoneyCard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="branchcode != null">
+                BranchCode = #{branchcode,jdbcType=VARCHAR},
+            </if>
+            <if test="aratio != null">
+                ARatio = #{aratio,jdbcType=DOUBLE},
+            </if>
+            <if test="bratio != null">
+                BRatio = #{bratio,jdbcType=DOUBLE},
+            </if>
+            <if test="cratio != null">
+                CRatio = #{cratio,jdbcType=DOUBLE},
+            </if>
+            <if test="dratio != null">
+                DRatio = #{dratio,jdbcType=DOUBLE},
+            </if>
+            <if test="fullstationcode != null">
+                FullStationCode = #{fullstationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="fullbranchcode != null">
+                FullBranchCode = #{fullbranchcode,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                Flag = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="roletype != null">
+                RoleType = #{roletype,jdbcType=VARCHAR},
+            </if>
+            <if test="isagent != null">
+                IsAgent = #{isagent,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where UserCode = #{usercode,jdbcType=VARCHAR}
+    </update>
+
+    <select id="findUserByUserCode" resultType="com.welb.organization_check.entity.User">
+    select u.*,r.* from user u,role r,user_role ur
+    where u.UserCode=ur.UserCode
+    and ur.RoleCode =r.RoleCode
+    and u.UserCode=#{usercode}
+    and u.Flag="0"
+    and u.UserState="1"
+    and u.RoleType="0"
+    and r.RoleCode in("100","150","200","300","50")
+  </select>
+    <!--修改用户密码-->
+    <update id="updateUserPassword" parameterType="com.welb.organization_check.entity.User">
+    update user set Password=#{password} where UserCode=#{usercode}
+  </update>
+    <!--查找用户code的最大数-->
+    <select id="selectMaxUserCode" resultType="string">
+    select MAX(CAST(UserCode AS SIGNED INTEGER)) from user
+  </select>
+    <!--查找所有用户-->
+    <select id="selectUserAll" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
+        u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
+        u.BRatio,u.CRatio, u.DRatio,u.FullBranchCode
+        from user u,role r,user_role ur
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="usercode!=null and usercode!=''">
+                and u.UserCode=#{usercode}
+            </if>
+            <if test="userstate!=null and userstate!=''">
+                and u.UserState=#{userstate}
+            </if>
+            <if test="roletype!=null and roletype!=''">
+                and u.RoleType=#{roletype}
+            </if>
+            and u.Flag ="0"
+            and u.RoleType="0"
+            -- and u.UserState="1"
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and r.RoleCode in("100","150","200","300","50")
+        </where>
+        order by u.UserCode+0
+    </select>
+
+    <!--通过stationcode查找用户-->
+    <select id="selectUserByStationCode" resultMap="BaseResultMap">
+        select u.UserName,u.UserCode,u.StationCode
+        from user u,station s
+        where u.StationCode=s.StationCode
+        and s.StationCode=#{stationcode}
+        and u.Flag="0"
+        and u.UserState="1"
+        and u.RoleType="0"
+    </select>
+
+    <select id="selectUserByDepartmentCode" resultMap="BaseResultMap">
+        select u.* ,d.DepartmentCode from user u,station s,department d
+        where u.StationCode=s.StationCode
+        AND d.DepartmentCode=s.DepartmentCode
+        and d.DepartmentCode=#{departmentcode}
+        and u.Flag="0"
+        and u.UserState="1"
+        and u.RoleType="0"
+    </select>
+
+    <!--查找所有用户-->
+    <select id="findUserAll" resultMap="BaseResultMap1">
+       select u.UserCode,u.Mobile,u.UserName,r.RoleCode,ur.* from user u,role r,user_role ur
+       where u.UserCode=ur.UserCode
+       and r.RoleCode=ur.RoleCode
+       and ur.RoleCode in("100","150","200","300","50")
+       and u.Flag="0"
+       and u.UserState="1"
+       and u.RoleType="0"
+    </select>
+    <!--查找所有用户-->
+    <select id="findUserAllBySummary" resultMap="BaseResultMap1">
+       select u.UserCode,u.Mobile,u.UserName,r.RoleCode,ur.* from user u,role r,user_role ur
+       where u.UserCode=ur.UserCode
+       and r.RoleCode=ur.RoleCode
+       and ur.RoleCode in("100","200","300","50")
+       and u.Flag="0"
+       and u.UserState="1"
+       and u.RoleType="0"
+    </select>
+
+    <select id="findFlagUsers" resultMap="BaseResultMap">
+        select UserCode,UserName from user where Flag="1"
+    </select>
+
+    <select id="findOne" resultType="com.welb.organization_check.entity.User">
+        select Flag from user where UserCode=#{usercode}
+    </select>
+
+
+    <select id="findRaterUserByUserCode" resultType="com.welb.organization_check.entity.User">
+    select u.* from user u
+    where  u.UserCode=#{usercode}
+    and u.Flag="0"
+    and u.UserState="1"
+  </select>
+
+
+    <select id="selectPersonnelUserByMoneyCard" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,p.Mone from user u,personnel_user p
+        where u.UserCode=R.UserCode
+        AND  p.MoneyCard=u.MoneyCard
+        and u.Flag="0"
+        and u.UserState="1"
+    </select>
+
+    <delete id="deleteUserByMoneyCard">
+      delete from user where MoneyCard=#{moneycard} and Flag="0" and UserState="1"
+    </delete>
+
+
+    <select id="findUserByOne" resultType="com.welb.organization_check.entity.User">
+    select u.* from user u
+    where u.UserCode=#{usercode}
+    and u.Flag="0"
+    and u.UserState="1"
+    </select>
+
+    <select id="getUserList" resultMap="BaseResultMap">
+    select d.DepartmentName ,u.*,s.StationName from station s ,department d ,user u,user_role ur
+    where s.DepartmentCode=d.DepartmentCode
+    and u.MoneyCard !=#{moneycard}
+    and u.StationCode=s.StationCode
+    and u.UserCode=ur.UserCode
+    and ur.RoleCode in("100","200","300","400","50")
+    and d.DepartmentCode = (select DepartmentCode from department where DepartmentName=#{departmentname})
+  </select>
+
+
+    <!--查找打分用户-->
+    <select id="selectGradeUserList" resultMap="BaseResultMap">
+    select u.*  from user u,user_role ur
+     where  u.UserCode=ur.UserCode
+     and ur.RoleCode ="150"
+     and u.Flag="0"
+     and u.UserState="1"
+    </select>
+
+    <select id="getUserByMoneyCard" resultType="com.welb.organization_check.entity.User">
+        select UserCode,UserName,Mobile,UserState,MoneyCard from user where Moneycard=#{moneycard} and Flag="0"
+    </select>
+
+
+    <select id="selectUserByMoneyCard" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where MoneyCard = #{moneycard,jdbcType=VARCHAR}
+        and Flag="0"
+    </select>
+</mapper>

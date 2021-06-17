@@ -1,0 +1,28 @@
+# #################################################
+# https://docs.gitlab.com/ee/ci/
+# https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+# https://docs.gitlab.com/ee/ci/yaml/README.html
+# #################################################
+
+# include:
+#  - project: "template/gitlab-ci"
+#    file: "/package/build-maven-artifacts.yml"
+#    ref: master
+
+# include:
+#  - project: "template/gitlab-ci"
+#    file: "/package/build-maven-docker.yml"
+#    ref: master
+
+include:
+  - project: "template/gitlab-ci"
+    file: "/package/deploy-maven-kubernetes.yml"
+    ref: master
+
+# include:
+#   - project: "template/gitlab-ci"
+#     file: "/package/build-maven-docker.yml"
+#     ref: lite
+
+variables:
+  MAVEN_BUILD_OPTS: "-Dmaven.test.skip=true"

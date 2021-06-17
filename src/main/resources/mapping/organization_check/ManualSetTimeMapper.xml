@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ManualSetTimeMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ManualSetTime" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="Year" property="year" jdbcType="VARCHAR" />
+    <result column="Month" property="month" jdbcType="VARCHAR" />
+    <result column="Time" property="time" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="VARCHAR" />
+    <result column="UpdateTime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="CreateMoneyCard" property="createmoneycard" jdbcType="VARCHAR" />
+    <result column="UpdateMoneyCard" property="updatemoneycard" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, Year, Month, Time, CreateTime, UpdateTime, CreateMoneyCard, UpdateMoneyCard
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from manual_set_time
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manual_set_time
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ManualSetTime" >
+    insert into manual_set_time
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="year != null" >
+        Year,
+      </if>
+      <if test="month != null" >
+        Month,
+      </if>
+      <if test="time != null" >
+        Time,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+      <if test="createmoneycard != null" >
+        CreateMoneyCard,
+      </if>
+      <if test="updatemoneycard != null" >
+        UpdateMoneyCard,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="createmoneycard != null" >
+        #{createmoneycard,jdbcType=VARCHAR},
+      </if>
+      <if test="updatemoneycard != null" >
+        #{updatemoneycard,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ManualSetTime" >
+    update manual_set_time
+    <set >
+      <if test="year != null" >
+        Year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        Month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        Time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="createmoneycard != null" >
+        CreateMoneyCard = #{createmoneycard,jdbcType=VARCHAR},
+      </if>
+      <if test="updatemoneycard != null" >
+        UpdateMoneyCard = #{updatemoneycard,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateTimeByYearAndMonth"  parameterType="com.welb.organization_check.entity.ManualSetTime" >
+    update manual_set_time
+    <set >
+    <if test="time != null" >
+      Time = #{time,jdbcType=VARCHAR},
+    </if>
+    <if test="updatetime != null" >
+      UpdateTime = #{updatetime,jdbcType=VARCHAR},
+    </if>
+    <if test="updatemoneycard != null" >
+      UpdateMoneyCard = #{updatemoneycard,jdbcType=VARCHAR},
+    </if>
+  </set>
+    where Year = #{year} and Month=#{month}
+  </update>
+
+  <select id="selectManualByYearAndMonth" resultType="com.welb.organization_check.entity.ManualSetTime">
+    select * from manual_set_time where Year=#{year} and Month=#{month}
+  </select>
+
+</mapper>

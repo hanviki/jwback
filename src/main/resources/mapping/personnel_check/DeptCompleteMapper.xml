@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.personnel_check.mapper.DeptCompleteMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.DeptComplete">
+        <id column="CompleteCode" property="completecode" jdbcType="VARCHAR"/>
+        <result column="DeptName" property="deptname" jdbcType="VARCHAR"/>
+        <result column="ExcelComplete" property="excelcomplete"/>
+        <result column="PdfCompleteYear" property="pdfcompleteyear"/>
+        <result column="PdfCompleteMonth" property="pdfcompletemonth"/>
+        <result column="Complete" property="complete"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="MoneyCard" property="moneycard" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    CompleteCode, DeptName, ExcelComplete, PdfCompleteYear, PdfCompleteMonth, Complete, MoneyCard,
+    Year, Month
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from dept_complete
+        where CompleteCode = #{completecode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dept_complete
+    where CompleteCode = #{completecode,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.DeptComplete">
+        insert into dept_complete
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="completecode != null">
+                CompleteCode,
+            </if>
+            <if test="deptname != null">
+                DeptName,
+            </if>
+            <if test="excelcomplete != null">
+                ExcelComplete,
+            </if>
+            <if test="pdfcompleteyear != null">
+                PdfCompleteYear,
+            </if>
+            <if test="pdfcompletemonth != null">
+                PdfCompleteMonth,
+            </if>
+            <if test="complete != null">
+                Complete,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="month != null">
+                Month,
+            </if>
+            <if test="moneycard != null">
+                MoneyCard,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="completecode != null">
+                #{completecode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptname != null">
+                #{deptname,jdbcType=VARCHAR},
+            </if>
+            <if test="excelcomplete != null">
+                #{excelcomplete},
+            </if>
+            <if test="pdfcompleteyear != null">
+                #{pdfcompleteyear},
+            </if>
+            <if test="pdfcompletemonth != null">
+                #{pdfcompletemonth},
+            </if>
+            <if test="complete != null">
+                #{complete},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.DeptComplete">
+        update dept_complete
+        <set>
+            <if test="deptname != null">
+                DeptName = #{deptname,jdbcType=VARCHAR},
+            </if>
+            <if test="excelcomplete != null">
+                ExcelComplete = #{excelcomplete},
+            </if>
+            <if test="pdfcompleteyear != null">
+                PdfCompleteYear = #{pdfcompleteyear},
+            </if>
+            <if test="pdfcompletemonth != null">
+                PdfCompleteMonth = #{pdfcompletemonth},
+            </if>
+            <if test="complete != null">
+                Complete = #{complete},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                MoneyCard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CompleteCode = #{completecode,jdbcType=VARCHAR}
+    </update>
+
+    <!--查找主键最大数-->
+    <select id="selectMaxCode" resultType="string">
+    select MAX(CAST(CompleteCode as SIGNED INTEGER )) from dept_complete
+  </select>
+
+    <!--查询所有的部门完成情况数据-->
+    <select id="selectAllDeptComplete" resultMap="BaseResultMap">
+
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        @rownum := @rownum + 1 AS lineNumber,
+        CompleteCode,
+        DeptName,
+        ExcelComplete,
+        PdfCompleteYear,
+        PdfCompleteMonth,
+        Complete,
+        MoneyCard,
+        YEAR,
+        MONTH
+        FROM
+        dept_complete,
+        ( SELECT @rownum := 0 ) r
+        ORDER BY
+        Complete,
+        ExcelComplete,
+--         PdfCompleteMonth,
+        PdfCompleteYear ASC
+        ) a
+        <where>
+            <if test="year!=null and year !=''">
+                and Year =#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and Month =#{month}
+            </if>
+
+            <if test="deptname!=null and deptname !=''">
+                and DeptName like concat('%',#{deptname},'%')
+            </if>
+            and (a.lineNumber &gt;= (#{pageNum} - 1) * #{pageSize} + 1
+            and a.lineNumber &lt;=#{pageNum} * #{pageSize})
+        </where>
+
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dept_complete
+        <where>
+            <if test="year!=null and year !=''">
+                and Year =#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and Month =#{month}
+            </if>
+
+            <if test="deptname!=null and deptname !=''">
+                and DeptName like concat('%',#{deptname},'%')
+            </if>
+        </where>
+        order by
+        Year+0 desc,
+        Month+0 desc,
+        Complete,
+        ExcelComplete,
+--         PdfCompleteMonth,
+        PdfCompleteYear,CompleteCode ASC
+    </select>
+
+    <select id="selectSingleDept" resultType="com.welb.personnel_check.entity.DeptComplete">
+        select * from dept_complete
+        where Year=#{year} and Month=#{month} and MoneyCard = #{moneycard}
+    </select>
+    <select id="selectByDepart" resultType="com.welb.personnel_check.entity.DeptComplete">
+        select * from dept_complete
+        where Year=#{year} and Month=#{month} and DeptName = #{deptname}
+    </select>
+
+
+    <delete id="deleteByYearAndMonth" parameterType="com.welb.personnel_check.entity.DeptComplete">
+        delete from dept_complete where Year=#{year} and Month=#{month}
+    </delete>
+
+
+    <select id="getNoImportExcelAndPdf" resultMap="BaseResultMap">
+        (select d.*,r.ScorringName,r.LeaderPhone from dept_complete d,rater r
+        <where>
+            <if test="deptname!=null and deptname !=''">
+                and d.DeptName like concat('%',#{deptname},'%')
+            </if>
+            <if test="scorringname!=null and scorringname !=''">
+                and r.ScorringName like concat('%',#{scorringname},'%')
+            </if>
+            and d.MoneyCard=r.ScorringCode
+            and d.ExcelComplete =2
+            and d.Year=#{year}
+            and d.Month=#{month}
+            and r.Flag ="0"
+        </where>
+        )
+
+        UNION
+        (select d.*,r.ScorringName,r.LeaderPhone from dept_complete d,rater r
+        <where>
+            <if test="deptname!=null and deptname !=''">
+                and d.DeptName like concat('%',#{deptname},'%')
+            </if>
+            <if test="scorringname!=null and scorringname !=''">
+                and r.ScorringName like concat('%',#{scorringname},'%')
+            </if>
+            and d.MoneyCard=r.ScorringCode
+            and d.PdfCompleteMonth =2
+            and d.Year=#{year}
+            and d.Month=#{month}
+            and r.Flag ="0"
+        </where>
+        )
+        order by ExcelComplete ,PdfCompleteMonth ,CompleteCode
+
+    </select>
+
+</mapper>

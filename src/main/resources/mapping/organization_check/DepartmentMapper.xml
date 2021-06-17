@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.DepartmentMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.Department">
+        <id column="DepartmentCode" property="departmentcode" jdbcType="VARCHAR"/>
+        <result column="DepartmentName" property="departmentname" jdbcType="VARCHAR"/>
+        <result column="UpDepartmentCode" property="updepartmentcode" jdbcType="VARCHAR"/>
+        <result column="DepartmentDesc" property="departmentdesc" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    DepartmentCode, DepartmentName, UpDepartmentCode, DepartmentDesc
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from department
+        where DepartmentCode = #{departmentcode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from department
+    where DepartmentCode = #{departmentcode}
+  </delete>
+    <insert id="insert" parameterType="com.welb.organization_check.entity.Department">
+    insert into department (DepartmentCode, DepartmentName, UpDepartmentCode,
+      DepartmentDesc)
+    values (#{departmentcode,jdbcType=VARCHAR}, #{departmentname,jdbcType=VARCHAR}, #{updepartmentcode,jdbcType=VARCHAR},
+      #{departmentdesc,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Department">
+        insert into department
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="departmentcode != null">
+                DepartmentCode,
+            </if>
+            <if test="departmentname != null">
+                DepartmentName,
+            </if>
+            <if test="updepartmentcode != null">
+                UpDepartmentCode,
+            </if>
+            <if test="departmentdesc != null">
+                DepartmentDesc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="departmentcode != null">
+                #{departmentcode,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="updepartmentcode != null">
+                #{updepartmentcode,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentdesc != null">
+                #{departmentdesc,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.Department">
+        update department
+        <set>
+            <if test="departmentname != null">
+                DepartmentName = #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="updepartmentcode != null">
+                UpDepartmentCode = #{updepartmentcode,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentdesc != null">
+                DepartmentDesc = #{departmentdesc,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DepartmentCode = #{departmentcode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.Department">
+    update department
+    set DepartmentName = #{departmentname,jdbcType=VARCHAR},
+      UpDepartmentCode = #{updepartmentcode,jdbcType=VARCHAR},
+      DepartmentDesc = #{departmentdesc,jdbcType=VARCHAR}
+    where DepartmentCode = #{departmentcode,jdbcType=VARCHAR}
+  </update>
+    <!--查询主键最大值-->
+    <select id="selectMaxDepartmentCode" resultType="string">
+     select MAX(CAST(DepartmentCode as SIGNED INTEGER))  from department
+  </select>
+    <!--查找所有部门 包含模糊匹配呢查询-->
+    <select id="selectDepartmentTrees" resultType="com.welb.organization_check.entity.Department">
+        select * from department
+        <where>
+            <if test="updepartmentcode!=null and updepartmentcode!=''">
+                UpDepartmentCode=#{updepartmentcode}
+            </if>
+            <if test="departmentname != null and departmentname!=''">
+                and DepartmentName like concat('%', #{departmentname},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

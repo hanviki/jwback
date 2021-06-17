@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.MessageTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.MessageTemplate">
+        <result column="TemplateCode" property="templatecode" jdbcType="VARCHAR"/>
+        <result column="TemplateName" property="templatename" jdbcType="VARCHAR"/>
+        <result column="TemplateContent" property="templatecontent" jdbcType="VARCHAR"/>
+        <result column="Flag" property="flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    TemplateCode, TemplateName, TemplateContent,Flag
+  </sql>
+    <!--添加模板-->
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.MessageTemplate">
+        insert into message_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templatecode != null">
+                TemplateCode,
+            </if>
+            <if test="templatename != null">
+                TemplateName,
+            </if>
+            <if test="templatecontent != null">
+                TemplateContent,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templatecode != null">
+                #{templatecode,jdbcType=VARCHAR},
+            </if>
+            <if test="templatename != null">
+                #{templatename,jdbcType=VARCHAR},
+            </if>
+            <if test="templatecontent != null">
+                #{templatecontent,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--通过主键修改短信模板-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.MessageTemplate">
+        update message_template
+        <set>
+            <if test="templatename!=null">
+                TemplateName=#{templatename},
+            </if>
+            <if test="templatecontent!=null">
+                TemplateContent=#{templatecontent},
+            </if>
+            <if test="flag!=null">
+                Flag=#{flag},
+            </if>
+        </set>
+        where TemplateCode=#{templatecode}
+    </update>
+    <!--通过主键查找短信模板-->
+    <select id="selectTemplateByPrimaryKey" resultType="com.welb.organization_check.entity.MessageTemplate">
+        select
+        <include refid="Base_Column_List"/>
+        from message_template
+        where TemplateCode=#{templatecode}
+    </select>
+    <!--通过主键删除短信模板-->
+    <delete id="deleteByPrimaryKey" parameterType="string">
+    delete from message_template where TemplateCode=#{templatecode}
+  </delete>
+    <!--查询所有的短信模板 包括多条件查询-->
+    <select id="selectAllTemplate" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from message_template
+        <where>
+            <if test="templatename!=null and templatename!=''">
+                and TemplateName like concat('%',#{templatename},'%')
+            </if>
+            <if test="templatecontent!=null and templatecontent!=''">
+                and TemplateContent like concat('%',#{templatecontent},'%')
+            </if>
+            and Flag=#{flag}
+        </where>
+    </select>
+    <!--查询短信模板表主键的最大数-->
+    <select id="seletMaxCode" resultType="string">
+    select MAX(CAST(TemplateCode as SIGNED INTEGER)) from  message_template;
+  </select>
+
+    <!--查询所有的短信模板 包括多条件查询-->
+    <select id="selectTemplateList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from message_template
+        where Flag=#{flag}
+    </select>
+</mapper>

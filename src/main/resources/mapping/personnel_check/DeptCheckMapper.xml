@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.personnel_check.mapper.DeptCheckMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.DeptCheck">
+        <result column="DeptCheckCode" jdbcType="VARCHAR" property="deptcheckcode"/>
+        <result column="FileName" jdbcType="VARCHAR" property="filename"/>
+        <result column="FilePath" jdbcType="VARCHAR" property="filepath"/>
+        <result column="Year" jdbcType="VARCHAR" property="year"/>
+        <result column="MoneyCard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="Depart" jdbcType="VARCHAR" property="depart"/>
+        <result column="UserName" jdbcType="VARCHAR" property="username"/>
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.DeptCheck">
+        insert into dept_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptcheckcode != null">
+                DeptCheckCode,
+            </if>
+            <if test="filename != null">
+                FileName,
+            </if>
+            <if test="filepath != null">
+                FilePath,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="moneycard != null">
+                MoneyCard,
+            </if>
+            <if test="depart != null">
+                Depart,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptcheckcode != null">
+                #{deptcheckcode,jdbcType=VARCHAR},
+            </if>
+            <if test="filename != null">
+                #{filename,jdbcType=VARCHAR},
+            </if>
+            <if test="filepath != null">
+                #{filepath,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="depart != null">
+                #{depart,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.DeptCheck">
+        update dept_check
+        <set>
+            <if test="filename != null">
+                FileName = #{filename,jdbcType=VARCHAR},
+            </if>
+            <if test="filepath != null">
+                FilePath = #{filepath,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="moneycard != null">
+                MoneyCard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="depart != null">
+                Depart = #{depart,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DeptCheckCode=#{deptcheckcode}
+    </update>
+    <!--通过年份查部门考核附件信息-->
+    <select id="selectDeptCheckByYear" resultType="com.welb.personnel_check.entity.DeptCheck">
+    select * from dept_check where Year=#{year} and MoneyCard =#{moneyCard}
+  </select>
+    <!--查询查部门考核附件表最大数-->
+    <select id="selectMaxCode" resultType="string">
+    select MAX(CAST(DeptCheckCode AS SIGNED INTEGER)) from dept_check
+  </select>
+
+    <!--通过年份和发薪号查部门考核附件信息-->
+    <select id="selectDeptCheckByYearAndMoneyCard" resultType="com.welb.personnel_check.entity.DeptCheck">
+    select * from dept_check where Year=#{year} and MoneyCard=#{moneycard}
+  </select>
+    <!--通过年份和部门查部门考核附件信息-->
+    <select id="selectDeptCheckByYearAndDepart" resultType="com.welb.personnel_check.entity.DeptCheck">
+    select * from dept_check where Year=#{year} and Depart=#{depart}
+  </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select u.UserName,d.* from dept_check d left join user u on  u.MoneyCard=d.MoneyCard
+        <where>
+            <if test="filename != null and filename!=''">
+               and d.FileName like concat('%',#{filename},'%')
+            </if>
+            <if test="year != null and year!=''">
+                and d.Year=#{year}
+            </if>
+
+            <if test="depart != null and depart!=''">
+                and d.Depart=#{depart}
+            </if>
+        </where>
+        order by Year+0 desc
+    </select>
+
+</mapper>

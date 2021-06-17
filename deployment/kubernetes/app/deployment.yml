@@ -1,0 +1,83 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${PROJECT_NAME}
+  namespace: ${PROJECT_NAMESPACE}
+  labels:
+    app: ${PROJECT_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${PROJECT_NAME}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ${PROJECT_NAME}
+    spec:
+      imagePullSecrets:
+        - name: ${PROJECT_REGISTRY_ACCESS}
+      serviceAccountName: micro-service-cluster-service-account-${PROJECT_NAMESPACE}
+      containers:
+        - name: ${PROJECT_NAME}
+          image: ${PROJECT_IMAGE}
+          resources:
+            requests:
+              cpu: ${PROJECT_RESOURCES_REQUESTS_CPU}
+              memory: ${PROJECT_RESOURCES_REQUESTS_MEMORY}
+            limits:
+              cpu: ${PROJECT_RESOURCES_LIMITS_CPU}
+              memory: ${PROJECT_RESOURCES_LIMITS_MEMORY}
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: ${PROJECT_HEALTH_PATH}
+              port: ${PROJECT_PORT}
+              scheme: HTTP
+            initialDelaySeconds: ${PROJECT_HEALTH_DELAY}
+            periodSeconds: ${PROJECT_HEALTH_PERIOD}
+            failureThreshold: ${PROJECT_HEALTH_FAILURE}
+            successThreshold: ${PROJECT_HEALTH_SUCCESS}
+            timeoutSeconds: ${PROJECT_HEALTH_TIMEOUT}
+          readinessProbe:
+            httpGet:
+              path: ${PROJECT_HEALTH_PATH}
+              port: ${PROJECT_PORT}
+              scheme: HTTP
+            initialDelaySeconds: ${PROJECT_HEALTH_DELAY}
+            periodSeconds: ${PROJECT_HEALTH_PERIOD}
+            failureThreshold: ${PROJECT_HEALTH_FAILURE}
+            successThreshold: ${PROJECT_HEALTH_SUCCESS}
+            timeoutSeconds: ${PROJECT_HEALTH_TIMEOUT}
+          env:
+            - name: "KUBERNETES_NAMESPACE"
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.namespace"
+            - name: SPRING_APPLICATION_JSON
+              value: '{"server.port":${PROJECT_PORT},"spring.profiles.active":"${RUNTIME_MARK}","spring.cloud.kubernetes.discovery.service-labels":{"env":"${RUNTIME_MARK}"}}'
+          volumeMounts:
+            - name: ${PROJECT_NAME}-pvc
+              mountPath: /uploads
+              subPath: ${PROJECT_NAME}/${PROJECT_NAMESPACE}
+#            - name: ${PROJECT_NAME}
+#              mountPath: /opt/path/key.conf
+#              subPath: key.conf
+#              readOnly: true
+      volumes:
+        - name: ${PROJECT_NAME}-pvc
+          persistentVolumeClaim:
+            claimName: ${PROJECT_NAME}-pvc
+#        - name: ${PROJECT_NAME}
+#          configMap:
+#            name: ${PROJECT_NAME}
+#            items:
+#              - key: key.conf
+#                path: key.conf

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.personnel_check.mapper.PersonnelScorringMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.PersonnelScorring">
+        <id column="UserCode" property="usercode" jdbcType="INTEGER"/>
+        <result column="Moneycard" property="moneycard" jdbcType="VARCHAR"/>
+        <result column="UserName" property="username" jdbcType="VARCHAR"/>
+        <result column="DepartmentName" property="departmentname" jdbcType="VARCHAR"/>
+        <result column="Score" property="score" jdbcType="VARCHAR"/>
+        <result column="Ranks" property="ranks" jdbcType="VARCHAR"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="Score1" property="score1" jdbcType="VARCHAR"/>
+        <result column="Score2" property="score2" jdbcType="VARCHAR"/>
+        <result column="Notes" property="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    UserCode, Moneycard, UserName, DepartmentName,Score, Ranks ,Year , Month, Notes
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from personnel_scorring
+        where Moneycard = #{moneycard,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from personnel_scorring
+    where UserCode = #{usercode}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.PersonnelScorring">
+        insert into personnel_scorring
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="usercode != null">
+                UserCode,
+            </if>
+            <if test="username != null">
+                UserName,
+            </if>
+
+            <if test="moneycard != null">
+                Moneycard,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="month != null">
+                Month,
+            </if>
+            <if test="score != null">
+                Score,
+            </if>
+            <if test="ranks != null">
+                Ranks,
+            </if>
+
+            <if test="departmentname != null">
+                DepartmentName,
+            </if>
+
+            <if test="notes != null">
+                Notes,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="usercode != null">
+                #{usercode},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=VARCHAR},
+            </if>
+            <if test="ranks != null">
+                #{ranks},
+            </if>
+
+            <if test="departmentname != null">
+                #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                #{notes,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.PersonnelScorring">
+        update personnel_scorring
+        <set>
+            <if test="username != null">
+                UserName = #{username,jdbcType=VARCHAR},
+            </if>
+
+            <if test="moneycard != null">
+                Moneycard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                Score = #{score,jdbcType=VARCHAR},
+            </if>
+            <if test="ranks != null">
+                Ranks = #{ranks,jdbcType=VARCHAR},
+            </if>
+
+            <if test="departmentname != null">
+                DepartmentName = #{departmentname,jdbcType=VARCHAR},
+            </if>
+
+            <if test="notes != null">
+                Notes = #{notes,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where UserCode = #{usercode}
+    </update>
+
+    <!--查询人事评分表最大数-->
+    <select id="selectMaxUserCode" resultType="string">
+    select MAX(CAST(UserCode AS SIGNED INTEGER)) from personnel_scorring
+  </select>
+
+<!--查询所有的人事评分 包含多条件查询-->
+    <select id="selectAllLike" resultMap="BaseResultMap">
+        select rank() OVER(PARTITION BY Year,Month order by Score+0 desc) as Ranks ,
+        UserCode, Moneycard, UserName, DepartmentName,Score ,Year , Month, Notes
+        from personnel_scorring
+        <where>
+            <if test="year!=null and year!=''">
+                and Year=#{year}
+            </if>
+            <if test="month!=null and month!=''">
+                and Month=#{month}
+            </if>
+            <if test="departmentname!=null and departmentname!=''">
+                and DepartmentName like concat('%',#{departmentname},'%')
+            </if>
+            <if test="score1!=null and score1!=''">
+                and Score &gt;=#{score1}+0
+            </if>
+            <if test="score2!=null and score2!=''">
+                and Score &lt;=#{score2}+0
+            </if>
+        </where>
+        order by Year+0 desc,Month+0 desc,Score+0 desc
+    </select>
+
+    <!--根据年份和季度查询所有的人事评分-->
+    <select id="selectListByMonthAndYear" resultMap="BaseResultMap">
+        select rank() OVER(PARTITION BY Year,Month order by Score+0 desc) as Ranks ,
+        UserCode, Moneycard, UserName, DepartmentName,Score ,Year , Month, Notes
+        from personnel_scorring
+        <where>
+           <if test="username!=null and username!=''">
+               and UserName like concat('%',#{username},'%')
+           </if>
+            <if test="departmentname!=null and departmentname!=''">
+                and DepartmentName like concat('%',#{departmentname},'%')
+            </if>
+            <if test="year!=null and year!=''">
+                and Year=#{year}
+            </if>
+            <if test="month!=null and month!=''">
+                and Month=#{month}
+            </if>
+            <if test="score1!=null and score1!=''">
+                and Score &gt;=#{score1}+0
+            </if>
+            <if test="score2!=null and score2!=''">
+                and Score &lt;=#{score2}+0
+            </if>
+        </where>
+        order by Year+0 desc,Month+0 desc,Score+0 desc,DepartmentName
+    </select>
+
+    <!--根据年份和季度查询所有的人事评分-->
+        <select id="selectListByMonthAndYearAndDepartmentName" resultMap="BaseResultMap">
+        select * from personnel_scorring
+        where Year=#{year} and Month=#{month} and DepartmentName=#{departmentname}
+    </select>
+
+
+    <insert id="batchInsert">
+        insert into personnel_scorring(UserCode, Moneycard, UserName, DepartmentName,Score, Ranks ,Year , Month, Notes)
+        values
+        <foreach collection="list" item="user" separator=",">
+            (
+            #{user.usercode},
+            #{user.moneycard},
+            #{user.username},
+            #{user.departmentname},
+            #{user.score},
+            #{user.ranks},
+            #{user.year},
+            #{user.month},
+            #{user.notes}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        delete from personnel_scorring where UserCode in
+        <foreach collection="list" item="usercodes" separator="," open="(" close=")">
+            #{usercodes}
+        </foreach>
+    </delete>
+
+
+    <!--查询所有的人事评分 包含多条件查询-->
+    <select id="selectAllLikeByManager" resultMap="BaseResultMap">
+        select rank() OVER(PARTITION BY Year,Month order by Score+0 desc) as Ranks ,
+        UserCode, Moneycard, UserName, DepartmentName,Score ,Year , Month, Notes
+        from personnel_scorring
+        <where>
+            <if test="year!=null and year!=''">
+                and Year=#{year}
+            </if>
+            <if test="month!=null and month!=''">
+                and Month=#{month}
+            </if>
+            <if test="departmentname!=null and departmentname!=''">
+                and DepartmentName like concat('%',#{departmentname},'%')
+            </if>
+            <if test="score1!=null and score1!=''">
+                and Score &gt;=#{score1}+0
+            </if>
+            <if test="score2!=null and score2!=''">
+                and Score &lt;=#{score2}+0
+            </if>
+        </where>
+        order by Year+0 desc,Month+0 desc,Score+0 desc,DepartmentName
+    </select>
+
+    <!--通过年份、季度、发薪号查询该季度的分数-->
+    <select id="selectOne" resultType="com.welb.personnel_check.entity.PersonnelScorring">
+        SELECT * FROM personnel_scorring
+        WHERE Year=#{year}
+        and Month=#{month}
+        and Moneycard=#{moneycard}
+    </select>
+
+    <!--通过年份、季度、发薪号删除该季度的分数-->
+    <select id="deleteOne">
+        delete FROM personnel_scorring
+        WHERE Year=#{year}
+        and Month=#{month}
+        and Moneycard=#{moneycard}
+    </select>
+</mapper>

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.HrpUserMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.HrpUser" >
+    <id column="u_id" property="uId" jdbcType="CHAR" />
+    <result column="u_password" property="uPassword" jdbcType="VARCHAR" />
+    <result column="u_name" property="uName" jdbcType="VARCHAR" />
+    <result column="u_img" property="uImg" jdbcType="VARCHAR" />
+    <result column="u_sex" property="uSex" jdbcType="CHAR" />
+    <result column="u_birth" property="uBirth" jdbcType="CHAR" />
+    <result column="u_home_address" property="uHomeAddress" jdbcType="VARCHAR" />
+    <result column="u_nation" property="uNation" jdbcType="VARCHAR" />
+    <result column="u_native_place" property="uNativePlace" jdbcType="VARCHAR" />
+    <result column="u_id_card" property="uIdCard" jdbcType="VARCHAR" />
+    <result column="u_old_id" property="uOldId" jdbcType="VARCHAR" />
+    <result column="u_job_time" property="uJobTime" jdbcType="CHAR" />
+    <result column="u_hospital_time" property="uHospitalTime" jdbcType="CHAR" />
+    <result column="u_job_number" property="uJobNumber" jdbcType="CHAR" />
+    <result column="u_email" property="uEmail" jdbcType="VARCHAR" />
+    <result column="u_phone" property="uPhone" jdbcType="VARCHAR" />
+    <result column="u_title_level" property="uTitleLevel" jdbcType="VARCHAR" />
+    <result column="u_technical_position1" property="uTechnicalPosition1" jdbcType="VARCHAR" />
+    <result column="u_position_time1" property="uPositionTime1" jdbcType="CHAR" />
+    <result column="u_technical_position2" property="uTechnicalPosition2" jdbcType="VARCHAR" />
+    <result column="u_position_time2" property="uPositionTime2" jdbcType="CHAR" />
+    <result column="u_employment_unit" property="uEmploymentUnit" jdbcType="VARCHAR" />
+    <result column="u_check_department" property="uCheckDepartment" jdbcType="VARCHAR" />
+    <result column="u_statistic_department" property="uStatisticDepartment" jdbcType="VARCHAR" />
+    <result column="u_his_number" property="uHisNumber" jdbcType="VARCHAR" />
+    <result column="u_update_status" property="uUpdateStatus" jdbcType="CHAR" />
+    <result column="u_activate_status" property="uActivateStatus" jdbcType="CHAR" />
+    <result column="u_check_data_status" property="uCheckDataStatus" jdbcType="BIT" />
+    <result column="u_tel" property="uTel" jdbcType="VARCHAR" />
+    <result column="u_degree" property="uDegree" jdbcType="VARCHAR" />
+    <result column="u_edu" property="uEdu" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    u_id, u_password, u_name, u_img, u_sex, u_birth, u_home_address, u_nation, u_native_place,
+    u_id_card, u_old_id, u_job_time, u_hospital_time, u_job_number, u_email, u_phone,
+    u_title_level, u_technical_position1, u_position_time1, u_technical_position2, u_position_time2,
+    u_employment_unit, u_check_department, u_statistic_department, u_his_number, u_update_status,
+    u_activate_status, u_check_data_status, u_tel, u_degree, u_edu
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from hrp_user
+    where u_id = #{uId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hrp_user
+    where u_id = #{uId,jdbcType=CHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.welb.organization_check.entity.HrpUser" >
+    insert into hrp_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="uPassword != null" >
+        u_password,
+      </if>
+      <if test="uName != null" >
+        u_name,
+      </if>
+      <if test="uImg != null" >
+        u_img,
+      </if>
+      <if test="uSex != null" >
+        u_sex,
+      </if>
+      <if test="uBirth != null" >
+        u_birth,
+      </if>
+      <if test="uHomeAddress != null" >
+        u_home_address,
+      </if>
+      <if test="uNation != null" >
+        u_nation,
+      </if>
+      <if test="uNativePlace != null" >
+        u_native_place,
+      </if>
+      <if test="uIdCard != null" >
+        u_id_card,
+      </if>
+      <if test="uOldId != null" >
+        u_old_id,
+      </if>
+      <if test="uJobTime != null" >
+        u_job_time,
+      </if>
+      <if test="uHospitalTime != null" >
+        u_hospital_time,
+      </if>
+      <if test="uJobNumber != null" >
+        u_job_number,
+      </if>
+      <if test="uEmail != null" >
+        u_email,
+      </if>
+      <if test="uPhone != null" >
+        u_phone,
+      </if>
+      <if test="uTitleLevel != null" >
+        u_title_level,
+      </if>
+      <if test="uTechnicalPosition1 != null" >
+        u_technical_position1,
+      </if>
+      <if test="uPositionTime1 != null" >
+        u_position_time1,
+      </if>
+      <if test="uTechnicalPosition2 != null" >
+        u_technical_position2,
+      </if>
+      <if test="uPositionTime2 != null" >
+        u_position_time2,
+      </if>
+      <if test="uEmploymentUnit != null" >
+        u_employment_unit,
+      </if>
+      <if test="uCheckDepartment != null" >
+        u_check_department,
+      </if>
+      <if test="uStatisticDepartment != null" >
+        u_statistic_department,
+      </if>
+      <if test="uHisNumber != null" >
+        u_his_number,
+      </if>
+      <if test="uUpdateStatus != null" >
+        u_update_status,
+      </if>
+      <if test="uActivateStatus != null" >
+        u_activate_status,
+      </if>
+      <if test="uCheckDataStatus != null" >
+        u_check_data_status,
+      </if>
+      <if test="uTel != null" >
+        u_tel,
+      </if>
+      <if test="uDegree != null" >
+        u_degree,
+      </if>
+      <if test="uEdu != null" >
+        u_edu,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uId != null" >
+        #{uId,jdbcType=CHAR},
+      </if>
+      <if test="uPassword != null" >
+        #{uPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="uName != null" >
+        #{uName,jdbcType=VARCHAR},
+      </if>
+      <if test="uImg != null" >
+        #{uImg,jdbcType=VARCHAR},
+      </if>
+      <if test="uSex != null" >
+        #{uSex,jdbcType=CHAR},
+      </if>
+      <if test="uBirth != null" >
+        #{uBirth,jdbcType=CHAR},
+      </if>
+      <if test="uHomeAddress != null" >
+        #{uHomeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="uNation != null" >
+        #{uNation,jdbcType=VARCHAR},
+      </if>
+      <if test="uNativePlace != null" >
+        #{uNativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="uIdCard != null" >
+        #{uIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="uOldId != null" >
+        #{uOldId,jdbcType=VARCHAR},
+      </if>
+      <if test="uJobTime != null" >
+        #{uJobTime,jdbcType=CHAR},
+      </if>
+      <if test="uHospitalTime != null" >
+        #{uHospitalTime,jdbcType=CHAR},
+      </if>
+      <if test="uJobNumber != null" >
+        #{uJobNumber,jdbcType=CHAR},
+      </if>
+      <if test="uEmail != null" >
+        #{uEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="uPhone != null" >
+        #{uPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="uTitleLevel != null" >
+        #{uTitleLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="uTechnicalPosition1 != null" >
+        #{uTechnicalPosition1,jdbcType=VARCHAR},
+      </if>
+      <if test="uPositionTime1 != null" >
+        #{uPositionTime1,jdbcType=CHAR},
+      </if>
+      <if test="uTechnicalPosition2 != null" >
+        #{uTechnicalPosition2,jdbcType=VARCHAR},
+      </if>
+      <if test="uPositionTime2 != null" >
+        #{uPositionTime2,jdbcType=CHAR},
+      </if>
+      <if test="uEmploymentUnit != null" >
+        #{uEmploymentUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="uCheckDepartment != null" >
+        #{uCheckDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="uStatisticDepartment != null" >
+        #{uStatisticDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="uHisNumber != null" >
+        #{uHisNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="uUpdateStatus != null" >
+        #{uUpdateStatus,jdbcType=CHAR},
+      </if>
+      <if test="uActivateStatus != null" >
+        #{uActivateStatus,jdbcType=CHAR},
+      </if>
+      <if test="uCheckDataStatus != null" >
+        #{uCheckDataStatus,jdbcType=BIT},
+      </if>
+      <if test="uTel != null" >
+        #{uTel,jdbcType=VARCHAR},
+      </if>
+      <if test="uDegree != null" >
+        #{uDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="uEdu != null" >
+        #{uEdu,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.HrpUser" >
+    update hrp_user
+    <set >
+      <if test="uPassword != null" >
+        u_password = #{uPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="uName != null" >
+        u_name = #{uName,jdbcType=VARCHAR},
+      </if>
+      <if test="uImg != null" >
+        u_img = #{uImg,jdbcType=VARCHAR},
+      </if>
+      <if test="uSex != null" >
+        u_sex = #{uSex,jdbcType=CHAR},
+      </if>
+      <if test="uBirth != null" >
+        u_birth = #{uBirth,jdbcType=CHAR},
+      </if>
+      <if test="uHomeAddress != null" >
+        u_home_address = #{uHomeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="uNation != null" >
+        u_nation = #{uNation,jdbcType=VARCHAR},
+      </if>
+      <if test="uNativePlace != null" >
+        u_native_place = #{uNativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="uIdCard != null" >
+        u_id_card = #{uIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="uOldId != null" >
+        u_old_id = #{uOldId,jdbcType=VARCHAR},
+      </if>
+      <if test="uJobTime != null" >
+        u_job_time = #{uJobTime,jdbcType=CHAR},
+      </if>
+      <if test="uHospitalTime != null" >
+        u_hospital_time = #{uHospitalTime,jdbcType=CHAR},
+      </if>
+      <if test="uJobNumber != null" >
+        u_job_number = #{uJobNumber,jdbcType=CHAR},
+      </if>
+      <if test="uEmail != null" >
+        u_email = #{uEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="uPhone != null" >
+        u_phone = #{uPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="uTitleLevel != null" >
+        u_title_level = #{uTitleLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="uTechnicalPosition1 != null" >
+        u_technical_position1 = #{uTechnicalPosition1,jdbcType=VARCHAR},
+      </if>
+      <if test="uPositionTime1 != null" >
+        u_position_time1 = #{uPositionTime1,jdbcType=CHAR},
+      </if>
+      <if test="uTechnicalPosition2 != null" >
+        u_technical_position2 = #{uTechnicalPosition2,jdbcType=VARCHAR},
+      </if>
+      <if test="uPositionTime2 != null" >
+        u_position_time2 = #{uPositionTime2,jdbcType=CHAR},
+      </if>
+      <if test="uEmploymentUnit != null" >
+        u_employment_unit = #{uEmploymentUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="uCheckDepartment != null" >
+        u_check_department = #{uCheckDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="uStatisticDepartment != null" >
+        u_statistic_department = #{uStatisticDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="uHisNumber != null" >
+        u_his_number = #{uHisNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="uUpdateStatus != null" >
+        u_update_status = #{uUpdateStatus,jdbcType=CHAR},
+      </if>
+      <if test="uActivateStatus != null" >
+        u_activate_status = #{uActivateStatus,jdbcType=CHAR},
+      </if>
+      <if test="uCheckDataStatus != null" >
+        u_check_data_status = #{uCheckDataStatus,jdbcType=BIT},
+      </if>
+      <if test="uTel != null" >
+        u_tel = #{uTel,jdbcType=VARCHAR},
+      </if>
+      <if test="uDegree != null" >
+        u_degree = #{uDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="uEdu != null" >
+        u_edu = #{uEdu,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where u_id = #{uId,jdbcType=CHAR}
+  </update>
+
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from hrp_user
+  </select>
+</mapper>

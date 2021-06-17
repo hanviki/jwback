@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.Score">
+        <id column="Id" property="id" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringcode" jdbcType="VARCHAR"/>
+        <result column="ScorredCode" property="scorredcode" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoretype" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, ScorringCode, ScorredCode, ScoreType
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from score
+        where Id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from score
+    where Id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.welb.organization_check.entity.Score">
+    insert into score (Id, ScorringCode, ScorredCode,
+      ScoreType)
+    values (#{id,jdbcType=VARCHAR}, #{scorringcode,jdbcType=VARCHAR}, #{scorredcode,jdbcType=VARCHAR},
+      #{scoretype,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Score">
+        insert into score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="scorringcode != null">
+                ScorringCode,
+            </if>
+            <if test="scorredcode != null">
+                ScorredCode,
+            </if>
+            <if test="scoretype != null">
+                ScoreType,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="scorringcode != null">
+                #{scorringcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorredcode != null">
+                #{scorredcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scoretype != null">
+                #{scoretype,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.Score">
+        update score
+        <set>
+            <if test="scorringcode != null">
+                ScorringCode = #{scorringcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorredcode != null">
+                ScorredCode = #{scorredcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scoretype != null">
+                ScoreType = #{scoretype,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.Score">
+    update score
+    set ScorringCode = #{scorringcode,jdbcType=VARCHAR},
+      ScorredCode = #{scorredcode,jdbcType=VARCHAR},
+      ScoreType = #{scoretype,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=VARCHAR}
+  </update>
+    <select id="selectMaxId" resultType="string">
+    select MAX(CAST(Id as SIGNED INTEGER))  from score
+  </select>
+    <!--通过被评分人code查找评分关系数据-->
+    <select id="selectScoresByScorredCode" resultMap="BaseResultMap">
+        select s.* from score s  left join user u on u.UserCode=s.ScorringCode
+        <where>
+            <if test="scorredcode!=null">
+                and s.ScorredCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+        order by Id+0
+    </select>
+    <!--模糊匹配查询名字和岗位-->
+    <select id="selectScoresByscorredAndUser" resultMap="BaseResultMap">
+        select s.*,u.UserName from score s left join user u on u.UserCode=s.ScorringCode
+        <where>
+            <if test="scorredcode!=null">
+                and s.ScorredCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            <if test="username!=null">
+                and u.UserName like concat("%",#{username},"%")
+            </if>
+            <if test="stationcode!=null">
+                and u.StationCode= #{stationcode}
+            </if>
+        </where>
+        and u.RoleType="0"
+        and u.Flag="0"
+
+        and u.UserState="1"
+        order by Id+0
+    </select>
+    <!--模糊匹配查询名字-->
+    <select id="selectScoresByscorredAndUserName" resultMap="BaseResultMap">
+        select s.*,u.UserName from score s left join user u on u.UserCode=s.ScorringCode
+        <where>
+            <if test="scorredcode!=null">
+                and s.ScorredCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            <if test="username!=null">
+                and u.UserName like concat("%",#{username},"%")
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+        order by Id+0
+    </select>
+    <!--模糊匹配查岗位-->
+    <select id="selectScoresByscorredAndUserStationCode" resultMap="BaseResultMap">
+        select s.*,u.UserName from score s left join user u on u.UserCode=s.ScorringCode
+        <where>
+            <if test="scorredcode!=null">
+                and s.ScorredCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            <if test="stationcode!=null">
+                and u.StationCode= #{stationcode}
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+        order by Id+0
+    </select>
+    <!--通过评分人code查找被评分人关系数据-->
+    <select id="selectScoresByScorringCode" resultMap="BaseResultMap">
+        select s.* from score s left join user u on u.Usercode= s.ScorredCode
+        <where>
+            <if test="scorredcode!=null">
+                and ScorringCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+        order by Id+0
+    </select>
+
+    <!--通过评分人code查找被评分人关系数据 模糊查询姓名 岗位-->
+    <select id="selectScoresByScorringAndUser" resultMap="BaseResultMap">
+        select s.* from score s left join user u on u.UserCode=s.ScorredCode
+        <where>
+            <if test="scorredcode!=null">
+                and ScorringCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            <if test="username!=null">
+                and u.UserName like concat("%",#{username},"%")
+            </if>
+            <if test="stationcode!=null">
+                and u.StationCode= #{stationcode}
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+    </select>
+    <!--通过评分人code查找被评分人关系数据 模糊查询姓名 -->
+    <select id="selectScoresByScorringAndUserName" resultMap="BaseResultMap">
+        select s.* from score s left join user u on u.UserCode=s.ScorredCode
+        <where>
+            <if test="scorredcode!=null">
+                and ScorringCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            <if test="username!=null">
+                and u.UserName like concat("%",#{username},"%")
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.UserState="1"
+        </where>
+        order by Id+0
+    </select>
+    <!--通过评分人code查找被评分人关系数据 查询岗位-->
+    <select id="selectScoresByScorringAndUserStationCode" resultMap="BaseResultMap">
+        select s.* from score s left join user u on u.UserCode=s.ScorredCode
+        <where>
+            <if test="scorredcode!=null">
+                and ScorringCode=#{scorredcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+            <if test="stationcode!=null">
+                and u.StationCode= #{stationcode}
+            </if>
+            and u.RoleType="0"
+            and u.Flag="0"
+
+            and u.UserState="1"
+        </where>
+        order by Id+0
+    </select>
+    <!--通过评分人code查找评分人信息-->
+    <select id="selectScoresByEmployeeCode" resultMap="BaseResultMap">
+    select * from  score   where  ScorringCode=#{scorredcode} order by Id+0
+  </select>
+    <!--通过被评分人code和评分人code查找评分数据-->
+    <select id="selectTypeByCode" resultType="com.welb.organization_check.entity.Score">
+    select * from score where ScorredCode=#{scorredcode} and ScorringCode=#{scorringcode}
+  </select>
+
+    <!--通过被评人code查找所有数据-->
+    <select id="selectScoreByScorredCode" resultMap="BaseResultMap">
+        select * from score where ScorredCode=#{scorredcode}
+    </select>
+    <!--通过关联scoreflow表的主键查找detail所有数据-->
+    <select id="selectDetailByFMserialno" resultMap="BaseResultMap">
+        select * from scoredetail where MSerialNo=#{mserialno}
+    </select>
+
+    <!--通过被评分人code查找评分关系数据-->
+    <select id="selectScoreByCodeAndType" resultType="com.welb.organization_check.entity.Score">
+        select s.* from score s
+        <where>
+            <if test="scorredcode!=null">
+                and s.ScorredCode=#{scorredcode}
+            </if>
+            <if test="scorringcode!=null">
+                and s.ScorringCode=#{scorringcode}
+            </if>
+            <if test="scoretype!=null">
+                and s.ScoreType=#{scoretype}
+            </if>
+
+        </where>
+        order by s.Id+0
+    </select>
+
+
+    <delete id="batchDelete">
+        delete from score where Id in
+        <foreach collection="list" item="scorredIds" separator="," open="(" close=")">
+            #{scorredIds}
+        </foreach>
+    </delete>
+
+
+
+    <!--通过被评人code查找所有数据的主键-->
+    <select id="selectIdByScorredCode" resultMap="BaseResultMap">
+        select Id from score where ScorredCode=#{scorredcode}
+    </select>
+
+    <!--通过评分人code查找所有数据-->
+    <select id="selectIdByScorringCode" resultMap="BaseResultMap">
+        select Id,ScorredCode from score where ScorringCode=#{scorringcode}
+    </select>
+
+    <select id="findScoreAll" resultMap="BaseResultMap">
+        select * from score
+    </select>
+
+</mapper>

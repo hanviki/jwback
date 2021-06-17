@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.survey.mapper.SurveyInfoPreviewMapper" >
+  <resultMap id="BaseResultMap" type="com.welb.survey.entity.SurveyInfoPreview" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="Title" property="title" jdbcType="VARCHAR" />
+    <result column="Content" property="content" jdbcType="VARCHAR" />
+    <result column="BatchJson" property="batchjson" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <resultMap id="BaseThreeTablesResultMap" type="com.welb.survey.entity.SurveyInfoPreview" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="Title" property="title" jdbcType="VARCHAR" />
+    <result column="Content" property="content" jdbcType="VARCHAR" />
+    <result column="BatchJson" property="batchjson" jdbcType="VARCHAR" />
+    <collection property="questionList" ofType="SurveyQuestion" column="Id">
+      <id column="QId" property="id" jdbcType="INTEGER"/>
+      <result column="SurveyInfoId" property="surveyinfoid" jdbcType="INTEGER"/>
+      <result column="QuestionTitle" property="questiontitle" jdbcType="VARCHAR"/>
+      <result column="Type" property="type" jdbcType="INTEGER"/>
+      <result column="UpdateTime" property="updatetime" jdbcType="VARCHAR"/>
+      <result column="QuestionOrder" property="questionorder" jdbcType="INTEGER"/>
+      <result column="IsWrite" property="iswrite" jdbcType="INTEGER"/>
+      <collection property="optionList" ofType="SurveyOption" column="Id">
+        <id column="OId" property="id" jdbcType="INTEGER"/>
+        <result column="QuestionId" property="questionid" jdbcType="INTEGER"/>
+        <result column="OptionContent" property="optioncontent" jdbcType="VARCHAR"/>
+        <result column="OptionOrder" property="optionorder" jdbcType="INTEGER"/>
+        <result column="Gap" property="gap" jdbcType="INTEGER" />
+        <result column="GapText" property="gaptext" jdbcType="VARCHAR" />
+      </collection>
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, Title, Content,BatchJson
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from survey_surveyinfo_preview
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective"  useGeneratedKeys="true" keyProperty="id" parameterType="com.welb.survey.entity.SurveyInfoPreview" >
+    insert into survey_surveyinfo_preview
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="title != null" >
+        Title,
+      </if>
+      <if test="content != null" >
+        Content,
+      </if>
+      <if test="batchjson != null" >
+        BatchJson,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="batchjson != null" >
+        #{batchjson,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.welb.survey.entity.SurveyInfoPreview" >
+    update survey_surveyinfo_preview
+    <set >
+      <if test="title != null" >
+        Title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        Content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="batchjson != null" >
+        BatchJson = #{batchjson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+  <!--查看问卷详情/预览问卷-->
+  <select id="getDetail" resultMap="BaseThreeTablesResultMap">
+        select info.Id,info.Title,info.Content,info.BatchJson,
+        q.Id as QId,q.SurveyInfoId,q.QuestionTitle,q.Type,q.QuestionOrder,q.IsWrite,
+        o.Id as OId,o.SurveyInfoId,o.QuestionId,o.OptionContent,o.OptionOrder,o.Gap,o.GapText
+        from survey_surveyinfo_preview info
+        left join survey_question_preview q on info.Id=q.SurveyInfoId
+        left join survey_option_preview o on q.Id=o.QuestionId
+        where  info.Id=#{id}
+        order by q.QuestionOrder ,o.OptionOrder
+    </select>
+</mapper>

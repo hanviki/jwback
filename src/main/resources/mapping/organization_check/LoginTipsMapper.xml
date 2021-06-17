@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.LoginTipsMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.LoginTips">
+        <result column="LoginInfo" jdbcType="VARCHAR" property="logininfo"/>
+        <result column="LoginType" jdbcType="VARCHAR" property="logintype"/>
+        <result column="RoleCode" jdbcType="VARCHAR" property="rolecode"/>
+        <result column="InportInfo" jdbcType="VARCHAR" property="inportinfo"/>
+        <result column="InportLogin" jdbcType="VARCHAR" property="inportlogin"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     LoginInfo, LoginType,RoleCode,InportInfo,InportLogin
+  </sql>
+    <update id="updateLoginTips" parameterType="com.welb.organization_check.entity.Role">
+        update logintips
+        <set>
+            <if test="logininfo != null">
+                LoginInfo = #{logininfo,jdbcType=VARCHAR},
+            </if>
+            <if test="logintype != null">
+                LoginType = #{logintype,jdbcType=VARCHAR},
+            </if>
+            <if test="inportinfo != null">
+                InportInfo = #{inportinfo,jdbcType=VARCHAR},
+            </if>
+            <if test="inportlogin != null">
+                InportLogin = #{inportlogin,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where RoleCode=#{rolecode}
+    </update>
+    <!--查询登录提示信息-->
+    <select id="selectLoginTips" resultMap="BaseResultMap">
+        select * from  logintips where RoleCode=#{rolecode}
+    </select>
+
+</mapper>

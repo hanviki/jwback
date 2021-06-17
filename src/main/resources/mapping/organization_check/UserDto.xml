@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserDto">
+        <id column="SerialNo" jdbcType="VARCHAR" property="serialno"/>
+        <result column="UserName" jdbcType="VARCHAR" property="username"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="StationCode" jdbcType="VARCHAR" property="stationcode"/>
+        <result column="MoneyCard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
+        <result column="Flag" jdbcType="VARCHAR" property="flag"/>
+        <result column="UserCode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="EmployeeCode" property="employeecode" jdbcType="VARCHAR"/>
+        <result column="Pubdate" property="pubdate" jdbcType="TIMESTAMP"/>
+        <result column="SavePath" property="savepath" jdbcType="VARCHAR"/>
+        <result column="FileName" property="filename" jdbcType="VARCHAR"/>
+        <result column="IsSend" property="issend" jdbcType="VARCHAR"/>
+        <result column="RoleType" property="roletype" jdbcType="VARCHAR"/>
+        <result column="Title" property="title" jdbcType="VARCHAR"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+        <result column="ScoreStatus" property="scorestatus" jdbcType="VARCHAR"/>
+        <result column="RoleCode" property="rolecode" jdbcType="VARCHAR"/>
+        <result column="RoleName" property="rolename" jdbcType="VARCHAR"/>
+
+    </resultMap>
+    <select id="selectUserDtoLikeToQuarter" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,u.MoneyCard,u.Mobile,
+        m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,r.RoleCode
+        from monthsummary m ,user u ,station s,department d,role r,user_role ur
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="roletype!=null and roletype !=''">
+                and u.Roletype=#{roletype}
+            </if>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and m.Month=#{month}
+            </if>
+            <if test="scorestatus!=null and scorestatus !=''">
+                and m.ScoreStatus=#{scorestatus}
+            </if>
+            <if test="state!=null and state !='' and state!='0'.toString()">
+                and m.State=#{state}
+            </if>
+            <if test='state=="0"'>
+                and (m.Title is null or m.Title='')
+                and (m.Content is null or m.Content='')
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.UserState="1"
+            and u.StationCode=s.StationCode
+            and s.DepartmentCode=d.DepartmentCode
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and r.RoleCode in("100","200","300","50")
+        </where>
+        order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
+    </select>
+    <select id="selectUserDtoLike" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,u.MoneyCard,u.ARatio,u.BRatio,u.CRatio,u.DRatio,
+        m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName
+        from user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="roletype!=null and roletype !=''">
+                and u.Roletype=#{roletype}
+            </if>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and m.Month=#{month}
+            </if>
+            <if test="state!=null and state !='' and state!='0'.toString()">
+                and m.State=#{state}
+                and r.RoleCode !="150" and r.RoleCode !="600" and r.RoleCode !="700"
+
+            </if>
+            <if test='state=="0"'>
+                and (m.Title is null or m.Title='')
+                and (m.Content is null or m.Content='')
+                and r.RoleCode !="150" and r.RoleCode !="600" and r.RoleCode !="700"
+
+            </if>
+            <if test="scorestatus!=null and scorestatus !=''">
+                and m.ScoreStatus=#{scorestatus}
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.StationCode=s.StationCode
+            and s.DepartmentCode=d.DepartmentCode
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and r.RoleCode in("100","200","300","50")
+        </where>
+        order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        select count(*) from monthsummary m,score s,role r,user_role ur,user u
+        where  s.ScorringCode=m.EmployeeCode
+        and m.Year=#{year}
+        and m.`Month`=#{month}
+        and m.EmployeeCode=#{employeecode}
+        and s.ScorredCode=ur.UserCode
+        and r.RoleCode=ur.RoleCode
+        and r.RoleCode in("100","200","300","50")
+        and u.UserCode=ur.UserCode
+        and u.UserState="1"
+        and u.Flag="0"
+    </select>
+    <select id="selectOneUserDto" resultType="com.welb.organization_check.dto.UserDto">
+        select u.UserCode,u.UserName,u.MoneyCard,u.ARatio,u.BRatio,u.CRatio,u.DRatio,
+        m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName
+        from user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and m.Month=#{month}
+            </if>
+            <if test="moneycard!=null and moneycard!=''">
+                and u.MoneyCard =#{moneycard}
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.StationCode=s.StationCode
+            and s.DepartmentCode=d.DepartmentCode
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and r.RoleCode in("100","150","200","300","50")
+        </where>
+        order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
+    </select>
+
+
+    <select id="gradeList" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,u.MoneyCard,
+        m.SerialNo,m.Year,m.Month,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName
+        from user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and m.Month=#{month}
+            </if>
+            <if test="scorestatus!=null and scorestatus !=''">
+                and m.ScoreStatus=#{scorestatus}
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.StationCode=s.StationCode
+            and s.DepartmentCode=d.DepartmentCode
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and r.RoleCode ="150"
+        </where>
+        order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
+    </select>
+
+</mapper>
+

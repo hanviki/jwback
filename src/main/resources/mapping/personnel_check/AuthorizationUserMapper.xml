@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.personnel_check.mapper.AuthorizationUserMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.AuthorizationUser">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Moneycard" property="moneycard" jdbcType="VARCHAR"/>
+        <result column="UserName" property="username" jdbcType="VARCHAR"/>
+        <result column="DepartmentName" property="departmentname" jdbcType="VARCHAR"/>
+        <result column="StartTime" property="starttime" jdbcType="VARCHAR"/>
+        <result column="EndTime" property="endtime" jdbcType="VARCHAR"/>
+        <result column="Flag" property="flag" jdbcType="VARCHAR"/>
+        <result column="IsPersonnel" property="ispersonnel" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, Moneycard, UserName, DepartmentName, StartTime, EndTime, Flag,IsPersonnel
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from authorization_user
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from authorization_user
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.AuthorizationUser">
+        insert into authorization_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="moneycard != null">
+                Moneycard,
+            </if>
+            <if test="username != null">
+                UserName,
+            </if>
+            <if test="departmentname != null">
+                DepartmentName,
+            </if>
+            <if test="starttime != null">
+                StartTime,
+            </if>
+            <if test="endtime != null">
+                EndTime,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+            <if test="ispersonnel != null">
+                IsPersonnel,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="moneycard != null">
+                #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                #{starttime,jdbcType=VARCHAR},
+            </if>
+            <if test="endtime != null">
+                #{endtime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="ispersonnel != null">
+                #{ispersonnel,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.AuthorizationUser">
+        update authorization_user
+        <set>
+            <if test="moneycard != null">
+                Moneycard = #{moneycard,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                UserName = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                DepartmentName = #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                StartTime = #{starttime,jdbcType=VARCHAR},
+            </if>
+            <if test="endtime != null">
+                EndTime = #{endtime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                Flag = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="ispersonnel != null">
+                IsPersonnel = #{ispersonnel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--批量添加-->
+    <insert id="batchInsert">
+        insert into authorization_user(Id,Moneycard, UserName, DepartmentName, StartTime, EndTime, Flag,IsPersonnel)
+        values
+        <foreach collection="list" item="user" separator=",">
+            (
+            #{user.id},
+            #{user.moneycard},
+            #{user.username},
+            #{user.departmentname},
+            #{user.starttime},
+            #{user.endtime},
+            #{user.flag},
+            #{user.ispersonnel}
+            )
+        </foreach>
+    </insert>
+
+
+    <!--获取代理人列表-->
+    <select id="getAuthorizationList" resultMap="BaseResultMap">
+        select * from authorization_user
+        <where>
+            <if test="flag != null and flag!=''">
+                and Flag = #{flag,jdbcType=VARCHAR}
+            </if>
+            <if test="ispersonnel != null and ispersonnel!=''">
+                and IsPersonnel = #{ispersonnel,jdbcType=VARCHAR}
+            </if>
+            <if test="moneycard != null and moneycard!=''">
+                and Moneycard = #{moneycard,jdbcType=VARCHAR}
+            </if>
+            <if test="username != null and username!=''">
+                and UserName like concat('%',#{username,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="departmentname != null and departmentname!=''">
+                and DepartmentName like concat('%',#{departmentname,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="starttime!=null and starttime!=''">
+                and StartTime >=#{starttime}
+                and StartTime!=''
+            </if>
+            <if test="endtime!=null and endtime!=''">
+                and EndTime &lt;=#{endtime}
+                and EndTime!=''
+            </if>
+        </where>
+        order by DepartmentName
+    </select>
+
+    <!--获取代理人列表-组织部成员  1-组织部 2-人事部-->
+    <select id="getAuthorizationListByIsPersonnel" resultMap="BaseResultMap">
+        select * from authorization_user  where IsPersonnel=#{ispersonnel} and DepartmentName=#{departmentname}
+
+    </select>
+
+    <!--批量删除-->
+    <delete id="batchDelete">
+        delete from authorization_user where Id in
+        <foreach collection="list" item="ids" separator="," close=")" open="(">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--修改代理状态-->
+    <update id="updateFlag" parameterType="com.welb.personnel_check.entity.AuthorizationUser">
+        update authorization_user set Flag=#{flag} where MoneyCard=#{moneycard}
+    </update>
+
+    <update id="updateFlagByMoneyCard" parameterType="com.welb.personnel_check.entity.AuthorizationUser">
+        update authorization_user set Flag=#{flag} ,StartTime="",EndTime="" where MoneyCard=#{moneycard}
+    </update>
+
+    <select id="selectByMoneyCard" resultType="com.welb.personnel_check.entity.AuthorizationUser">
+        select
+        <include refid="Base_Column_List"/>
+        from authorization_user
+        where MoneyCard = #{moneycard}
+    </select>
+</mapper>

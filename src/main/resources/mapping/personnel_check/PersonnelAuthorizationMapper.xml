@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.personnel_check.mapper.PersonnelAuthorizationMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.PersonnelAuthorization">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Agent" property="agent" jdbcType="VARCHAR"/>
+        <result column="DeptUser" property="deptuser" jdbcType="VARCHAR"/>
+        <result column="StartTime" property="starttime" jdbcType="VARCHAR"/>
+        <result column="EndTime" property="endtime" jdbcType="VARCHAR"/>
+        <result column="Flag" property="flag" jdbcType="VARCHAR"/>
+        <result column="DepartmentName" property="departmentname" jdbcType="VARCHAR"/>
+        <result column="AgentUserName" property="agentusername" jdbcType="VARCHAR"/>
+        <result column="DeptUserName" property="deptusername" jdbcType="VARCHAR"/>
+        <result column="IsPersonnel" property="ispersonnel" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, Agent, DeptUser, StartTime, EndTime,Flag,DepartmentName,AgentUserName,DeptUserName,IsPersonnel
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from personnel_authorization
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from personnel_authorization
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.PersonnelAuthorization">
+        insert into personnel_authorization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="agent != null">
+                Agent,
+            </if>
+            <if test="deptuser != null">
+                DeptUser,
+            </if>
+            <if test="starttime != null">
+                StartTime,
+            </if>
+            <if test="endtime != null">
+                EndTime,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+            <if test="departmentname != null">
+                DepartmentName,
+            </if>
+
+            <if test="agentusername != null">
+                AgentUserName,
+            </if>
+            <if test="deptusername != null">
+                DeptUserName,
+            </if>
+            <if test="ispersonnel != null">
+                IsPersonnel,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="agent != null">
+                #{agent,jdbcType=VARCHAR},
+            </if>
+            <if test="deptuser != null">
+                #{deptuser,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                #{starttime,jdbcType=VARCHAR},
+            </if>
+            <if test="endtime != null">
+                #{endtime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="agentusername != null">
+                #{agentusername,jdbcType=VARCHAR},
+            </if>
+            <if test="deptusername != null">
+                #{deptusername,jdbcType=VARCHAR},
+            </if>
+            <if test="ispersonnel != null">
+                #{ispersonnel,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.PersonnelAuthorization">
+        update personnel_authorization
+        <set>
+            <if test="agent != null">
+                Agent = #{agent,jdbcType=VARCHAR},
+            </if>
+            <if test="deptuser != null">
+                DeptUser = #{deptuser,jdbcType=VARCHAR},
+            </if>
+            <if test="starttime != null">
+                StartTime = #{starttime,jdbcType=VARCHAR},
+            </if>
+            <if test="endtime != null">
+                EndTime = #{endtime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                Flag = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentname != null">
+                DepartmentName = #{departmentname,jdbcType=VARCHAR},
+            </if>
+            <if test="agentusername != null">
+                AgentUserName = #{agentusername,jdbcType=VARCHAR},
+            </if>
+            <if test="deptusername != null">
+                DeptUserName = #{deptusername,jdbcType=VARCHAR},
+            </if>
+            <if test="ispersonnel != null">
+                IsPersonnel = #{ispersonnel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER} and Flag not in("3","4")
+    </update>
+    <update id="updateFlag">
+       update personnel_authorization  set Flag=#{flag},EndTime=#{endtime}  where Agent=#{angent}
+  </update>
+
+    <update id="closeFlag">
+       update personnel_authorization set Flag="3"  where Id=#{id}
+  </update>
+
+    <select id="selectListByStart" resultMap="BaseResultMap">
+        select * from personnel_authorization where StartTime &lt;=#{starttime} and Flag="1"
+    </select>
+
+    <select id="selectListByLater" resultMap="BaseResultMap">
+        select * from personnel_authorization where EndTime &lt;=#{endtime} and Flag="2"
+    </select>
+
+    <update id="batchUpdate">
+        update personnel_authorization set Flag="2" where Agent in
+        <foreach collection="list" item="agents" separator="," open="(" close=")">
+            #{agents}
+        </foreach>
+        and Flag ="1"
+
+    </update>
+
+    <select id="selectOne" resultType="com.welb.personnel_check.entity.PersonnelAuthorization">
+        select * from personnel_authorization where  Agent = #{agent} and Flag  not in("3","4")
+    </select>
+
+    <select id="getHistoryAuthorizationList" resultMap="BaseResultMap">
+        select * from personnel_authorization
+        <where>
+            Flag not in("3")
+            <if test="departmentname != null and departmentname!=''">
+                and DepartmentName like concat('%',#{departmentname},'%')
+            </if>
+            <if test="deptuser != null and deptuser!='' ">
+                and DeptUser = #{deptuser}
+            </if>
+            <if test="agent != null and agent!=''">
+                and Agent = #{agent}
+            </if>
+            <if test="flag != null and flag!=''">
+                and Flag = #{flag}
+            </if>
+            <if test="agentusername != null and agentusername!=''">
+                and AgentUserName like concat('%',#{agentusername},'%')
+            </if>
+            <if test="deptusername != null and deptusername!=''">
+                and DeptUserName like concat('%', #{deptusername},'%')
+            </if>
+            <if test="starttime!=null and starttime!=''">
+                and StartTime >=#{starttime}
+                and StartTime!=''
+            </if>
+            <if test="endtime!=null and endtime!=''">
+                and EndTime &lt;=#{endtime}
+                and EndTime!=''
+            </if>
+            <if test="ispersonnel!=null and ispersonnel!=''">
+                and IsPersonnel =#{ispersonnel}
+            </if>
+        </where>
+        order by StartTime desc
+    </select>
+
+    <select id="findByAgent" resultType="com.welb.personnel_check.entity.PersonnelAuthorization">
+        select * from personnel_authorization where Flag in("1","2")and Agent=#{agent}
+    </select>
+</mapper>

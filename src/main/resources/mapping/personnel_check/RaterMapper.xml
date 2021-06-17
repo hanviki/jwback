@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.personnel_check.mapper.RaterMapper">
+    <resultMap id="BaseResultMap" type="com.welb.personnel_check.entity.Rater">
+        <id column="RaterCode" property="ratercode" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringcode" jdbcType="VARCHAR"/>
+        <result column="ScorringName" property="scorringname" jdbcType="VARCHAR"/>
+        <result column="Phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="Department" property="department" jdbcType="VARCHAR"/>
+        <result column="LeaderPhone" property="leaderphone" jdbcType="VARCHAR"/>
+        <result column="Remarks" property="remarks" jdbcType="VARCHAR"/>
+        <result column="Remarks2" property="remarks2" jdbcType="VARCHAR"/>
+        <result column="Flag" property="flag" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    RaterCode,ScorringCode, ScorringName, Phone, Department,LeaderPhone,Remarks,Remarks2,Flag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from rater
+        where RaterCode = #{ratercode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from rater
+    where RaterCode = #{ratercode,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.welb.personnel_check.entity.Rater">
+        insert into rater
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ratercode != null">
+                RaterCode,
+            </if>
+            <if test="scorringcode != null">
+                ScorringCode,
+            </if>
+            <if test="scorringname != null">
+                ScorringName,
+            </if>
+            <if test="phone != null">
+                Phone,
+            </if>
+            <if test="department != null">
+                Department,
+            </if>
+            <if test="leaderphone != null">
+                LeaderPhone,
+            </if>
+            <if test="remarks != null">
+                Remarks,
+            </if>
+            <if test="remarks2 != null">
+                Remarks2,
+            </if>
+            <if test="flag != null">
+                Flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ratercode != null">
+                #{ratercode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorringcode != null">
+                #{scorringcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorringname != null">
+                #{scorringname,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="leaderphone != null">
+                #{leaderphone,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks2 != null">
+                #{remarks2,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.personnel_check.entity.Rater">
+        update rater
+        <set>
+            <if test="scorringcode != null">
+                ScorringCode = #{scorringcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorringname != null">
+                ScorringName = #{scorringname,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                Phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                Department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="leaderphone != null">
+                LeaderPhone = #{leaderphone,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                Remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks2!= null">
+                Remarks2 = #{remarks2,jdbcType=VARCHAR},
+            </if>
+            <if test="flag!= null">
+                Flag = #{flag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where RaterCode = #{ratercode,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectAllRater" resultMap="BaseResultMap">
+        select r.*,u.UserCode
+        from rater r,user u
+        <where>
+            <if test="scorringname!=null and scorringname!=''">
+                and r.ScorringName like concat('%',#{scorringname},'%')
+            </if>
+            <if test="scorringcode!=null and scorringcode!=''">
+                and r.ScorringCode like concat('%',#{scorringcode},'%')
+            </if>
+            <if test="department!=null and department!=''">
+                and r.Department like concat('%',#{department},'%')
+            </if>
+            and r.Flag ="0"
+            and u.MoneyCard=r.ScorringCode
+            and u.Flag="0"
+        </where>
+    </select>
+
+
+    <select id="selectList" resultMap="BaseResultMap">
+    select * from rater where Flag ="0"
+  </select>
+
+    <select id="selectMaxCode" resultType="string">
+    select MAX(CAST(RaterCode as SIGNED INTEGER))  from rater
+  </select>
+
+    <select id="selectByMoneyCard" resultType="com.welb.personnel_check.entity.Rater">
+        select
+        <include refid="Base_Column_List"/>
+        from rater
+        where ScorringCode = #{scorringcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectDepartList" resultMap="BaseResultMap">
+     select distinct(Department) from rater
+  </select>
+
+
+    <delete id="deleteRaterByScorringCode" parameterType="java.lang.String">
+    delete from rater where ScorringCode = #{scorringcode,jdbcType=VARCHAR}
+  </delete>
+
+    <select id="selectRaterByDept" resultType="com.welb.personnel_check.entity.Rater">
+    select * from rater where Department=#{department} and Flag="0"
+  </select>
+</mapper>
+
