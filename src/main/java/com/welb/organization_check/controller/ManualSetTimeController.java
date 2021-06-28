@@ -45,12 +45,13 @@ public class ManualSetTimeController {
         ModelMap map = new ModelMap();
         String year = CalendarUtil.getYear();
         String month = CalendarUtil.getMonth();
-        String quarter = CalendarUtil.getQuarter(month);
-        int count = Integer.parseInt(quarter) - 1;
+       //hsc 20210628
+      //  String quarter = CalendarUtil.getQuarter(month);
+        int count = Integer.parseInt(month) - 1;
         if (count == 0) {
             int lastYear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastYear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }
@@ -64,10 +65,10 @@ public class ManualSetTimeController {
 
         }
         if (isFinish){
-            map.put("msg","是否确认开启新的季度考核新的考核");
+            map.put("msg","是否确认开启新的月度考核新的考核");
             map.put("code",0);
         }else {
-            map.put("msg","当前季度考核还未全部完成,是否结束当前季度考核并开始新的季度考核。");
+            map.put("msg","当前月度考核还未全部完成,是否结束当前季度考核并开始新的月度考核。");
             map.put("code",0);
         }
         return map;
@@ -84,12 +85,12 @@ public class ManualSetTimeController {
         try {
             String year = CalendarUtil.getYear();
             String month = CalendarUtil.getMonth();
-            String quarter = CalendarUtil.getQuarter(month);
+          //  String quarter = CalendarUtil.getQuarter(month);
             setTime.setYear(year);
-            setTime.setMonth(quarter);
+            setTime.setMonth(month);
             String time = DateUtil.getTime();
             setTime.setCreatetime(time);
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
             if (manualSetTime!=null){
                 //修改
                 setTime.setId(manualSetTime.getId());
@@ -130,14 +131,14 @@ public class ManualSetTimeController {
         try {
             String year = CalendarUtil.getYear();
             String month = CalendarUtil.getMonth();
-            String quarter = CalendarUtil.getQuarter(month);
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+           // String quarter = CalendarUtil.getQuarter(month);
+            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
             if (manualSetTime == null) {
-                int count = Integer.parseInt(quarter) - 1;
+                int count = Integer.parseInt(month) - 1;
                 if (count == 0) {
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
-                    month = "4";
+                    month = "12";
                 } else {
                     month = String.valueOf(count);
                 }
@@ -145,9 +146,8 @@ public class ManualSetTimeController {
                 setTime.setMonth(month);
             }else {
                 setTime.setYear(year);
-                setTime.setMonth(quarter);
+                setTime.setMonth(month);
             }
-
             String time = DateUtil.getTime();
             setTime.setUpdatetime(time);
             setTimeService.updateTimeByYearAndMonth(setTime);

@@ -401,14 +401,14 @@ public class UserController extends BaseController {
         //获取当前月份
         String month = CalendarUtil.getMonth();
         //获取当前季度
-        String quarter = CalendarUtil.getQuarter(month);
+        //String quarter = CalendarUtil.getQuarter(month);
         //当前上一个季度
-        int count1 = Integer.parseInt(quarter.trim()) - 1;
+        int count1 = Integer.parseInt(month.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
         if (state.equals("1")) {
             //手动考核-查看所有季节总结
-            manualAddUser(summary, usercode, year, quarter, count1, sysTime);
+            manualAddUser(summary, usercode, year, month, count1, sysTime);
 
         } else {
             //自动考核-查看所有季节总结
@@ -444,7 +444,7 @@ public class UserController extends BaseController {
             if (count1 == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count1);
             }
@@ -454,7 +454,7 @@ public class UserController extends BaseController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -518,7 +518,7 @@ public class UserController extends BaseController {
                 MonthSummary summary = new MonthSummary();
                 String year = CalendarUtil.getYear();
                 String month = CalendarUtil.getMonth();
-                String quarter = CalendarUtil.getQuarter(month);
+                String quarter =month;// CalendarUtil.getQuarter(month);
                 int i = Integer.parseInt(quarter) - 1;
                 //获取当前系统时间
                 String sysTime = DateUtil.getTime();
@@ -608,7 +608,7 @@ public class UserController extends BaseController {
             if (i == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(i);
             }
@@ -619,7 +619,7 @@ public class UserController extends BaseController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -635,7 +635,7 @@ public class UserController extends BaseController {
         if (i == 0) {
             int lastYear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastYear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(i);
 

@@ -127,7 +127,7 @@ public class UserDtoController {
                 //当前月份
                 String month = CalendarUtil.getMonth();
                 //获取当前季度
-                String quarter = CalendarUtil.getQuarter(month);
+                String quarter =month;// CalendarUtil.getQuarter(month);
                 int counts = Integer.parseInt(quarter.trim()) - 1;
                 //获取当前系统时间
                 String sysTime = DateUtil.getTime();
@@ -169,7 +169,7 @@ public class UserDtoController {
             if (counts == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(counts);
             }
@@ -179,7 +179,7 @@ public class UserDtoController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth =12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -209,7 +209,7 @@ public class UserDtoController {
         if (counts == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
 
         } else {
             month = String.valueOf(counts);
@@ -360,7 +360,7 @@ public class UserDtoController {
         //当前月份
         String month = CalendarUtil.getMonth();
         //获取当前季度
-        String quarter = CalendarUtil.getQuarter(month);
+        String quarter = month;//CalendarUtil.getQuarter(month);
         int counts = Integer.parseInt(quarter.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
@@ -398,7 +398,7 @@ public class UserDtoController {
             if (counts == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(counts);
             }
@@ -408,7 +408,7 @@ public class UserDtoController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -435,7 +435,7 @@ public class UserDtoController {
         if (counts == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(counts);
         }
@@ -618,7 +618,7 @@ public class UserDtoController {
         if (i == 0) {
             int lastYear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastYear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(i);
         }
@@ -797,7 +797,7 @@ public class UserDtoController {
         //获取当前月份
         String month = CalendarUtil.getMonth();
         //获取当前季度
-        String quarter = CalendarUtil.getQuarter(month);
+        String quarter = month;//CalendarUtil.getQuarter(month);
         //当前上一个季度
         int count = Integer.parseInt(quarter.trim()) - 1;
         //获取当前系统时间
@@ -881,7 +881,7 @@ public class UserDtoController {
         //获取当前月份
         String month = CalendarUtil.getMonth();
         //获取当前季度
-        String quarter = CalendarUtil.getQuarter(month);
+        String quarter =month;// CalendarUtil.getQuarter(month);
         //当前上一个季度
         int count = Integer.parseInt(quarter.trim()) - 1;
         //获取当前系统时间
@@ -930,7 +930,7 @@ public class UserDtoController {
                     if (count == 0) {
                         int lastyear = Integer.parseInt(year.trim()) - 1;
                         year = String.valueOf(lastyear);
-                        month = "4";
+                        month = "12";
                     } else {
                         month = String.valueOf(count);
                     }
@@ -941,7 +941,7 @@ public class UserDtoController {
                 if (count == 0) {
                     int lastyear = Integer.parseInt(year.trim()) - 1;
                     year = String.valueOf(lastyear);
-                    month = "4";
+                    month = "12";
                 } else {
                     month = String.valueOf(count);
                 }
@@ -952,7 +952,7 @@ public class UserDtoController {
                 } else {
                     int lastMonth = Integer.parseInt(month) - 1;
                     if (lastMonth == 0) {
-                        lastMonth = 4;
+                        lastMonth = 12;
                         int lastYear = Integer.parseInt(year) - 1;
                         year = String.valueOf(lastYear);
                     }
@@ -966,7 +966,7 @@ public class UserDtoController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }

@@ -269,13 +269,13 @@ public class ScoreController {
         int count = scoreService.updateByPrimaryKeySelective(score);
         String year = CalendarUtil.getYear();
         String month = CalendarUtil.getMonth();
-        String quarter = CalendarUtil.getQuarter(month);
-        int i = Integer.parseInt(quarter.trim()) - 1;
+     //   String quarter = CalendarUtil.getQuarter(month);
+        int i = Integer.parseInt(month.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
         if (state.equals("1")) {
             //手动考核-查看所有季节总结
-            manualUpdateScore(score, map, selectScoreByCode, count, year, quarter, i, sysTime);
+            manualUpdateScore(score, map, selectScoreByCode, count, year, month, i, sysTime);
         } else {
             //自动考核-修改评分关系
             automaticUpdateScore(score, map, selectScoreByCode, count, year, i);
@@ -303,7 +303,7 @@ public class ScoreController {
             if (i == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(i);
             }
@@ -314,7 +314,7 @@ public class ScoreController {
                 } else {
                     int lastMonth = Integer.parseInt(month) - 1;
                     if (lastMonth==0){
-                        lastMonth=4;
+                        lastMonth=12;
                         int lastYear = Integer.parseInt(year)-1;
                         year=String.valueOf(lastYear);
                     }
@@ -339,7 +339,7 @@ public class ScoreController {
         if (i == 0) {
             int lastYear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastYear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(i);
         }

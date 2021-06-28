@@ -114,14 +114,14 @@ public class MobileController {
 //                    当前月份h
                     String month = CalendarUtil.getMonth();
 //                    当前季度
-                    String quarter = CalendarUtil.getQuarter(month);
+                 //   String quarter = CalendarUtil.getQuarter(month);
                     //当前上一季度
-                    int count = Integer.parseInt(quarter.trim()) - 1;
+                    int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
                     if (state.equals("1")) {
                         //手动考核-查看所有季节总结
-                        manualGetDetail(dto, map, data, year, quarter, count, sysTime);
+                        manualGetDetail(dto, map, data, year, month, count, sysTime);
 
                     } else {
                         //自动考核-查看所有季节总结
@@ -154,7 +154,7 @@ public class MobileController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -164,7 +164,7 @@ public class MobileController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -190,7 +190,7 @@ public class MobileController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
 
         } else {
             month = String.valueOf(count);
@@ -297,13 +297,13 @@ public class MobileController {
 //            月份
                             String month = CalendarUtil.getMonth();
 //            季度
-                            String quarter = CalendarUtil.getQuarter(month);
-                            int count = Integer.parseInt(quarter) - 1;
+                          //  String quarter = CalendarUtil.getQuarter(month);
+                            int count = Integer.parseInt(month) - 1;
                             //获取当前系统时间
                             String sysTime = DateUtil.getTime();
                             if (state.equals("1")) {
                                 //手动考核-查看所有季节总结
-                                manualSendEvaluationReport(usercode, report, r1, r2, user, df, year, quarter, count, sysTime);
+                                manualSendEvaluationReport(usercode, report, r1, r2, user, df, year, month, count, sysTime);
 
                             } else {
                                 //自动考核-查看所有季节总结
@@ -397,7 +397,7 @@ public class MobileController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -407,7 +407,7 @@ public class MobileController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -438,7 +438,7 @@ public class MobileController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             report.setYear(year);
             month = String.valueOf(count);
@@ -475,7 +475,7 @@ public class MobileController {
             if (count1 == 0) {
                 int lastyear1 = Integer.parseInt(year) - 1;
                 report1.setYear(String.valueOf(lastyear1));
-                report1.setMonth("4");
+                report1.setMonth("12");
                 EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);
                 getCompareLastInfo(report, maxScore, minScore, report2);
             } else {
@@ -647,13 +647,13 @@ public class MobileController {
                     List<Duty> yiBan = dutyService.queryYiBan(user.getStationcode());
                     String year = CalendarUtil.getYear();
                     String month = CalendarUtil.getMonth();
-                    String quarter = CalendarUtil.getQuarter(month);
-                    int count = Integer.parseInt(quarter.trim()) - 1;
+                  //  String quarter = CalendarUtil.getQuarter(month);
+                    int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
                     if (state.equals("1")) {
                         //手动考核-查看所有季节总结
-                        manualGetSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, quarter, count, sysTime);
+                        manualGetSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, month, count, sysTime);
                     } else {
                         //自动考核-查看所有季节总结
                         automaticGetSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, count);
@@ -706,7 +706,7 @@ public class MobileController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -716,7 +716,7 @@ public class MobileController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -741,7 +741,7 @@ public class MobileController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }
@@ -991,13 +991,13 @@ public class MobileController {
 //            月份
         String month = CalendarUtil.getMonth();
 //            季度
-        String quarter = CalendarUtil.getQuarter(month);
-        int count = Integer.parseInt(quarter) - 1;
+      //  String quarter = CalendarUtil.getQuarter(month);
+        int count = Integer.parseInt(month) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
         if (state.equals("1")) {
             //手动考核-查看所有季节总结
-            manualGetReport(report, year, quarter, count, sysTime);
+            manualGetReport(report, year, month, count, sysTime);
         } else {
             //自动考核-查看所有季节总结
             automaticGetReport(report, year, count);
@@ -1035,7 +1035,7 @@ public class MobileController {
                 if (count == 0) {
                     int lastyear = Integer.parseInt(year.trim()) - 1;
                     year = String.valueOf(lastyear);
-                    month = "4";
+                    month = "12";
                 } else {
                     month = String.valueOf(count);
                 }
@@ -1046,7 +1046,7 @@ public class MobileController {
                 } else {
                     int lastMonth = Integer.parseInt(month) - 1;
                     if (lastMonth == 0) {
-                        lastMonth = 4;
+                        lastMonth = 12;
                         int lastYear = Integer.parseInt(year) - 1;
                         year = String.valueOf(lastYear);
                     }
@@ -1065,7 +1065,7 @@ public class MobileController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }
@@ -1141,14 +1141,14 @@ public class MobileController {
                         //获取当前月份
                         String month = CalendarUtil.getMonth();
                         //获取当前季度
-                        String quarter = CalendarUtil.getQuarter(month);
+                      //  String quarter = CalendarUtil.getQuarter(month);
                         //当前上一个季度
-                        int count = Integer.parseInt(quarter.trim()) - 1;
+                        int count = Integer.parseInt(month.trim()) - 1;
                         //获取当前系统时间
                         String sysTime = DateUtil.getTime();
                         if (state.equals("1")) {
                             //手动考核-查看所有季节总结
-                            manualSelectUserDtoLike(usercode, dto, map, summarys, year, quarter, count, sysTime);
+                            manualSelectUserDtoLike(usercode, dto, map, summarys, year, month, count, sysTime);
                         } else {
                             //自动考核-查看所有季节总结
                             automaticSelectUserDtoLike(usercode, dto, map, summarys, year, count);
@@ -1188,7 +1188,7 @@ public class MobileController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -1198,7 +1198,7 @@ public class MobileController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -1213,7 +1213,7 @@ public class MobileController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
 
         } else {
             month = String.valueOf(count);

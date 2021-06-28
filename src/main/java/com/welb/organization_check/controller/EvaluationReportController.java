@@ -76,7 +76,7 @@ public class EvaluationReportController {
                     //月份
                     month = CalendarUtil.getMonth();
                     //季度
-                    String quarter = CalendarUtil.getQuarter(month);
+                    String quarter =month;// CalendarUtil.getQuarter(month);
                     int count = Integer.parseInt(quarter) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
@@ -123,7 +123,7 @@ public class EvaluationReportController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -133,7 +133,7 @@ public class EvaluationReportController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -148,7 +148,7 @@ public class EvaluationReportController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
             report.setYear(year);
         } else {
             report.setYear(year);
@@ -280,7 +280,7 @@ public class EvaluationReportController {
             if (count1 == 0) {
                 int lastyear1 = Integer.parseInt(year) - 1;
                 report1.setYear(String.valueOf(lastyear1));
-                report1.setMonth("4");
+                report1.setMonth("12");
                 EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);
                 getCompareLastInfo(report, maxScore, minScore, report2);
             } else {
@@ -447,7 +447,7 @@ public class EvaluationReportController {
                     //月份
                     String month = CalendarUtil.getMonth();
                     //季度
-                    String quarter = CalendarUtil.getQuarter(month);
+                    String quarter =month;// CalendarUtil.getQuarter(month);
                     int count = Integer.parseInt(quarter) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
@@ -545,7 +545,7 @@ public class EvaluationReportController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -556,7 +556,7 @@ public class EvaluationReportController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -572,7 +572,7 @@ public class EvaluationReportController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
 
         } else {
             month = String.valueOf(count);
@@ -772,7 +772,7 @@ public class EvaluationReportController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -782,7 +782,7 @@ public class EvaluationReportController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth==0){
-                    lastMonth=4;
+                    lastMonth=12;
                     int lastYear = Integer.parseInt(year)-1;
                     year=String.valueOf(lastYear);
                 }
@@ -822,7 +822,7 @@ public class EvaluationReportController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }

@@ -81,13 +81,13 @@ public class ResultDetailController {
                     if (year.equals("") && month.equals("")) {
                         String sysYear = CalendarUtil.getYear();
                         String sysMonth = CalendarUtil.getMonth();
-                        String quarter = CalendarUtil.getQuarter(sysMonth);
-                        int count = Integer.parseInt(quarter.trim()) - 1;
+                     //   String quarter = CalendarUtil.getQuarter(sysMonth);
+                        int count = Integer.parseInt(month.trim()) - 1;
                         //获取当前系统时间
                         String sysTime = DateUtil.getTime();
                         if (state.equals("1")) {
                             //手动考核-查看所有季节总结
-                            manualGetSingleTotalScore(usercode, id, year, detail, report, resultDetails, user, jichu, yiBan, sysYear, quarter, count, sysTime);
+                            manualGetSingleTotalScore(usercode, id, year, detail, report, resultDetails, user, jichu, yiBan, sysYear, month, count, sysTime);
 
                         } else {
                             //自动考核-查看所有季节总结
@@ -154,7 +154,7 @@ public class ResultDetailController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
                 year=sysYear;
@@ -165,7 +165,7 @@ public class ResultDetailController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth==0){
-                    lastMonth=4;
+                    lastMonth=12;
                     int lastYear = Integer.parseInt(year)-1;
                     year=String.valueOf(lastYear);
                 }
@@ -192,7 +192,7 @@ public class ResultDetailController {
         if (count == 0) {
             int lastyear = Integer.parseInt(sysYear) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             year = sysYear;
             month = String.valueOf(count);
@@ -282,13 +282,13 @@ public class ResultDetailController {
                 if (year.equals("") && month.equals("")) {
                     year = CalendarUtil.getYear();
                     month = CalendarUtil.getMonth();
-                    String quarter = CalendarUtil.getQuarter(month);
-                    int count = Integer.parseInt(quarter.trim()) - 1;
+                   // String quarter = CalendarUtil.getQuarter(month);
+                    int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
                     if (state.equals("1")) {
                         //手动考核-查看所有季节总结
-                        manualGetScorringAndScore(usercode, type, year, map, detail, resultReport, quarter, count, sysTime);
+                        manualGetScorringAndScore(usercode, type, year, map, detail, resultReport, month, count, sysTime);
                     } else {
                         //自动考核-查看所有季节总结
                         automaticGetScorringAndScore(usercode, type, year, map, detail, resultReport, count);
@@ -326,7 +326,7 @@ public class ResultDetailController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -336,7 +336,7 @@ public class ResultDetailController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth==0){
-                    lastMonth=4;
+                    lastMonth=12;
                     int lastYear = Integer.parseInt(year)-1;
                     year=String.valueOf(lastYear);
                 }
@@ -361,7 +361,7 @@ public class ResultDetailController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }

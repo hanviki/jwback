@@ -68,14 +68,14 @@ public class MonthSummaryController {
             //获取当前月份
             String month = CalendarUtil.getMonth();
             //获取当前季度
-            String quarter = CalendarUtil.getQuarter(month);
+          //  String quarter = CalendarUtil.getQuarter(month);
             //当前上一个季度
-            int count = Integer.parseInt(quarter.trim()) - 1;
+            int count = Integer.parseInt(month.trim()) - 1;
             //获取当前系统时间
             String sysTime = DateUtil.getTime();
             if (state.equals("1")) {
                 //手动考核 --查询个人季节总结
-                manualSelectSummary(summary, pageNum, pageSize, map, usercode, year, quarter, count, sysTime);
+                manualSelectSummary(summary, pageNum, pageSize, map, usercode, year, month, count, sysTime);
 
             } else {
                 //自动考核 --查询个人季节总结
@@ -107,7 +107,7 @@ public class MonthSummaryController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -117,7 +117,7 @@ public class MonthSummaryController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -141,7 +141,7 @@ public class MonthSummaryController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
 
         } else {
             month = String.valueOf(count);
@@ -215,13 +215,13 @@ public class MonthSummaryController {
         //获取当前月份
         String month = CalendarUtil.getMonth();
         //获取当前季度
-        String quarter = CalendarUtil.getQuarter(month);
+       // String quarter = CalendarUtil.getQuarter(month);
         //当前上一个季度
-        int count = Integer.parseInt(quarter.trim()) - 1;
+        int count = Integer.parseInt(month.trim()) - 1;
         String sysTime = DateUtil.getTime();
         if (state.equals("1")) {
             //手动考核 --添加个人季节总结
-            manualAddSummary(summary, map, usercode, year, quarter, count, sysTime);
+            manualAddSummary(summary, map, usercode, year, month, count, sysTime);
 
         } else {
             //自动考核  --添加个人季节总结
@@ -254,7 +254,7 @@ public class MonthSummaryController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -267,7 +267,7 @@ public class MonthSummaryController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -306,7 +306,7 @@ public class MonthSummaryController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             summary.setYear(String.valueOf(lastyear));
-            summary.setMonth("4");
+            summary.setMonth("12");
         } else {
             month = String.valueOf(count);
             summary.setMonth(month);

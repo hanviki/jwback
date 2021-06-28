@@ -73,13 +73,13 @@ public class SendMessageController {
         String state = (String) req.getSession().getAttribute("state");
         String year = CalendarUtil.getYear();
         String month = CalendarUtil.getMonth();
-        String quarter = CalendarUtil.getQuarter(month);
-        int count = Integer.parseInt(quarter) - 1;
+       // String quarter = CalendarUtil.getQuarter(month);
+        int count = Integer.parseInt(month) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
         if (state.equals("1")) {
             //手动考核-一键发送短信
-            manualSendMessageAll(templatecontent, map, loginUserCode, year, quarter, count, sysTime);
+            manualSendMessageAll(templatecontent, map, loginUserCode, year, month, count, sysTime);
         } else {
             //自动考核-一键发送短信
             automaticSendMessageAll(templatecontent, map, loginUserCode, year, count);
@@ -106,7 +106,7 @@ public class SendMessageController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -116,7 +116,7 @@ public class SendMessageController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -131,7 +131,7 @@ public class SendMessageController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
             judgeSendMessage(map, year, month, templatecontent, loginUserCode);
         } else {
             month = String.valueOf(count);
@@ -233,13 +233,13 @@ public class SendMessageController {
         String content = "";
         String year = CalendarUtil.getYear();
         String month = CalendarUtil.getMonth();
-        String quarter = CalendarUtil.getQuarter(month);
-        int count = Integer.parseInt(quarter) - 1;
+      //  String quarter = CalendarUtil.getQuarter(month);
+        int count = Integer.parseInt(month) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
         if (state.equals("1")) {
             //手动考核-给所有评分人发送短信
-            manualSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, quarter, count, sysTime);
+            manualSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, month, count, sysTime);
         } else {
             //自动考核-给所有评分人发送短信
             automaticSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, count);
@@ -264,7 +264,7 @@ public class SendMessageController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -274,7 +274,7 @@ public class SendMessageController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -289,7 +289,7 @@ public class SendMessageController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
             sendToScorringCode(usercode, map, userName, userPassword, userMAC, smsCode, content, year, month, loginUserCode, templatecontent);
 
         } else {
@@ -316,8 +316,9 @@ public class SendMessageController {
                     User user = userService.findUserByUserCode(scorringSummary.getEmployeecode());
                     mobile = user.getMobile();
                     if (!"".equals(mobile) && mobile != null) {
+                        // hsc20210628
 //                        content = template.getTemplatecontent() + " http://106.54.21.154:8091/360check/#/web?usercode=" + user.getUsercode();
-                        content = templatecontent + "http://119.97.220.235:9908/360check/#/web?usercode=" + user.getUsercode();
+                        content = templatecontent + "http://58.49.116.106:1099/#/web?usercode=" + user.getUsercode();
                         String service = new SmsService().getSmsServiceHttpPort().service(userName, userPassword, userMAC, smsCode, mobile, content);
                         getMessAgeState(map, service);
                         index++;
@@ -372,8 +373,9 @@ public class SendMessageController {
         User user = userService.findUserByUserCode(usercode);
         mobile = user.getMobile();
         if (!"".equals(mobile) && mobile != null) {
+            //hsc20210628
 //                content = template.getTemplatecontent() + " http://106.54.21.154:8091/360check/#/web?usercode=" + user.getUsercode();
-            content = templatecontent + " http://119.97.220.235:9908/360check/#/web?usercode=" + user.getUsercode();
+            content = templatecontent + " http://58.49.116.106:1099/#/web?usercode=" + user.getUsercode();
             String service = new SmsService().getSmsServiceHttpPort().service(userName, userPassword, userMAC, smsCode, mobile, content);
             getMessAgeState(map, service);
             //添加短信发送日志记录

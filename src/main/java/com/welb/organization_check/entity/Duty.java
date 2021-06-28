@@ -8,7 +8,7 @@ public class Duty {
 
     static {
         dutytypes.put("0", "基础量化指标");
-        dutytypes.put("1", "关键量化指标");
+        dutytypes.put("1", "岗位量化指标");
     }
 
     private String dutycode;

@@ -100,9 +100,9 @@ public class HomePageController {
 //                    当前月份h
                         String month = CalendarUtil.getMonth();
 //                    当前季度
-                        String quarter = CalendarUtil.getQuarter(month);
+                        String quarter = month;//CalendarUtil.getQuarter(month);
                         //当前上一季度
-                        int count = Integer.parseInt(quarter.trim()) - 1;
+                        int count = Integer.parseInt(month.trim()) - 1;
                         //获取当前系统时间
                         String sysTime = DateUtil.getTime();
                         if (state.equals("1")) {
@@ -157,7 +157,7 @@ public class HomePageController {
             if (count == 0) {
                 int lastyear = Integer.parseInt(year.trim()) - 1;
                 year = String.valueOf(lastyear);
-                month = "4";
+                month = "12";
             } else {
                 month = String.valueOf(count);
             }
@@ -176,7 +176,7 @@ public class HomePageController {
             } else {
                 int lastMonth = Integer.parseInt(month) - 1;
                 if (lastMonth == 0) {
-                    lastMonth = 4;
+                    lastMonth = 12;
                     int lastYear = Integer.parseInt(year) - 1;
                     year = String.valueOf(lastYear);
                 }
@@ -196,7 +196,7 @@ public class HomePageController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }
@@ -449,7 +449,7 @@ public class HomePageController {
 //            月份
         String month = CalendarUtil.getMonth();
 //            季度
-        String quarter = CalendarUtil.getQuarter(month);
+        String quarter =month;// CalendarUtil.getQuarter(month);
         int count = Integer.parseInt(quarter) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
@@ -472,7 +472,7 @@ public class HomePageController {
                 if (count == 0) {
                     int lastyear = Integer.parseInt(year.trim()) - 1;
                     year = String.valueOf(lastyear);
-                    month = "4";
+                    month = "12";
                 } else {
                     month = String.valueOf(count);
                 }
@@ -482,7 +482,7 @@ public class HomePageController {
                 } else {
                     int lastMonth = Integer.parseInt(month) - 1;
                     if (lastMonth == 0) {
-                        lastMonth = 4;
+                        lastMonth = 12;
                         int lastYear = Integer.parseInt(year) - 1;
                         year = String.valueOf(lastYear);
                     }
@@ -516,7 +516,7 @@ public class HomePageController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }

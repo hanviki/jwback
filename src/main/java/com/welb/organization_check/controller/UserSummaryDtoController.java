@@ -69,7 +69,7 @@ public class UserSummaryDtoController {
             //获取当前月份
             String month = CalendarUtil.getMonth();
             //获取当前季度
-            String quarter = CalendarUtil.getQuarter(month);
+            String quarter = month;//CalendarUtil.getQuarter(month);
             //当前上一个季度
             int count = Integer.parseInt(quarter.trim()) - 1;
             //获取当前系统时间
@@ -112,7 +112,7 @@ public class UserSummaryDtoController {
                 if (count == 0) {
                     int lastyear = Integer.parseInt(year.trim()) - 1;
                     year = String.valueOf(lastyear);
-                    month = "4";
+                    month = "12";
                 } else {
                     month = String.valueOf(count);
                 }
@@ -122,7 +122,7 @@ public class UserSummaryDtoController {
                 } else {
                     int lastMonth = Integer.parseInt(month) - 1;
                     if (lastMonth == 0) {
-                        lastMonth = 4;
+                        lastMonth = 12;
                         int lastYear = Integer.parseInt(year) - 1;
                         year = String.valueOf(lastYear);
                     }
@@ -140,7 +140,7 @@ public class UserSummaryDtoController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
         } else {
             month = String.valueOf(count);
         }
@@ -228,7 +228,7 @@ public class UserSummaryDtoController {
                 //获取当前月份
                 String month = CalendarUtil.getMonth();
                 //获取当前季度
-                String quarter = CalendarUtil.getQuarter(month);
+                String quarter =month;// CalendarUtil.getQuarter(month);
                 //当前上一个季度
                 int count = Integer.parseInt(quarter.trim()) - 1;
                 //获取当前系统时间
@@ -287,7 +287,7 @@ public class UserSummaryDtoController {
                 if (count == 0) {
                     int lastyear = Integer.parseInt(year.trim()) - 1;
                     year = String.valueOf(lastyear);
-                    month = "4";
+                    month = "12";
                 } else {
                     month = String.valueOf(count);
                 }
@@ -297,7 +297,7 @@ public class UserSummaryDtoController {
                 } else {
                     int lastMonth = Integer.parseInt(month) - 1;
                     if (lastMonth == 0) {
-                        lastMonth = 4;
+                        lastMonth = 12;
                         int lastYear = Integer.parseInt(year) - 1;
                         year = String.valueOf(lastYear);
                     }
@@ -316,7 +316,7 @@ public class UserSummaryDtoController {
         if (count == 0) {
             int lastyear = Integer.parseInt(year.trim()) - 1;
             year = String.valueOf(lastyear);
-            month = "4";
+            month = "12";
             getSummary(summaryDto, map, usercode, year, month,pageNum,pageSize);
 
         } else {

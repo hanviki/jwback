@@ -14,9 +14,9 @@ public class HistoryScore {
         states.put("1","已提交");
         states.put("2","未评分");
         states.put("3","未完成评分");
-        states.put("5","季结待提交");
-        states.put("6","季结评分");
-        states.put("7","季结评分完成");
+        states.put("5","月结待提交");
+        states.put("6","月结评分");
+        states.put("7","月结评分完成");
 
         scorestatusList.put("1","未评分");
         scorestatusList.put("2","未完成");
