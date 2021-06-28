@@ -76,7 +76,7 @@ public class DutyController {
     @RequestMapping(value = "/add", produces = "application/json;charset=utf-8")
     public Object addDuty(Duty duty) {
         ModelMap map = new ModelMap();
-        getDutyType(duty);
+      //  getDutyType(duty);
         int count = dutyService.insertSelective(duty);
         if (count > 0) {
             map.put("msg", "添加指标成功");
@@ -98,7 +98,7 @@ public class DutyController {
     @RequestMapping(value = "/update", produces = "application/json;charset=utf-8")
     public Object updateDuty(Duty duty) {
         ModelMap map = new ModelMap();
-        getDutyType(duty);
+      //  getDutyType(duty);
         int count = dutyService.updateByPrimaryKeySelective(duty);
         if (count > 0) {
             map.put("msg", "修改指标成功");

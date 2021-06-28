@@ -322,6 +322,7 @@ public class UserController extends BaseController {
     public Object addUser(HttpServletRequest req, User user, String rolecode) {
         ModelMap map = new ModelMap();
         String state = (String) req.getSession().getAttribute("state");
+
         insertUser(user, rolecode, map, state);
         return map;
     }
@@ -504,7 +505,16 @@ public class UserController extends BaseController {
         try {
             List<Role> roles = roleService.selectRoleListByUserCode(user.getUsercode());
             User user1 = userService.findUserByUserCode(user.getUsercode());
+
             if (user.getMoneycard().equals(user1.getMoneycard())) {//修改的是同一个用户-没有更改发薪号
+
+                user.setRoletype(user1.getRoletype());
+                //对输入的密码进行加密
+                user.setPassword(user1.getPassword());
+                //默认用户状态为启用
+                user.setUserstate(user1.getUserstate());
+                user.setFlag(user1.getFlag());
+
                 MonthSummary summary = new MonthSummary();
                 String year = CalendarUtil.getYear();
                 String month = CalendarUtil.getMonth();
