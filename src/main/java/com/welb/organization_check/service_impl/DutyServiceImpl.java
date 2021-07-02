@@ -72,4 +72,9 @@ public class DutyServiceImpl implements IDutyService {
     public List<Duty> queryYiBan(String stationcode) {
         return dutyMapper.queryYiBan(stationcode);
     }
+
+    @Override
+    public List<Duty> queryDutyByType(String dutyType,String stationcode) {
+        return dutyMapper.queryDutyByType(dutyType,stationcode);
+    }
 }

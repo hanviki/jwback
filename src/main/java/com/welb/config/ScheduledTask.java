@@ -101,13 +101,10 @@ public class ScheduledTask {
             int i = Integer.parseInt(quarter) - 1;
             //获取当前系统时间
             String sysTime = DateUtil.getTime();
-            if (state.equals("1")) {
+
                 //手动考核-查看所有季节总结
                 manualGetStatus(year, quarter, i, sysTime);
-            } else {
-                //自动考核-查看所有季节总结
-                automaticGetStatus(year, i);
-            }
+
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
         }
@@ -154,37 +151,13 @@ public class ScheduledTask {
 
     private void manualGetStatus(String year, String quarter, int i, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                getUserDto(year, month);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticGetStatus(year, i);
-            }
-        } else {
-            if (i == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "4";
-            } else {
-                month = String.valueOf(i);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getUserDto(year, month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 4;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getUserDto(year, month);
-            }
+                getUserDto(setTime.getYear(), setTime.getMonth());
+
         }
     }
 
@@ -329,61 +302,19 @@ public class ScheduledTask {
         UserDto dto = new UserDto();
         UserEvaluationDto evaluationDto = new UserEvaluationDto();
         try {
-            String year = CalendarUtil.getYear();
-            String month = CalendarUtil.getMonth();
-            String quarter = CalendarUtil.getQuarter(month);
-            int i = Integer.parseInt(quarter) - 1;
-            //获取当前系统时间
-            String sysTime = DateUtil.getTime();
-            if (state.equals("1")) {
-                //手动考核-查看所有季节总结
-                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
-                if (setTime != null) {
-                    if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                        //开始新的季度考核
-                        month = quarter;
-                    } else {
-                        if (i == 0) {
-                            int lastYear = Integer.parseInt(year) - 1;
-                            year = String.valueOf(lastYear);
-                            month = "4";
-                        } else {
-                            month = String.valueOf(i);
-                        }
-                    }
-                } else {
-                    if (i == 0) {
-                        int lastyear = Integer.parseInt(year.trim()) - 1;
-                        year = String.valueOf(lastyear);
-                        month = "4";
-                    } else {
-                        month = String.valueOf(i);
-                    }
-                    ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-                    if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
+            String year = "";
+            String month ="";
 
-                    } else {
-                        int lastMonth = Integer.parseInt(month) - 1;
-                        if (lastMonth == 0) {
-                            lastMonth = 4;
-                            int lastYear = Integer.parseInt(year) - 1;
-                            year = String.valueOf(lastYear);
-                        }
-                        month = String.valueOf(lastMonth);
-                    }
-                }
-            } else {
-                //自动考核-查看所有季节总结
-                if (i == 0) {
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                    month = "4";
-                } else {
-                    month = String.valueOf(i);
-                }
-            }
-            evaluationDto.setYear(year);
-            evaluationDto.setMonth(month);
+
+                //手动考核-查看所有季节总结
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
+
+            evaluationDto.setYear(setTime.getYear());
+            evaluationDto.setMonth(setTime.getMonth());
+
+            year= setTime.getYear();
+            month= setTime.getMonth();
+
             List<UserEvaluationDto> evaluationReports;
             evaluationReports = evaluationReportService.selectAllEvaluationReportLike(evaluationDto);
             if (evaluationReports.size() > 0) {
@@ -422,19 +353,12 @@ public class ScheduledTask {
                         report.setScoredifference(scoreDifference);
                         EvaluationReport report1 = new EvaluationReport();
                         report1.setUsercode(report.getUsercode());
-                        int count1 = Integer.parseInt(month) - 1;
-                        if (count1 == 0) {
-                            int lastyear1 = Integer.parseInt(year) - 1;
-                            report1.setYear(String.valueOf(lastyear1));
-                            report1.setMonth("4");
-                            EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);
-                            getCompareLastInfo(report, maxScore, minScore, report2);
-                        } else {
+
                             report1.setYear(year);
-                            report1.setMonth(String.valueOf(count1));
+                            report1.setMonth(month);
                             EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);
                             getCompareLastInfo(report, maxScore, minScore, report2);
-                        }
+
                         evaluationReportService.updateByPrimaryKeySelective(report);
                     }
                 }
@@ -585,13 +509,10 @@ public class ScheduledTask {
             int count = Integer.parseInt(quarter) - 1;
             //获取当前系统时间
             String sysTime = DateUtil.getTime();
-            if (state.equals("1")) {
+
                 //手动考核-查看所有季节总结
                 manualGetUserDto(dto, year, quarter, count, sysTime);
-            } else {
-                //自动考核-查看所有季节总结
-                automaticGetUserDto(dto, year, count);
-            }
+
             List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto);
             getMonthScoreStationName(userDtoList);
             List<HistoryScore> scores = historyScoreService.selectAll(dto.getYear(), dto.getMonth());
@@ -606,41 +527,15 @@ public class ScheduledTask {
 
     private void manualGetUserDto(UserDto dto, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                dto.setYear(year);
-                dto.setMonth(month);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticGetUserDto(dto, year, count);
-            }
+                dto.setYear(setTime.getYear());
+                dto.setMonth(setTime.getMonth());
 
-        } else {
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "4";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                dto.setYear(year);
-                dto.setMonth(month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 4;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                dto.setYear(year);
-                dto.setMonth(month);
-            }
+
         }
     }
 

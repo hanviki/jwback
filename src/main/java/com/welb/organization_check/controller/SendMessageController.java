@@ -77,14 +77,10 @@ public class SendMessageController {
         int count = Integer.parseInt(month) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
-        if (state.equals("1")) {
+
             //手动考核-一键发送短信
             manualSendMessageAll(templatecontent, map, loginUserCode, year, month, count, sysTime);
-        } else {
-            //自动考核-一键发送短信
-            automaticSendMessageAll(templatecontent, map, loginUserCode, year, count);
 
-        }
 
         return map;
     }
@@ -92,37 +88,13 @@ public class SendMessageController {
     private void manualSendMessageAll(String templatecontent, ModelMap map, String loginUserCode,
                                       String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                judgeSendMessage(map, year, month, templatecontent, loginUserCode);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticSendMessageAll(templatecontent, map, loginUserCode, year, count);
-            }
-        } else {
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                judgeSendMessage(map, year, month, templatecontent, loginUserCode);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                judgeSendMessage(map, year, month, templatecontent, loginUserCode);
-            }
+                judgeSendMessage(map, setTime.getYear(), setTime.getMonth(), templatecontent, loginUserCode);
+
         }
     }
 
@@ -237,50 +209,23 @@ public class SendMessageController {
         int count = Integer.parseInt(month) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
-        if (state.equals("1")) {
+
             //手动考核-给所有评分人发送短信
-            manualSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, month, count, sysTime);
-        } else {
-            //自动考核-给所有评分人发送短信
-            automaticSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, count);
-        }
+        manualSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, month, count, sysTime);
+
         return map;
     }
 
     private void manualSendOneMessage(String usercode, String templatecontent, ModelMap map, String loginUserCode,
                                       String userName, String userPassword, String userMAC, String smsCode, String content, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                sendToScorringCode(usercode, map, userName, userPassword, userMAC, smsCode, content, year, month, loginUserCode, templatecontent);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticSendOneMessage(usercode, templatecontent, map, loginUserCode, userName, userPassword, userMAC, smsCode, content, year, count);
-            }
-        } else {
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                sendToScorringCode(usercode, map, userName, userPassword, userMAC, smsCode, content, year, month, loginUserCode, templatecontent);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                sendToScorringCode(usercode, map, userName, userPassword, userMAC, smsCode, content, year, month, loginUserCode, templatecontent);
-            }
+                sendToScorringCode(usercode, map, userName, userPassword, userMAC, smsCode, content, setTime.getYear(), setTime.getMonth(), loginUserCode, templatecontent);
+
         }
     }
 

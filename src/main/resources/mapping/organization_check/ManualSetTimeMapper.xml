@@ -125,7 +125,12 @@
   </update>
 
   <select id="selectManualByYearAndMonth" resultType="com.welb.organization_check.entity.ManualSetTime">
-    select * from manual_set_time where Year=#{year} and Month=#{month}
+     <if test="year != null and year !=''" >
+    select * from manual_set_time  where Year = #{year} and Month=#{month}
+    </if>
+    <if test="year == null or year ==''" >
+      select * from manual_set_time order by id desc limit 1
+    </if>
   </select>
 
 </mapper>

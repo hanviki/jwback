@@ -406,14 +406,11 @@ public class UserController extends BaseController {
         int count1 = Integer.parseInt(month.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
-        if (state.equals("1")) {
+
             //手动考核-查看所有季节总结
             manualAddUser(summary, usercode, year, month, count1, sysTime);
 
-        } else {
-            //自动考核-查看所有季节总结
-            automaticAddUser(summary, usercode, year, count1);
-        }
+
         //添加角色
         UserRoleKey roleKey = new UserRoleKey();
         roleKey.setRolecode(rolecode);
@@ -430,37 +427,13 @@ public class UserController extends BaseController {
 
     private void manualAddUser(MonthSummary summary, String usercode, String year, String quarter, int count1, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                addMonthSummary(summary, usercode, year, month);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticAddUser(summary, usercode, year, count1);
-            }
-        } else {
-            if (count1 == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count1);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                addMonthSummary(summary, usercode, year, month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                addMonthSummary(summary, usercode, year, month);
-            }
+                addMonthSummary(summary, usercode, setTime.getYear(), setTime.getMonth());
+
         }
     }
 
@@ -522,13 +495,10 @@ public class UserController extends BaseController {
                 int i = Integer.parseInt(quarter) - 1;
                 //获取当前系统时间
                 String sysTime = DateUtil.getTime();
-                if (state.equals("1")) {
+
                     //手动考核-查看所有季节总结
                     manualGetSerialNo(user, summary, year, quarter, i, sysTime);
-                } else {
-                    //自动考核-查看所有季节总结
-                    automaticGetSerialNo(user, summary, year, i);
-                }
+
                 MonthSummary monthSunmmary = summaryService.selectByPrimaryKey(summary.getSerialno());
                 //修改用户角色
                 if (rolecode != null) {
@@ -593,40 +563,14 @@ public class UserController extends BaseController {
 
     private void manualGetSerialNo(User user, MonthSummary summary, String year, String quarter, int i, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                String serialNo = year + "-" + month + "-" + user.getUsercode();
+                String serialNo = setTime.getYear() + "-" + setTime.getMonth() + "-" + user.getUsercode();
                 summary.setSerialno(serialNo);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticGetSerialNo(user, summary, year, i);
-            }
-        } else {
-            if (i == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(i);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                String serialNo = year + "-" + month + "-" + user.getUsercode();
-                summary.setSerialno(serialNo);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                String serialNo = year + "-" + month + "-" + user.getUsercode();
-                summary.setSerialno(serialNo);
-            }
+
         }
     }
 

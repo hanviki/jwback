@@ -80,7 +80,11 @@ public class ScoreDetailService implements IScoreDetailService {
 
     @Override
     public int batchUpdate(List<ScoreDetail> list) {
-        return scoreDetailMapper.batchUpdate(list);
+//        return scoreDetailMapper.batchUpdate(list);
+        for(ScoreDetail scoreDetail : list){
+            scoreDetailMapper.updateScoreDetail(scoreDetail);
+        }
+        return 1;
     }
 
     @Override

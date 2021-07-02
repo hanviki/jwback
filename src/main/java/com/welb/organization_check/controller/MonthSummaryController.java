@@ -50,7 +50,7 @@ public class MonthSummaryController {
     IManualSetTimeService setTimeService;
 
     /**
-     * 查询个人季节总结 包含模糊匹配查询
+     * 查询个人月节总结 包含模糊匹配查询
      *
      * @param summary
      * @param pageNum
@@ -67,20 +67,17 @@ public class MonthSummaryController {
             String year = CalendarUtil.getYear();
             //获取当前月份
             String month = CalendarUtil.getMonth();
-            //获取当前季度
+            //获取当前月度
           //  String quarter = CalendarUtil.getQuarter(month);
-            //当前上一个季度
+            //当前上一个月度
             int count = Integer.parseInt(month.trim()) - 1;
             //获取当前系统时间
             String sysTime = DateUtil.getTime();
-            if (state.equals("1")) {
-                //手动考核 --查询个人季节总结
+
+                //手动考核 --查询个人月节总结
                 manualSelectSummary(summary, pageNum, pageSize, map, usercode, year, month, count, sysTime);
 
-            } else {
-                //自动考核 --查询个人季节总结
-                automaticSelectSummary(summary, pageNum, pageSize, map, usercode, year, count);
-            }
+
         } else {
             map.put("msg", "登录用户超时,请重新登录");
             map.put("code", 810);
@@ -90,40 +87,16 @@ public class MonthSummaryController {
 
     private void manualSelectSummary(MonthSummary summary, int pageNum, int pageSize, ModelMap map, String usercode, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
             //开始新的一轮考核 手动设置考核时间未超过自动考核时间
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的考核
                 month = quarter;
-                getSummaryList(summary, pageNum, pageSize, map, usercode, year, month);
-            } else {
-                //还没有到指定考核时间仍展示上一季度数据
-                automaticSelectSummary(summary, pageNum, pageSize, map, usercode, year, count);
-            }
+                getSummaryList(summary, pageNum, pageSize, map, usercode, setTime.getYear(), setTime.getMonth());
 
-        } else {
-            //开始新的一轮考核 手动设置考核时间超过自动考核时间
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getSummaryList(summary, pageNum, pageSize, map, usercode, year, month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getSummaryList(summary, pageNum, pageSize, map, usercode, year, month);
-            }
+
+
 
         }
     }
@@ -185,18 +158,18 @@ public class MonthSummaryController {
             //数据总量
             map.put("totalPages", pageInfo.getTotal());
             map.put("data", summaryList);
-            map.put("msg", "查询个人季节总结成功 ");
+            map.put("msg", "查询个人月节总结成功 ");
             map.put("code", 0);
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
-            map.put("msg", "查询个人季节总结失败 ");
+            map.put("msg", "查询个人月节总结失败 ");
             map.put("code", 1);
         }
     }
 
 
     /**
-     * 添加个人季节总结
+     * 添加个人月节总结
      *
      * @param summary
      * @return
@@ -214,71 +187,33 @@ public class MonthSummaryController {
         String year = CalendarUtil.getYear();
         //获取当前月份
         String month = CalendarUtil.getMonth();
-        //获取当前季度
+        //获取当前月度
        // String quarter = CalendarUtil.getQuarter(month);
-        //当前上一个季度
+        //当前上一个月度
         int count = Integer.parseInt(month.trim()) - 1;
         String sysTime = DateUtil.getTime();
-        if (state.equals("1")) {
-            //手动考核 --添加个人季节总结
+
             manualAddSummary(summary, map, usercode, year, month, count, sysTime);
 
-        } else {
-            //自动考核  --添加个人季节总结
-            automaticAddSummary(summary, map, usercode, year, count);
-        }
         return map;
     }
 
     private void manualAddSummary(MonthSummary summary, ModelMap map, String usercode, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         //开始新的一轮考核 手动设置考核时间未超过自动考核时间
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的考核
                 month = quarter;
-                summary.setMonth(month);
-                summary.setYear(year);
-                //拼接个人季节唯一标识
+                summary.setMonth(setTime.getMonth());
+                summary.setYear(setTime.getYear());
+                //拼接个人月节唯一标识
                 String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + usercode;
                 MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
                 addOrUpdateSummary(summary, map, usercode, serialno, summary1);
-            } else {
-                //还没有到指定考核时间仍展示上一季度数据
-                automaticAddSummary(summary, map, usercode, year, count);
 
-            }
-        } else {
-            //开始新的一轮考核 手动设置考核时间超过自动考核时间
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                //拼接个人季节唯一标识
-                String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + usercode;
-                MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
-                addOrUpdateSummary(summary, map, usercode, serialno, summary1);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                summary.setYear(year);
-                summary.setMonth(month);
-                //拼接个人季节唯一标识
-                String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + usercode;
-                MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
-                addOrUpdateSummary(summary, map, usercode, serialno, summary1);
-            }
+
         }
     }
 
@@ -312,7 +247,7 @@ public class MonthSummaryController {
             summary.setMonth(month);
             summary.setYear(year);
         }
-        //拼接个人季节唯一标识
+        //拼接个人月节唯一标识
         String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + usercode;
         MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
         addOrUpdateSummary(summary, map, usercode, serialno, summary1);
@@ -332,16 +267,16 @@ public class MonthSummaryController {
 
     private void getCount(ModelMap map, int count1) {
         if (count1 > 0) {
-            map.put("msg", "添加个人季节总结成功");
+            map.put("msg", "添加个人月节总结成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "添加个人季节总结失败");
+            map.put("msg", "添加个人月节总结失败");
             map.put("code", 1);
         }
     }
 
     /**
-     * 修改个人季节总结
+     * 修改个人月节总结
      *
      * @param summary
      * @return
@@ -366,10 +301,10 @@ public class MonthSummaryController {
         } else {
             int count = summaryService.updateByPrimaryKeySelective(summary);
             if (count > 0) {
-                map.put("msg", "修改个人季节总结成功");
+                map.put("msg", "修改个人月节总结成功");
                 map.put("code", 0);
             } else {
-                map.put("msg", "修改个人季节总结失败");
+                map.put("msg", "修改个人月节总结失败");
                 map.put("code", 1);
             }
         }

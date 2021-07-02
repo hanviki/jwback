@@ -184,7 +184,23 @@
     </foreach>
   </update>
 
-
+  <update id="updateScoreDetail">
+      update scoredetail
+      <set >
+        <trim suffixOverrides=",">
+          <if test="scoreDetail.FSerialNo != null" >
+            FSerialNo = #{scoreDetail.FSerialNo,jdbcType=VARCHAR},
+          </if>
+          <if test="scoreDetail.DSerialNo != null" >
+            DSerialNo = #{scoreDetail.DSerialNo,jdbcType=VARCHAR},
+          </if>
+          <if test="scoreDetail.score != null" >
+            Score = #{scoreDetail.score},
+          </if>
+        </trim>
+      </set>
+      where SerialNo = #{scoreDetail.serialNo}
+  </update>
 
   <!--通过DSerialNo和FSerialNo批量查找打分信息-->
   <select id="batchSelectDetailBySerialNo" resultMap="BaseResultMap">

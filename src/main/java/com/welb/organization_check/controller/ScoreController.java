@@ -273,58 +273,27 @@ public class ScoreController {
         int i = Integer.parseInt(month.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
-        if (state.equals("1")) {
+
             //手动考核-查看所有季节总结
             manualUpdateScore(score, map, selectScoreByCode, count, year, month, i, sysTime);
-        } else {
-            //自动考核-修改评分关系
-            automaticUpdateScore(score, map, selectScoreByCode, count, year, i);
-        }
+
 
     }
 
     private void manualUpdateScore(Score score, ModelMap map, Score selectScoreByCode, int count, String year, String quarter, int i, String sysTime) {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
             try {
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                    //开始新的季度考核
-                    month = quarter;
-                    getScoreFlowType(score, map, selectScoreByCode, count, year, month);
-                }else {
-                    //未到达指定考核时间，仍展示上一季度数据
-                    automaticUpdateScore(score, map, selectScoreByCode, count, year, i);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } else {
-            if (i == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(i);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            try {
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                    getScoreFlowType(score, map, selectScoreByCode, count, year, month);
-                } else {
-                    int lastMonth = Integer.parseInt(month) - 1;
-                    if (lastMonth==0){
-                        lastMonth=12;
-                        int lastYear = Integer.parseInt(year)-1;
-                        year=String.valueOf(lastYear);
-                    }
-                    month = String.valueOf(lastMonth);
-                    getScoreFlowType(score, map, selectScoreByCode, count, year, month);
-                }
-            } catch (ParseException e) {
+                //开始新的季度考核
+                month = quarter;
+                getScoreFlowType(score, map, selectScoreByCode, count, setTime.getYear(), setTime.getMonth());
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
     }
 
     private void getScoreFlowType(Score score, ModelMap map, Score selectScoreByCode, int count, String year, String month) {

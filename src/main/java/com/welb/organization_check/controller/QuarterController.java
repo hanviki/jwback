@@ -26,7 +26,7 @@ import java.util.List;
  * @author luoyaozu
  * @title: QuarterController
  * @projectName xh-360appraisal-interface
- * @description: 季度总结控制层
+ * @description: 月度总结控制层
  * @date 2019/5/3117:02
  */
 @RestController
@@ -49,7 +49,7 @@ public class QuarterController {
     IManualSetTimeService setTimeService;
 
     /**
-     * 查看所有季节总结  包含模糊条件查询
+     * 查看所有月节总结  包含模糊条件查询
      *
      * @param pageNum
      * @param pageSize
@@ -60,26 +60,11 @@ public class QuarterController {
     public Object selectAll(HttpServletRequest req, int pageNum, int pageSize, UserDto dto) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
-        String state = (String) req.getSession().getAttribute("state");
+     //   String state = (String) req.getSession().getAttribute("state");
         if (usercode != null) {
             List<User> users = userService.findUserAll();
-            //获取当前年份
-            String year = CalendarUtil.getYear();
-            //获取当前月份
-            String month = CalendarUtil.getMonth();
-            //获取当前季度
-       //     String quarter = CalendarUtil.getQuarter(month);
-            //当前上一个季度
-            int count = Integer.parseInt(month.trim()) - 1;
-            //获取当前系统时间
-            String sysTime = DateUtil.getTime();
-            if (state.equals("1")) {
-                //手动考核-查看所有季节总结
-                manualSelectAll(pageNum, pageSize, dto, map, users, year, month, count, sysTime);
-            } else {
-                //自动考核-查看所有季节总结
-                automaticSelectAll(pageNum, pageSize, dto, map, users, year, count);
-            }
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
+             manualSelectAll(pageNum, pageSize, dto, map, users, setTime.getYear(), setTime.getMonth(), 0, "");
         } else {
             map.put("msg", "登录用户超时,请重新登录");
             map.put("code", 810);
@@ -89,11 +74,8 @@ public class QuarterController {
 
     private void manualSelectAll(int pageNum, int pageSize, UserDto dto, ModelMap map, List<User> users, String year, String quarter, int count, String sysTime) {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
-        if (setTime != null) {
             try {
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                    //开始新的季度考核
+                    //开始新的月度考核
                     month = quarter;
                     List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month);
                     if (summaryList.size() != users.size()) {
@@ -101,39 +83,11 @@ public class QuarterController {
                     }
                     PageHelper.startPage(pageNum, pageSize);
                     findUserAndUserList(dto, map, year, month);
-                } else {
-                    //未到达指定考核时间，仍展示上一季度数据
-                    automaticSelectAll(pageNum, pageSize, dto, map, users, year, count);
-                }
-            } catch (ParseException e) {
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {//新一季度考核-手动设置的考核时间超过系统自动考核时间
-            try {
-                if (count == 0) {
-                    int lastyear = Integer.parseInt(year.trim()) - 1;
-                    year = String.valueOf(lastyear);
-                    month = "12";
-                } else {
-                    month = String.valueOf(count);
-                }
-                ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                    getSummaryList(pageNum, pageSize, dto, map, users, year, month);
-                } else {
-                    int lastMonth = Integer.parseInt(month) - 1;
-                    if (lastMonth == 0) {
-                        lastMonth = 12;
-                        int lastYear = Integer.parseInt(year) - 1;
-                        year = String.valueOf(lastYear);
-                    }
-                    month = String.valueOf(lastMonth);
-                    getSummaryList(pageNum, pageSize, dto, map, users, year, month);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
 
     private void getSummaryList(int pageNum, int pageSize, UserDto dto, ModelMap map, List<User> users, String year, String month) {
@@ -166,13 +120,13 @@ public class QuarterController {
             PageInfo<UserDto> pageInfo = new PageInfo<>(userDtoList);
             userDtoList = pageInfo.getList();
             map.put("totalPages", pageInfo.getTotal());
-            map.put("msg", "查询季度总结成功");
+            map.put("msg", "查询月度总结成功");
             map.put("data", userDtoList);
             map.put("code", 0);
 
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
-            map.put("msg", "查询季度总结失败");
+            map.put("msg", "查询月度总结失败");
             map.put("code", 1);
         }
     }
@@ -199,7 +153,7 @@ public class QuarterController {
     }
 
     /**
-     * 批量季节提交状态修改
+     * 批量月节提交状态修改
      *
      * @param serialnos
      * @return
@@ -216,10 +170,10 @@ public class QuarterController {
                 counts += count;
             }
             if (counts > 0) {
-                map.put("msg", "批量季结提交成功");
+                map.put("msg", "批量月结提交成功");
                 map.put("code", 0);
             } else {
-                map.put("msg", "批量季结提交失败");
+                map.put("msg", "批量月结提交失败");
                 map.put("code", 1);
             }
         } else {
@@ -230,7 +184,7 @@ public class QuarterController {
     }
 
     /**
-     * 批量季节评分状态修改
+     * 批量月节评分状态修改
      *
      * @param serialnos
      * @return
@@ -245,17 +199,17 @@ public class QuarterController {
             counts += count;
         }
         if (counts > 0) {
-            map.put("msg", "批量季结评分状态修改成功");
+            map.put("msg", "批量月结评分状态修改成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "批量季结评分状态修改失败");
+            map.put("msg", "批量月结评分状态修改失败");
             map.put("code", 1);
         }
         return map;
     }
 
     /**
-     * 将季节评分状态全部修改为季节评分
+     * 将月节评分状态全部修改为月节评分
      *
      * @return
      */
@@ -264,17 +218,17 @@ public class QuarterController {
         ModelMap map = new ModelMap();
         int count = summaryService.updateStateAll();
         if (count > 0) {
-            map.put("msg", "全部季结评分修改成功");
+            map.put("msg", "全部月结评分修改成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "全部季结评分修改失败");
+            map.put("msg", "全部月结评分修改失败");
             map.put("code", 1);
         }
         return map;
     }
 
     /**
-     * 将季节评分状态全部修改为季节评分
+     * 将月节评分状态全部修改为月节评分
      *
      * @return
      */
@@ -283,10 +237,10 @@ public class QuarterController {
         ModelMap map = new ModelMap();
         int count = summaryService.updateStateBySerialNo(summary);
         if (count > 0) {
-            map.put("msg", "修改季结状态成功");
+            map.put("msg", "修改月结状态成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "修改季结状态失败");
+            map.put("msg", "修改月结状态失败");
             map.put("code", 1);
         }
         return map;
@@ -294,7 +248,7 @@ public class QuarterController {
 
 
     /**
-     * 查看季节内容
+     * 查看月节内容
      *
      * @return
      */
@@ -303,12 +257,12 @@ public class QuarterController {
         ModelMap map = new ModelMap();
         try {
             MonthSummary summary = summaryService.selectByPrimaryKey(serialno);
-            map.put("msg", "查看季节内容成功");
+            map.put("msg", "查看月节内容成功");
             map.put("data", summary);
             map.put("code", 0);
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
-            map.put("msg", "查看季节内容失败");
+            map.put("msg", "查看月节内容失败");
             map.put("code", 1);
         }
 

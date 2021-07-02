@@ -7,8 +7,10 @@ public class Duty {
     public static Map<String, String> dutytypes = new LinkedHashMap<>();
 
     static {
-        dutytypes.put("0", "基础量化指标");
-        dutytypes.put("1", "岗位量化指标");
+        dutytypes.put("0", "基础指标");
+        dutytypes.put("1", "岗位职责");
+        dutytypes.put("2", "重点任务");
+        dutytypes.put("3", "目标任务");
     }
 
     private String dutycode;

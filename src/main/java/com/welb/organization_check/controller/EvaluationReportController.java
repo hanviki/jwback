@@ -72,26 +72,23 @@ public class EvaluationReportController {
             try {
                 if (year.equals("") && month.equals("")) {
                     //年份
-                    year = CalendarUtil.getYear();
+                    year = "";
                     //月份
-                    month = CalendarUtil.getMonth();
-                    //季度
+                    month = "";
+                    //月度
                     String quarter =month;// CalendarUtil.getQuarter(month);
                     int count = Integer.parseInt(quarter) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
-                    if (state.equals("1")) {
-                        //手动考核-查看所有季节总结
-                        manualSelectReport(usercode, year, map, data, report, r1, r2, user, df, quarter, count, sysTime);
-                    } else {
-                        //自动考核-查看所有季节总结
-                        automaticSelectReport(usercode, year, map, data, report, r1, r2, user, df, count);
-                    }
+
+                        //手动考核-查看所有月节总结
+                    manualSelectReport(usercode, year, map, data, report, r1, r2, user, df, quarter, count, sysTime);
+
                 } else if (!year.equals("") && !month.equals("")) {
                     getEvaluation(usercode, year, month, map, data, report, r1, r2, user, df);
 
                 } else {
-                    map.put("msg", "年份和季度必须一起选择才可以搜索");
+                    map.put("msg", "年份和月度必须一起选择才可以搜索");
                     map.put("code", 1);
                 }
             } catch (Exception e) {
@@ -108,39 +105,10 @@ public class EvaluationReportController {
 
     private void manualSelectReport(String usercode, String year, ModelMap map, Map<String, Object> data, EvaluationReport report, ResultReport r1, ResultReport r2, User user, DecimalFormat df, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
-        if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                //开始新的季度考核
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
+                //开始新的月度考核
                 month = quarter;
-                getEvaluation(usercode, year, month, map, data, report, r1, r2, user, df);
-
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticSelectReport(usercode, year, map, data, report, r1, r2, user, df, count);
-            }
-        } else {
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getEvaluation(usercode, year, month, map, data, report, r1, r2, user, df);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getEvaluation(usercode, year, month, map, data, report, r1, r2, user, df);
-            }
-        }
+                getEvaluation(usercode, setTime.getYear(), setTime.getMonth(), map, data, report, r1, r2, user, df);
     }
 
     private void automaticSelectReport(String usercode, String year, ModelMap map, Map<String, Object> data, EvaluationReport report, ResultReport r1, ResultReport r2, User user, DecimalFormat df, int count) {
@@ -446,19 +414,16 @@ public class EvaluationReportController {
                     String year = CalendarUtil.getYear();
                     //月份
                     String month = CalendarUtil.getMonth();
-                    //季度
+                    //月度
                     String quarter =month;// CalendarUtil.getQuarter(month);
                     int count = Integer.parseInt(quarter) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
-                    if (state.equals("1")) {
-                        //手动考核-查看所有季节总结
+
+                        //手动考核-查看所有月节总结
                         manualSelectAllReport(evaluationDto, year, quarter, count, sysTime);
 
-                    } else {
-                        //自动考核-查看所有季节总结
-                        automaticSelectAllReport(evaluationDto, year, count);
-                    }
+
                 }
 
 
@@ -529,41 +494,14 @@ public class EvaluationReportController {
 
     private void manualSelectAllReport(UserEvaluationDto evaluationDto, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                //开始新的季度考核
+
+                //开始新的月度考核
                 month = quarter;
-                evaluationDto.setYear(year);
-                evaluationDto.setMonth(month);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticSelectAllReport(evaluationDto, year, count);
-            }
-        } else {
-            //新一季度考核-手动设置的考核时间超过系统自动考核时间
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                evaluationDto.setYear(year);
-                evaluationDto.setMonth(month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                evaluationDto.setYear(year);
-                evaluationDto.setMonth(month);
-            }
+                evaluationDto.setYear(setTime.getYear());
+                evaluationDto.setMonth(setTime.getMonth());
+
         }
     }
 
@@ -719,13 +657,10 @@ public class EvaluationReportController {
                     int count = Integer.parseInt(quarter.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
-                    if (state.equals("1")) {
+
                         //手动考核-部门长查询部门下的所有人员测评报告
                         manualSelectDeptReport(reports, users, year, quarter, count, sysTime);
-                    } else {
-                        //自动考核-部门长查询部门下的所有人员测评报告
-                        automaticSelectDeptReport(reports, users, year, count);
-                    }
+
                     for (EvaluationReport report : reports) {
                         User user1 = userService.findUserByUserCode(report.getUsercode());
                         report.setUsername(user1.getUsername());
@@ -757,39 +692,14 @@ public class EvaluationReportController {
 
     private void manualSelectDeptReport(List<EvaluationReport> reports, List<User> users, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                //开始新的季度考核
+                //开始新的月度考核
                 month = quarter;
-                getReports(reports, users, year, month);
-            }else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticSelectDeptReport(reports, users, year, count);
-            }
-        }else {
-            //新一季度考核-手动设置的考核时间超过系统自动考核时间
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getReports(reports, users, year, month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth==0){
-                    lastMonth=12;
-                    int lastYear = Integer.parseInt(year)-1;
-                    year=String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getReports(reports, users, year, month);
-            }
+                getReports(reports, users, setTime.getYear(), setTime.getMonth());
+
         }
+
     }
 
     private void getReports(List<EvaluationReport> reports, List<User> users, String year, String month) {

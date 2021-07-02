@@ -75,9 +75,9 @@ public class ResultDetailController {
             if (user.getStationcode() != null || !user.getStationcode().equals("")) {
                 try {
                     //获取指标类型为基础评分类型的相关数据
-                    List<Duty> jichu = dutyService.queryJiChu(user.getStationcode());
+                    List<Duty> jichu = dutyService.queryDutyByType("0",user.getStationcode());
                     //获取指标类型为关键评分类型的相关数据
-                    List<Duty> yiBan = dutyService.queryYiBan(user.getStationcode());
+                    List<Duty> yiBan = dutyService.queryDutyByType("1",user.getStationcode());
                     if (year.equals("") && month.equals("")) {
                         String sysYear = CalendarUtil.getYear();
                         String sysMonth = CalendarUtil.getMonth();
@@ -85,14 +85,11 @@ public class ResultDetailController {
                         int count = Integer.parseInt(month.trim()) - 1;
                         //获取当前系统时间
                         String sysTime = DateUtil.getTime();
-                        if (state.equals("1")) {
+
                             //手动考核-查看所有季节总结
                             manualGetSingleTotalScore(usercode, id, year, detail, report, resultDetails, user, jichu, yiBan, sysYear, month, count, sysTime);
 
-                        } else {
-                            //自动考核-查看所有季节总结
-                            automaticGetSingleTotalScore(usercode, id, detail, report, resultDetails, user, jichu, yiBan, sysYear, count);
-                        }
+
 
                     } else {
                         getDetailInfo(usercode, id, year, month, detail, report, resultDetails, user, jichu, yiBan);
@@ -137,41 +134,16 @@ public class ResultDetailController {
 
     private void manualGetSingleTotalScore(String usercode, Integer id, String year, ResultDetail detail, ResultReport report, List<ResultDetail> resultDetails, User user, List<Duty> jichu, List<Duty> yiBan, String sysYear, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(sysYear, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
 
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
-                month = quarter;
-                year=sysYear;
+                month = setTime.getMonth();
+                year = setTime.getYear();
                 getDetailInfo(usercode, id, year, month, detail, report, resultDetails, user, jichu, yiBan);
 
-            }else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticGetSingleTotalScore(usercode, id, detail, report, resultDetails, user, jichu, yiBan, sysYear, count);
-            }
-        }else {
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-                year=sysYear;
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getDetailInfo(usercode, id, year, month, detail, report, resultDetails, user, jichu, yiBan);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth==0){
-                    lastMonth=12;
-                    int lastYear = Integer.parseInt(year)-1;
-                    year=String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getDetailInfo(usercode, id, year, month, detail, report, resultDetails, user, jichu, yiBan);
-            }
+
         }
     }
 
@@ -286,13 +258,10 @@ public class ResultDetailController {
                     int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
-                    if (state.equals("1")) {
+
                         //手动考核-查看所有季节总结
                         manualGetScorringAndScore(usercode, type, year, map, detail, resultReport, month, count, sysTime);
-                    } else {
-                        //自动考核-查看所有季节总结
-                        automaticGetScorringAndScore(usercode, type, year, map, detail, resultReport, count);
-                    }
+
 
                 } else {
                     getFlows(usercode, type, year, month, map, detail, resultReport);
@@ -312,37 +281,14 @@ public class ResultDetailController {
 
     private void manualGetScorringAndScore(String usercode, String type, String year, ModelMap map, ResultDetail detail, ResultReport resultReport, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                getFlows(usercode, type, year, month, map, detail, resultReport);
-            }else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticGetScorringAndScore(usercode, type, year, map, detail, resultReport, count);
-            }
-        }else {
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getFlows(usercode, type, year, month, map, detail, resultReport);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth==0){
-                    lastMonth=12;
-                    int lastYear = Integer.parseInt(year)-1;
-                    year=String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getFlows(usercode, type, year, month, map, detail, resultReport);
-            }
+                getFlows(usercode, type, setTime.getYear(), setTime.getMonth(), map, detail, resultReport);
+
+
         }
     }
 

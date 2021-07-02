@@ -52,6 +52,8 @@ public interface ScoreDetailMapper {
 
     int batchUpdate(@Param("list")List<ScoreDetail>list);
 
+    int updateScoreDetail(@Param("scoreDetail") ScoreDetail scoreDetail);
+
     List<ScoreDetail> batchSelectDetailBySerialNo(@Param("list")List<ScoreDetail> list);
 
 }

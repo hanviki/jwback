@@ -189,26 +189,13 @@ public class LoginController {
         int count = Integer.parseInt(quarter.trim()) - 1;
         String time = null;
         //自动考核
-        if (state.getState().equals("1")) {
+
             //手动考核
-            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
             if (setTime != null) {
                 time=setTime.getTime();
-            }else {
-                if (count == 0) {
-                    int lastyear = Integer.parseInt(year.trim()) - 1;
-                    year = String.valueOf(lastyear);
-                    month = "12";
-                } else {
-                    month = String.valueOf(count);
-                }
-                ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-                time=manualSetTime.getTime();
             }
-        } else {
-            time="";
 
-        }
         return time;
     }
 

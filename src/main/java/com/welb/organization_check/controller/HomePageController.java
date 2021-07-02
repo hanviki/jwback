@@ -105,13 +105,10 @@ public class HomePageController {
                         int count = Integer.parseInt(month.trim()) - 1;
                         //获取当前系统时间
                         String sysTime = DateUtil.getTime();
-                        if (state.equals("1")) {
+
                             //手动考核  --个人考核详情页面
-                            manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime);
-                        } else {
-                            //自动考核  --个人考核详情页面
-                            automaticGetDetail(dtos, map, usercode, data, year, count);
-                        }
+                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime);
+
                     }
                 } catch (Exception e) {
                     log.error(LogUtil.getTrace(e));
@@ -136,57 +133,20 @@ public class HomePageController {
     private void manualGetDetail(UserSummaryDto dtos, ModelMap map, String usercode, Map<String, Object> data, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
         UserSummaryDto dto;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
             //新一季度考核-手动设置的考核时间未超过系统自动考核时间
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                 //开始新的季度考核
                 month = quarter;
-                dtos.setYear(year);
-                dtos.setMonth(month);
+                dtos.setYear(setTime.getYear());
+                dtos.setMonth(setTime.getMonth());
                 dto = dtoService.selectUserSummaryByLike(dtos);
-                dto.setMonth(month);
+                dto.setMonth(setTime.getMonth());
                 //查找岗位
                 getMapList(map, usercode, data, dto);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticGetDetail(dtos, map, usercode, data, year, count);
-            }
-        } else {
-            //新一季度考核-手动设置的考核时间超过系统自动考核时间
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                dtos.setYear(year);
-                dtos.setMonth(month);
-                dto = dtoService.selectUserSummaryByLike(dtos);
-                if (dto != null) {
-                    //查找岗位
-                    getMapList(map, usercode, data, dto);
-                } else {
-                    map.put("msg", "数据为空");
-                    map.put("code", 0);
-                }
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                dtos.setYear(year);
-                dtos.setMonth(month);
-                dto = dtoService.selectUserSummaryByLike(dtos);
-                //查找岗位
-                getMapList(map, usercode, data, dto);
-            }
+
+
         }
     }
 
@@ -213,11 +173,17 @@ public class HomePageController {
             for (ScoreFlow flow : scoreFlow) {
                 data.put("total", flow.getScore() + "分");
                 //获取基础量化指标相关信息
-                List<Duty> dutyJichu = dutyService.queryJiChu(dto.getStationcode());
+                List<Duty> dutyJichu = dutyService.queryDutyByType("0",dto.getStationcode());
                 getDutyInfo(flow, dutyJichu);
                 //获取关键量化指标的相关信息
-                List<Duty> dutyYiban = dutyService.queryYiBan(dto.getStationcode());
+                List<Duty> dutyYiban = dutyService.queryDutyByType("1",dto.getStationcode());
                 getDutyInfo(flow, dutyYiban);
+                //获取关键量化指标的相关信息
+                List<Duty> dutyZhongdian = dutyService.queryDutyByType("2",dto.getStationcode());
+                getDutyInfo(flow, dutyZhongdian);
+                //获取关键量化指标的相关信息
+                List<Duty> dutyMubiao = dutyService.queryDutyByType("3",dto.getStationcode());
+                getDutyInfo(flow, dutyMubiao);
                 //判断是否可编辑
                 if (dto.getState().equals("7")) {
                     dto.setIsedit("1");
@@ -228,19 +194,32 @@ public class HomePageController {
                 data.put("stations", station);
                 data.put("dutyJichu", dutyJichu);
                 data.put("dutyYiban", dutyYiban);
+                data.put("dutyZhongdian", dutyZhongdian);
+                data.put("dutyMubiao", dutyMubiao);
                 map.put("msg", "查询个人考核详情成功");
                 map.put("data", data);
                 map.put("code", 0);
             }
         } else {
             data.put("total", "");
-            List<Duty> dutyJichu = dutyService.queryJiChu(dto.getStationcode());
+            List<Duty> dutyJichu = dutyService.queryDutyByType("0",dto.getStationcode());
             for (Duty duty : dutyJichu) {
                 duty.setScore("");
             }
             //获取关键量化指标的相关信息
-            List<Duty> dutyYiban = dutyService.queryYiBan(dto.getStationcode());
+            List<Duty> dutyYiban = dutyService.queryDutyByType("1",dto.getStationcode());
             for (Duty duty : dutyYiban) {
+                duty.setScore("");
+            }
+            //获取关键量化指标的相关信息
+            List<Duty> dutyZhongdian = dutyService.queryDutyByType("2",dto.getStationcode());
+            for (Duty duty : dutyZhongdian) {
+                duty.setScore("");
+            }
+
+            //获取关键量化指标的相关信息
+            List<Duty> dutyMubiao = dutyService.queryDutyByType("3",dto.getStationcode());
+            for (Duty duty : dutyMubiao) {
                 duty.setScore("");
             }
             if (dto.getState().equals("7")) {
@@ -253,6 +232,9 @@ public class HomePageController {
             data.put("stations", station);
             data.put("dutyJichu", dutyJichu);
             data.put("dutyYiban", dutyYiban);
+            data.put("dutyZhongdian", dutyZhongdian);
+            data.put("dutyMubiao", dutyMubiao);
+
             map.put("msg", "查询个人考核详情成功");
             map.put("data", data);
             map.put("code", 0);
@@ -281,7 +263,7 @@ public class HomePageController {
      */
     @RequestMapping(value = "/getTotalScore", produces = "application/json;charset=utf-8")
     public Object getTotalScore(HttpServletRequest req, String scorringcode, UserSummaryDto dto, String dutyJiChu,
-                                String dutyYiban, EvaluationReport report, String year, String month) {
+                                String dutyYiban, String dutyZhongdian, String dutyMubiao, EvaluationReport report, String year, String month) {
         ModelMap map = new ModelMap();
         //保留两位小数
         DecimalFormat df = new DecimalFormat("0.00");
@@ -318,11 +300,11 @@ public class HomePageController {
                     flowService.batchUpdate(list);
                 }
                 for (ScoreFlow scoreFlow : list) {
-                    getScore(dutyJiChu, dutyYiban, scoreFlow);
+                    getScore(dutyJiChu, dutyYiban, dutyZhongdian, dutyMubiao, scoreFlow);
                 }
             } else {
                 flowService.insertSelective(flow);
-                getScore(dutyJiChu, dutyYiban, flow);
+                getScore(dutyJiChu, dutyYiban, dutyZhongdian, dutyMubiao, flow);
             }
 /*========================计算完总分之后  个人测评报告也相应的产生一条数据==================================================*/
             getEvaluationReportInfo(req, dto, report);
@@ -455,45 +437,16 @@ public class HomePageController {
         String sysTime = DateUtil.getTime();
         //手动考核-计算总分
         if (state.equals("1")) {
-            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
             if (setTime != null) {
 
                 //新一季度考核-手动设置的考核时间未超过系统自动考核时间
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
+
                     //开始新的季度考核
                     month = quarter;
-                    insertOrUpdateEvaluationReport(report, year, month);
-                } else {
-                    //未到达指定考核时间，仍展示上一季度数据
-                    automaticGetEvaluationInfo(report, year, count);
-                }
-            } else {
-                //新一季度考核-手动设置的考核时间超过系统自动考核时间
-                if (count == 0) {
-                    int lastyear = Integer.parseInt(year.trim()) - 1;
-                    year = String.valueOf(lastyear);
-                    month = "12";
-                } else {
-                    month = String.valueOf(count);
-                }
-                ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                    insertOrUpdateEvaluationReport(report, year, month);
-                } else {
-                    int lastMonth = Integer.parseInt(month) - 1;
-                    if (lastMonth == 0) {
-                        lastMonth = 12;
-                        int lastYear = Integer.parseInt(year) - 1;
-                        year = String.valueOf(lastYear);
-                    }
-                    month = String.valueOf(lastMonth);
-                    insertOrUpdateEvaluationReport(report, year, month);
-                }
+                    insertOrUpdateEvaluationReport(report, setTime.getYear(), setTime.getMonth());
 
             }
-        } else {
-            //自动考核-计算总分
-            automaticGetEvaluationInfo(report, year, count);
         }
     }
 
@@ -531,7 +484,7 @@ public class HomePageController {
      * @param flow1
      */
 
-    private void getScore(String dutyJiChu, String dutyYiBan, ScoreFlow flow1) {
+    private void getScore(String dutyJiChu, String dutyYiBan, String dutyZhongdian, String dutyMubiao, ScoreFlow flow1) {
         ScoreDetail detail = new ScoreDetail();
         JSONArray array = JSONArray.fromObject(dutyJiChu);
         List jichu = JSONArray.toList(array, new DutyCodeAndScore(), new JsonConfig());
@@ -541,6 +494,14 @@ public class HomePageController {
         JSONArray array1 = JSONArray.fromObject(dutyYiBan);
         List yiban = JSONArray.toList(array1, new DutyCodeAndScore(), new JsonConfig());
         judgeAddOrUpdate(flow1, detail, yiban);
+
+        JSONArray array2 = JSONArray.fromObject(dutyZhongdian);
+        List zhongdian = JSONArray.toList(array2, new DutyCodeAndScore(), new JsonConfig());
+        judgeAddOrUpdate(flow1, detail, zhongdian);
+
+        JSONArray array3 = JSONArray.fromObject(dutyMubiao);
+        List mubiao = JSONArray.toList(array3, new DutyCodeAndScore(), new JsonConfig());
+        judgeAddOrUpdate(flow1, detail, mubiao);
     }
 
     private void judgeAddOrUpdate(ScoreFlow flow1, ScoreDetail detail, List<DutyCodeAndScore> jichu) {

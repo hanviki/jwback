@@ -108,7 +108,7 @@ public class UserDtoController {
     }
 */
     /**
-     * 评分汇总查询列表数据  ；当前年份的上一季度
+     * 评分汇总查询列表数据  ；当前年份的上一月度
      *
      * @param dto
      * @param pageNum
@@ -126,18 +126,15 @@ public class UserDtoController {
                 String year = CalendarUtil.getYear();
                 //当前月份
                 String month = CalendarUtil.getMonth();
-                //获取当前季度
+                //获取当前月度
                 String quarter =month;// CalendarUtil.getQuarter(month);
                 int counts = Integer.parseInt(quarter.trim()) - 1;
                 //获取当前系统时间
                 String sysTime = DateUtil.getTime();
-                if (state.equals("1")) {
-                    //手动考核-查看所有季节总结
+
+                    //手动考核-查看所有月节总结
                     manualSelectUserDtoLikeByUserAndState(dto, map, year, quarter, counts, sysTime, pageNum, pageSize);
-                } else {
-                    //自动考核-查看所有季节总结
-                    automaticSelectUserDtoLikeByUserAndState(dto, map, year, counts, pageNum, pageSize);
-                }
+
             } catch (Exception e) {
                 log.error(LogUtil.getTrace(e));
                 map.put("msg", "查询评分汇总列表失败");
@@ -153,39 +150,15 @@ public class UserDtoController {
     private void manualSelectUserDtoLikeByUserAndState(UserDto dto, ModelMap map, String year, String quarter,
                                                        int counts, String sysTime, int pageNum, int pageSize) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                //开始新的季度考核
-                month = quarter;
-                getUserDtos(dto, map, year, month, pageNum, pageSize);
 
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticSelectUserDtoLikeByUserAndState(dto, map, year, counts, pageNum, pageSize);
-            }
-        } else {
-            //新一季度考核-手动设置的考核时间超过系统自动考核时间
-            if (counts == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(counts);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getUserDtos(dto, map, year, month, pageNum, pageSize);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth =12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getUserDtos(dto, map, year, month, pageNum, pageSize);
-            }
+                //开始新的月度考核
+                month = quarter;
+                getUserDtos(dto, map, setTime.getYear(), setTime.getMonth(), pageNum, pageSize);
+
+
+
         }
     }
 
@@ -286,7 +259,7 @@ public class UserDtoController {
     }
 
     /**
-     * 批量季节评分状态修改
+     * 批量月节评分状态修改
      *
      * @param serialnos
      * @return
@@ -303,17 +276,17 @@ public class UserDtoController {
             counts += count;
         }
         if (counts > 0) {
-            map.put("msg", "批量修改季结评分完成状态成功");
+            map.put("msg", "批量修改月结评分完成状态成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "批量修改季结评分完成状态失败");
+            map.put("msg", "批量修改月结评分完成状态失败");
             map.put("code", 1);
         }
         return map;
     }
 
     /**
-     * 将季节评分状态全部修改为季节评分
+     * 将月节评分状态全部修改为月节评分
      *
      * @return
      */
@@ -322,10 +295,10 @@ public class UserDtoController {
         ModelMap map = new ModelMap();
         int count = summaryService.updateFinishGradeAll();
         if (count > 0) {
-            map.put("msg", "全部修改季结评分完成成功");
+            map.put("msg", "全部修改月结评分完成成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "全部修改季结评分完成失败");
+            map.put("msg", "全部修改月结评分完成失败");
             map.put("code", 1);
         }
         return map;
@@ -342,7 +315,7 @@ public class UserDtoController {
         // 定义表的标题
         String title = "评分汇总-员工列表";
         //定义表的列名
-        String[] rowsName = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "季结状态", "A", "B", "C", "D", "总分"};
+        String[] rowsName = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "月结状态", "A", "B", "C", "D", "总分"};
         //定义表的内容
         List<Object[]> dataList = new ArrayList<>();
         Object[] objs = null;
@@ -359,18 +332,15 @@ public class UserDtoController {
         String year = CalendarUtil.getYear();
         //当前月份
         String month = CalendarUtil.getMonth();
-        //获取当前季度
+        //获取当前月度
         String quarter = month;//CalendarUtil.getQuarter(month);
         int counts = Integer.parseInt(quarter.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
-        if (state.equals("1")) {
-            //手动考核-查看所有季节总结
+
+            //手动考核-查看所有月节总结
             manualExportExcelData(dto, rowsName, dataList, year, quarter, counts, sysTime);
-        } else {
-            //自动考核-查看所有季节总结
-            automaticExportExcelData(dto, rowsName, dataList, year, counts);
-        }
+
 
         try {
             // 创建ExportExcel对象
@@ -384,37 +354,13 @@ public class UserDtoController {
 
     private void manualExportExcelData(UserDto dto, String[] rowsName, List<Object[]> dataList, String year, String quarter, int counts, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
         if (setTime != null) {
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                //开始新的季度考核
+
+                //开始新的月度考核
                 month = quarter;
-                getUserDtos(dto, rowsName, dataList, year, month);
-            } else {
-                //未到达指定考核时间，仍展示上一季度数据
-                automaticExportExcelData(dto, rowsName, dataList, year, counts);
-            }
-        } else {
-            if (counts == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(counts);
-            }
-            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-            if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                getUserDtos(dto, rowsName, dataList, year, month);
-            } else {
-                int lastMonth = Integer.parseInt(month) - 1;
-                if (lastMonth == 0) {
-                    lastMonth = 12;
-                    int lastYear = Integer.parseInt(year) - 1;
-                    year = String.valueOf(lastYear);
-                }
-                month = String.valueOf(lastMonth);
-                getUserDtos(dto, rowsName, dataList, year, month);
-            }
+                getUserDtos(dto, rowsName, dataList, setTime.getYear(), setTime.getMonth());
+
         }
     }
 
@@ -503,7 +449,7 @@ public class UserDtoController {
         // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
         SXSSFWorkbook wb = new SXSSFWorkbook(100);
         Sheet sheet = wb.createSheet("历史评分汇总");
-        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "季结状态", "季节季度", "A", "B", "C", "D", "总分"};
+        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "月结状态", "月节月度", "A", "B", "C", "D", "总分"};
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {
             Cell cell = titleRow.createCell(i);
@@ -592,12 +538,12 @@ public class UserDtoController {
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
         if (setTime != null) {
             if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                //开始新的季度考核
+                //开始新的月度考核
                 month = quarter;
                 userDto.setMonth(month);
                 userDto.setYear(year);
             } else {
-                //未到达指定考核时间，仍展示上一季度数据
+                //未到达指定考核时间，仍展示上一月度数据
                 automaticgetGrage(userDto, year, i);
             }
         }else {
@@ -722,7 +668,7 @@ public class UserDtoController {
         // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
         SXSSFWorkbook wb = new SXSSFWorkbook(100);
         Sheet sheet = wb.createSheet("历史评分汇总");
-        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "打分季度"};
+        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "打分月度"};
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {
             Cell cell = titleRow.createCell(i);
@@ -796,14 +742,17 @@ public class UserDtoController {
         String year = CalendarUtil.getYear();
         //获取当前月份
         String month = CalendarUtil.getMonth();
-        //获取当前季度
+        //获取当前月度
         String quarter = month;//CalendarUtil.getQuarter(month);
-        //当前上一个季度
+        //当前上一个月度
         int count = Integer.parseInt(quarter.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
+
+        ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "");
+
         ScoreHistory scoreHistory=new ScoreHistory();
-        getCurrentYearAndMonth(state, year, quarter, count, sysTime, scoreHistory);
+        getCurrentYearAndMonth(state, manualSetTime.getYear(), manualSetTime.getMonth(), count, sysTime, scoreHistory);
         List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory);
         if (users.size()==0){
             map.put("msg", "数据为空");
@@ -880,14 +829,15 @@ public class UserDtoController {
         String year = CalendarUtil.getYear();
         //获取当前月份
         String month = CalendarUtil.getMonth();
-        //获取当前季度
+        //获取当前月度
         String quarter =month;// CalendarUtil.getQuarter(month);
-        //当前上一个季度
+        //当前上一个月度
         int count = Integer.parseInt(quarter.trim()) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
+        ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "");
         ScoreHistory scoreHistory=new ScoreHistory();
-        getCurrentYearAndMonth(state, year, quarter, count, sysTime, scoreHistory);
+        getCurrentYearAndMonth(state, manualSetTime.getYear(), manualSetTime.getMonth(), count, sysTime, scoreHistory);
 
         List<ScoreHistory> historyList = historyService.selectGradeHisotyList(scoreHistory);
         if (users.size()==0){
@@ -916,63 +866,18 @@ public class UserDtoController {
 
     private void getCurrentYearAndMonth(String state, String year, String quarter, int count, String sysTime, ScoreHistory scoreHistory) throws ParseException {
         String month;
-        if (state.equals("1")) {
-            //手动考核-查看所有季节总结
-            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth(year, quarter);
+
+            //手动考核-查看所有月节总结
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
             if (setTime != null) {
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(setTime.getTime()).getTime()) {
-                    //开始新的季度考核
-                    month = quarter;
-                    scoreHistory.setYear(year);
-                    scoreHistory.setMonth(month);
-                } else {
-                    //未到达指定考核时间，仍展示上一季度数据
-                    if (count == 0) {
-                        int lastyear = Integer.parseInt(year.trim()) - 1;
-                        year = String.valueOf(lastyear);
-                        month = "12";
-                    } else {
-                        month = String.valueOf(count);
-                    }
-                    scoreHistory.setYear(year);
-                    scoreHistory.setMonth(month);
-                }
-            } else {
-                if (count == 0) {
-                    int lastyear = Integer.parseInt(year.trim()) - 1;
-                    year = String.valueOf(lastyear);
-                    month = "12";
-                } else {
-                    month = String.valueOf(count);
-                }
-                ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth(year, month);
-                if (sdfTime.parse(sysTime).getTime() >= sdfTime.parse(manualSetTime.getTime()).getTime()) {
-                    scoreHistory.setYear(year);
-                    scoreHistory.setMonth(month);
-                } else {
-                    int lastMonth = Integer.parseInt(month) - 1;
-                    if (lastMonth == 0) {
-                        lastMonth = 12;
-                        int lastYear = Integer.parseInt(year) - 1;
-                        year = String.valueOf(lastYear);
-                    }
-                    month = String.valueOf(lastMonth);
-                    scoreHistory.setYear(year);
-                    scoreHistory.setMonth(month);
-                }
+
+                //开始新的月度考核
+                month = quarter;
+                scoreHistory.setYear(setTime.getYear());
+                scoreHistory.setMonth(setTime.getMonth());
+
             }
-        } else {
-            //自动考核-查看所有季节总结
-            if (count == 0) {
-                int lastyear = Integer.parseInt(year.trim()) - 1;
-                year = String.valueOf(lastyear);
-                month = "12";
-            } else {
-                month = String.valueOf(count);
-            }
-            scoreHistory.setYear(year);
-            scoreHistory.setMonth(month);
-        }
+
     }
 
 
@@ -1011,7 +916,7 @@ public class UserDtoController {
         // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
         SXSSFWorkbook wb = new SXSSFWorkbook(100);
         Sheet sheet = wb.createSheet("历史评分汇总");
-        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "打分季度"};
+        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "打分月度"};
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {
             Cell cell = titleRow.createCell(i);
@@ -1082,7 +987,7 @@ public class UserDtoController {
         // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
         SXSSFWorkbook wb = new SXSSFWorkbook(100);
         Sheet sheet = wb.createSheet("sheet1");
-        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位","角色", "打分状态", "季结状态", "季节季度", "A", "B", "C", "D", "总分"};
+        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位","角色", "打分状态", "月结状态", "月节月度", "A", "B", "C", "D", "总分"};
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {
             Cell cell = titleRow.createCell(i);
@@ -1139,7 +1044,7 @@ public class UserDtoController {
 
 
     /**
-     * 一键导出当前季度未评分和未完成状态的数据
+     * 一键导出当前月度未评分和未完成状态的数据
      * @return
      */
     @RequestMapping("/oneClickDown")

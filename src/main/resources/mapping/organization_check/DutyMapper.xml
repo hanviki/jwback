@@ -198,4 +198,11 @@
         where DutyType='1'  and StationCode =#{stationcode}
         order by OrderId
     </select>
+
+    <!--通过stationcode查询指标类型为关键量化指标的数据-->
+    <select id="queryDutyByType" resultMap="BaseResultMap">
+        select DutyCode, DutyName ,AScore,BScore,CScore,DScore from duty
+        where DutyType=#{dutyType}  and StationCode =#{stationcode}
+        order by OrderId
+    </select>
 </mapper>

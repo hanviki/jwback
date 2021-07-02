@@ -27,4 +27,6 @@ public interface DutyMapper {
     List<Duty>queryJiChu(String stationcode);
 
     List<Duty>queryYiBan(String stationcode);
+
+    List<Duty> queryDutyByType(String dutyType,String stationcode);
 }
