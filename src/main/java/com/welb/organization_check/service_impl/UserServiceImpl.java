@@ -162,4 +162,8 @@ public class UserServiceImpl implements IUserService {
         userMapper.add(user);
     }
 
+    @Override
+    public List<User>findUserByScoreFlowType(String mserialNo, String scoreType){
+        return  userMapper.findUserByScoreFlowType(mserialNo,scoreType);
+    }
 }

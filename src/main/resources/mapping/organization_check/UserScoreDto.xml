@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserScoreDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserDto">
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="ScoredCode" property="scoredCode" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringCode" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoreType" jdbcType="VARCHAR"/>
+        <result column="MserialNo" property="mserialNo" jdbcType="VARCHAR"/>
+        <result column="FserialNo" property="fserialNo" jdbcType="VARCHAR"/>
+        <result column="DserialNo" property="dserialNo" jdbcType="VARCHAR"/>
+        <result column="DutyType" property="dutyType" jdbcType="VARCHAR"/>
+        <result column="Ratio" property="ratio" jdbcType="DOUBLE"/>
+        <result column="Score" property="score" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <select id="findUserScore" resultType="com.welb.organization_check.dto.UserScoreDto">
+        select
+            m.YEAR,
+            m.Month,
+            sf.ScoredCode,
+            sf.ScorringCode,
+            sf.ScoreType,
+            sf.MSerialNo,
+            sd.FSerialNo,
+            sd.DSerialNo,
+            dy.dutytype,
+            sf.Ratio,
+            sd.Score
+        from
+            monthsummary m, scoreflow sf, scoredetail sd, duty dy
+        where
+            m.SerialNo = sf.MSerialNo
+            and sf.SerialNo = sd.FSerialNo
+            and sd.DSerialNo = dy.DutyCode
+            and m.YEAR = #{year}
+            and m.Month = #{month}
+            and dy.dutytype in('2','3')
+    </select>
+
+</mapper>
+

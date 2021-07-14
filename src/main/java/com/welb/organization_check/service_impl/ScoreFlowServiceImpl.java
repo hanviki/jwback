@@ -125,4 +125,8 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
         return flowMapper.findFlowsByCode(usercode);
     }
 
+    @Override
+    public List<ScoreFlow> selectByScoreFlowType(String mserialno,String scoreType) {
+        return flowMapper.selectByScoreFlowType(mserialno, scoreType);
+    }
 }

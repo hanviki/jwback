@@ -91,5 +91,5 @@ public interface IScoreHistoryService {
     List<ScoreHistory>findScoreHistoryList(@Param("year")String year, @Param("month")String month);
 
 
-
+    List<ScoreHistory> findUserScoreHistory(String year,String month);
 }

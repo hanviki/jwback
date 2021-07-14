@@ -34,4 +34,5 @@ public interface ScoreHistoryMapper {
 
     List<ScoreHistory>findScoreHistoryList(@Param("year")String year,@Param("month")String month);
 
+    List<ScoreHistory> findUserScoreHistory(@Param("year")String year,@Param("month")String month);
 }

@@ -167,4 +167,6 @@ public interface IScoreFlowService {
 
 
     List<ScoreFlow>findFlowsByCode(String usercode);
+
+    List<ScoreFlow> selectByScoreFlowType(String mserialno,String scoreType);
 }

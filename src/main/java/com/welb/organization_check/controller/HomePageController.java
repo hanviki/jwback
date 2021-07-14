@@ -2,6 +2,7 @@ package com.welb.organization_check.controller;
 
 import com.welb.organization_check.dto.UserDto;
 import com.welb.organization_check.dto.UserSummaryDto;
+import com.welb.organization_check.dto.UserScoreDto;
 import com.welb.organization_check.entity.*;
 import com.welb.organization_check.service.*;
 import com.welb.util.CalendarUtil;
@@ -24,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -64,6 +66,10 @@ public class HomePageController {
     IScoreHistoryService historyService;
     @Resource
     IUserDtoService userDtoService;
+    @Autowired
+    IUserScoreDtoService userScoreDtoService;
+    @Autowired
+    IMonthSummaryService monthSummaryService;
 
     /**
      * 个人考核详情页面
@@ -71,7 +77,7 @@ public class HomePageController {
      * @return
      */
     @RequestMapping(value = "/getDetail", produces = "application/json;charset=utf-8")
-    public Object getDetail(HttpServletRequest req, UserSummaryDto dtos) {
+    public Object getDetail(HttpServletRequest req, UserSummaryDto dtos,String scorringUserCode) {
         //获取当前登录用户的编号
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
@@ -89,7 +95,7 @@ public class HomePageController {
                         if (dto != null) {
                             //查找岗位
                             dto.setMonth(dtos.getMonth());
-                            getMapList(map, usercode, data, dto);
+                            getMapList(map, usercode, data, dto,scorringUserCode);
                         } else {
                             map.put("msg", "数据为空");
                             map.put("code", 0);
@@ -123,10 +129,16 @@ public class HomePageController {
         return map;
     }
 
-    private void getMapList(ModelMap map, String usercode, Map<String, Object> data, UserSummaryDto dto) {
-        Station station = stationService.selectByStationCode(dto.getStationcode());
+    private void getMapList(ModelMap map, String usercode, Map<String, Object> data, UserSummaryDto dto,String scorringUserCode) {
         //获取评分人给被评分人打分的情况
-        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), usercode);
+        Station station = new Station();
+        List<ScoreFlow> flow = new ArrayList<>();
+        if(scorringUserCode!=null && !scorringUserCode.equals("")){
+            flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringUserCode);
+        }else {
+            station = stationService.selectByStationCode(dto.getStationcode());
+            flow = flowService.selectByScoreFlow(dto.getSerialno(), usercode);
+        }
         getFlow(map, data, dto, station, flow);
     }
 
@@ -144,7 +156,7 @@ public class HomePageController {
                 dto = dtoService.selectUserSummaryByLike(dtos);
                 dto.setMonth(setTime.getMonth());
                 //查找岗位
-                getMapList(map, usercode, data, dto);
+                getMapList(map, usercode, data, dto,null);
 
 
         }
@@ -165,7 +177,7 @@ public class HomePageController {
         dto = dtoService.selectUserSummaryByLike(dtos);
         dto.setMonth(month);
         //查找岗位
-        getMapList(map, usercode, data, dto);
+        getMapList(map, usercode, data, dto,null);
     }
 
     private void getFlow(ModelMap map, Map<String, Object> data, UserSummaryDto dto, Station station, List<ScoreFlow> scoreFlow) {
@@ -529,5 +541,179 @@ public class HomePageController {
         }
     }
 
+    @RequestMapping(value = "/jisuanScore", produces = "application/json;charset=utf-8")
+    public Object jisuanScore(HttpServletRequest req) {
+        //获取当前登录用户的编号
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        if (usercode != null) {
+            Map<String, Object> data = new LinkedHashMap<>();
+            try {
+                String msg = "";
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "");
+                if(setTime != null) {
+                    String year = setTime.getYear();
+                    String month = setTime.getMonth();
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectListByYearAndMonth(year, month);
+                    if(monthSummaryList != null){
+                        long count = monthSummaryList.stream().filter(s-> !s.getState().equals("7")).count();
+                        if(count == 0){
+                            List<ScoreHistory> scoreHistoryList = historyService.findUserScoreHistory(year, month);
+                            if(scoreHistoryList.size() > 0){
+                                List<UserScoreDto> userScoreDtoList = userScoreDtoService.findUserScore(year, month);
+                                if(userScoreDtoList.size()>0){
+//                                    Map<String, List<UserScoreDto>> byAuthor = userScoreDtoList.stream().map()
+//                                            .collect(Collectors.groupingBy(UserScoreDto::getScoreType));
+                                    List<String> typeList = new ArrayList<>();
+                                    typeList.add("A");typeList.add("B");typeList.add("C");typeList.add("D");
+                                    List<UserScoreDto> userQueryList = new ArrayList<>();
+                                    Double totalRatio = 0.0;
+                                    Double totalZdScore = 0.0;
+                                    Double totalMbScore = 0.0;
+                                    Double sumZdScore = 0.0;
+                                    Double sumMbScore = 0.0;
+                                    Double ratio = 0.0;
+                                    Double score2 = 0.0;
+                                    Double score3 = 0.0;
+                                    Double ratioA = 0.0;
+                                    Double score2A = 0.0;
+                                    Double score3A = 0.0;
+                                    Double ratioB = 0.0;
+                                    Double score2B = 0.0;
+                                    Double score3B = 0.0;
+                                    Double ratioC = 0.0;
+                                    Double score2C = 0.0;
+                                    Double score3C = 0.0;
+                                    Double ratioD = 0.0;
+                                    Double score2D = 0.0;
+                                    Double score3D = 0.0;
+                                    long pingfenCount = 0;
+//                                    long yZdCount = 0;
+//                                    long nZdCount = 0;
+//                                    long yMbCount = 0;
+//                                    long nMbCount = 0;
+                                    for (ScoreHistory item: scoreHistoryList){
+                                        totalRatio = 0.0;
+                                        userQueryList = userScoreDtoList.stream().filter(
+                                                s->s.getScoredCode().equals(item.getUsercode())
+                                        ).collect(Collectors.toList());
+
+                                        for (String type : typeList) {
+                                            pingfenCount = userQueryList.stream().filter(
+                                                    s-> s.getScoreType().equals(type) && s.getDutyType().equals("2"))
+                                                    .map(UserScoreDto::getScorringCode).distinct().count();
+
+                                            score2 = userQueryList.stream().filter(
+                                                    s-> s.getScoreType().equals(type) && s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getScore).sum();
+
+                                            score3 = userQueryList.stream().filter(
+                                                    s-> s.getScoreType().equals(type) && s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getScore).sum();
+
+                                            ratio = userQueryList.stream().filter(s-> s.getScoreType().equals(type)).map(
+                                                    UserScoreDto::getRatio).findFirst().orElse( 0.0 );
+
+                                            score2 = score2.isNaN() ? 0 : score2;
+                                            score3 = score3.isNaN() ? 0 : score3;
+
+                                            totalRatio += ratio;
+                                            score2 = score2 == 0 ? 0 : score2 / pingfenCount;
+                                            score3 = score3 == 0 ? 0 : score3 / pingfenCount;
+                                            if(type.equals("A")){
+                                                ratioA = ratio;
+                                                score2A = score2;
+                                                score3A = score3;
+                                            } else if(type.equals("B")){
+                                                ratioB = ratio;
+                                                score2B = score2;
+                                                score3B = score3;
+                                            } else if(type.equals("C")){
+                                                ratioC = ratio;
+                                                score2C = score2;
+                                                score3C = score3;
+                                            } else {
+                                                ratioD = ratio;
+                                                score2D = score2;
+                                                score3D = score3;
+                                            }
+                                        }
+
+                                        sumZdScore = score2A * ratioA + score2B * ratioB +
+                                                score2C * ratioC + score2D * ratioD;
+
+                                        sumMbScore = score3A * ratioA + score3B * ratioB +
+                                                score3C * ratioC + score3D * ratioD;
+
+                                        sumZdScore = sumZdScore == 0 ? 0 : sumZdScore / totalRatio;
+                                        sumMbScore = sumMbScore == 0 ? 0 : sumMbScore / totalRatio;
+
+                                        item.setSumZdScore(sumZdScore);
+                                        item.setSumMbScore(sumMbScore);
+
+//                                        if (sumZdScore == 0) {
+//                                            nZdCount += 1;
+//                                        } else {
+//                                            yZdCount += 1;
+//                                        }
+//
+//                                        if (sumMbScore == 0) {
+//                                            nMbCount += 1;
+//                                        } else {
+//                                            yMbCount += 1;
+//                                        }
+
+                                        totalZdScore += sumZdScore;
+                                        totalMbScore += sumMbScore;
+                                    }
+
+                                    totalZdScore = totalZdScore == 0 ? 0 : totalZdScore / scoreHistoryList.size();
+
+                                    totalMbScore = totalMbScore == 0 ? 0 : totalMbScore / scoreHistoryList.size();
+
+                                    for (ScoreHistory item: scoreHistoryList) {
+                                        ScoreHistory scoreHistory = new ScoreHistory();
+                                        scoreHistory.setId(item.getId());
+                                        scoreHistory.setSumZdScore(item.getSumZdScore());
+                                        scoreHistory.setSumMbScore(item.getSumMbScore());
+                                        if(item.getSumZdScore() == 0) {
+                                            scoreHistory.setAvgZdScore(totalZdScore);
+                                        }else{
+                                            scoreHistory.setAvgZdScore(0.00);
+                                        }
+                                        if(item.getSumMbScore() == 0) {
+                                            scoreHistory.setAvgMbScore(totalMbScore);
+                                        }else{
+                                            scoreHistory.setAvgMbScore(0.00);
+                                        }
+                                        historyService.updateByPrimaryKeySelective(scoreHistory);
+                                    }
+                                    msg = "OK";
+                                }else{
+                                    msg = "考核月明细数据为空";
+                                }
+                            }else {
+                                msg = "考核月历史数据为空";
+                            }
+                        } else {
+                            msg = "考核月结数据还有评分未完成";
+                        }
+                    }else{
+                        msg = "考核月结数据为空";
+                    }
+                } else {
+                    msg =  "考核月为空";
+                }
+                map.put("msg", msg);
+                map.put("code", msg.equals("OK") ? 0 : 1);
+            } catch (Exception e) {
+                log.error(LogUtil.getTrace(e));
+                map.put("msg", "查询个人考核详情失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
 
 }

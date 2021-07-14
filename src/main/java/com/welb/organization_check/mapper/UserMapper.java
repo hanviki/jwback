@@ -51,6 +51,7 @@ public interface UserMapper {
 
     List<User>getUserList(@Param("moneycard")String moneycard,@Param("departmentname") String departmentname);
 
+    List<User>findUserByScoreFlowType(@Param("mserialNo") String mserialNo,@Param("scoreType") String scoreType);
 
     List<User>selectGradeUserList();
 

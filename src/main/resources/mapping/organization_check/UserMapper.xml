@@ -558,6 +558,18 @@
         and u.RoleType="0"
     </select>
 
+    <select id="findUserByScoreFlowType" resultMap="BaseResultMap">
+    SELECT
+        u.*
+    FROM
+        user u,
+        scoreflow sf
+    WHERE
+        sf.ScorringCode = u.UserCode
+        AND sf.MSerialNo = #{mserialNo}
+        AND sf.ScoreType = #{scoreType}
+  </select>
+
     <!--查找所有用户-->
     <select id="findUserAll" resultMap="BaseResultMap1">
        select u.UserCode,u.Mobile,u.UserName,r.RoleCode,ur.* from user u,role r,user_role ur

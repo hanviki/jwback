@@ -59,4 +59,7 @@ public interface ScoreFlowMapper {
 
     List<ScoreFlow>findFlowsByCode(String usercode);
 
+    List<ScoreFlow> selectByScoreFlowType(@Param("mserialno") String mserialno,@Param("scoreType") String scoreType);
+
+
 }

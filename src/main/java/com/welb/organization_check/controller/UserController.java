@@ -183,6 +183,23 @@ public class UserController extends BaseController {
         return users;
     }
 
+    @RequestMapping(value = "/getUserByScoreFlow", produces = "application/json;charset=utf-8")
+    public Object getUserByScoreFlow(HttpServletRequest req, String serialNo,String scoreType){
+        //获取当前登录用户的编号
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        if (usercode != null) {
+            List<User> user = userService.findUserByScoreFlowType(serialNo, scoreType);
+            map.put("msg", "查询考核用户列表成功");
+            map.put("data", user);
+            map.put("code", 0);
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
+
     //导出Excel
     @RequestMapping("/exportExcel")
     public void exportExcel(HttpServletResponse response,HttpServletRequest req, User user){

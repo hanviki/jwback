@@ -24,14 +24,22 @@ public class UserDto {
         states.put("", "--");
         states.put("0", "未提交");
         states.put("1", "已提交");
-        states.put("5", "季结待提交");
-        states.put("6", "季结评分");
-        states.put("7", "季结评分完成");
+        states.put("5", "待提交");
+        states.put("6", "评分中");
+        states.put("7", "评分完成");
 
-        months.put("1", "第一季度");
-        months.put("2", "第二季度");
-        months.put("3", "第三季度");
-        months.put("4", "第四季度");
+        months.put("1", "1月");
+        months.put("2", "2月");
+        months.put("3", "3月");
+        months.put("4", "4月");
+        months.put("5", "5月");
+        months.put("6", "6月");
+        months.put("7", "7月");
+        months.put("8", "8月");
+        months.put("9", "9月");
+        months.put("10", "10月");
+        months.put("11", "11月");
+        months.put("12", "12月");
 
         scorestatusList.put("1","未评分");
         scorestatusList.put("2","未完成");

@@ -203,6 +203,10 @@
     select * from scoreflow where ScorringCode=#{scorringcode}
   </select>
 
+    <select id="selectByScoreFlowType" resultMap="BaseResultMap">
+    select * from scoreflow where MSerialNo=#{mserialno} and ScoreType=#{scoreType}
+  </select>
+
     <!--通过被评人code查找上一季度打分详情数据-->
     <select id="getSingleTotalScoreAll" resultMap="BaseResultMap">
     select s.* from scoreflow s,scoredetail d ,duty t

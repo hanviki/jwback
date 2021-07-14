@@ -14,9 +14,9 @@ public class MonthSummary {
         states.put("1","已提交");
         states.put("2","未评分");
         states.put("3","未完成评分");
-        states.put("5","季结待提交");
-        states.put("6","季结评分");
-        states.put("7","季结评分完成");
+        states.put("5", "待提交");
+        states.put("6", "评分中");
+        states.put("7", "评分完成");
 
         months.put("1","1月");
         months.put("2","2月");

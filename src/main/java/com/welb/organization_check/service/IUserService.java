@@ -158,4 +158,7 @@ public interface IUserService {
 
     void add(User user);
 
+    List<User>findUserByScoreFlowType(String mserialNo, String scoreType);
+
+
 }

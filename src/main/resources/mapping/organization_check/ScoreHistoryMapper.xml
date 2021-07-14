@@ -12,6 +12,9 @@
         <result column="CScore" property="cscore" jdbcType="DOUBLE"/>
         <result column="DScore" property="dscore" jdbcType="DOUBLE"/>
         <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="SumZdScore" property="sumZdScore" jdbcType="DOUBLE"/>
+        <result column="SumMbScore" property="sumMbScore" jdbcType="DOUBLE"/>
+
     </resultMap>
     <resultMap id="BaseResultMap2" type="com.welb.organization_check.entity.ScoreHistory">
         <id column="Id" property="id" jdbcType="INTEGER"/>
@@ -24,6 +27,8 @@
         <result column="CScore" property="cscore" jdbcType="DOUBLE"/>
         <result column="DScore" property="dscore" jdbcType="DOUBLE"/>
         <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="SumZdScore" property="sumZdScore" jdbcType="DOUBLE"/>
+        <result column="SumMbScore" property="sumMbScore" jdbcType="DOUBLE"/>
 
         <result column="RoleCode" property="rolecode" jdbcType="VARCHAR"/>
         <result column="RoleName" property="rolename" jdbcType="VARCHAR"/>
@@ -142,6 +147,18 @@
             </if>
             <if test="totalscore != null">
                 TotalScore = #{totalscore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumZdScore != null">
+                SumZdScore = #{sumZdScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumMbScore != null">
+                SumMbScore = #{sumMbScore,jdbcType=DOUBLE},
+            </if>
+            <if test="avgZdScore != null">
+                AvgZdScore = #{avgZdScore,jdbcType=DOUBLE},
+            </if>
+            <if test="avgMbScore != null">
+                AvgMbScore = #{avgMbScore,jdbcType=DOUBLE},
             </if>
         </set>
         where Id = #{id,jdbcType=INTEGER}
@@ -360,4 +377,26 @@
         and m.`Month`=h.`Month`
         order by h.Year+ 0 desc,h.Month+0 desc, h.ScoreStatus
     </select>
+    <select id="findUserScoreHistory" resultType="com.welb.organization_check.entity.ScoreHistory">
+    SELECT
+        h.*
+    FROM
+        scorehistory h,
+        USER u,
+        monthsummary m,
+        role r,
+        user_role ur
+    WHERE
+        u.UserCode = h.UserCode
+        AND u.UserCode = m.EmployeeCode
+        AND u.RoleType = "0"
+        AND u.Flag = "0"
+        AND u.UserCode = ur.UserCode
+        AND r.RoleCode = ur.RoleCode
+        AND r.RoleCode IN ( "100", "200", "300", "50" )
+        AND h.YEAR = m.YEAR
+        AND m.Month = h.Month
+        AND h.Year=#{year}
+        AND h.Month=#{month}
+</select>
 </mapper>
